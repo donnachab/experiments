@@ -7,7 +7,7 @@
     <style>
         /* Define the color palette from the CV */
         :root {
-            --cv-bg-base: #f0fdf4;      /* Very Light Mint/Green Base (Original, not used for body) */
+            --cv-bg-base: #f0fdf4;      /* Very Light Mint/Green Base */
             --cv-bg-main: #ffffff;      /* White Main Area */
             --cv-bg-sidebar: #dcfce7;    /* Light Green Sidebar */
             --cv-text-dark: #14532d;    /* Dark Green Text */
@@ -19,202 +19,307 @@
             --cv-shadow: rgba(34, 197, 94, 0.15); /* Shadow color based on accent */
         }
 
-        /* Basic styling for the body using a white background color */
+        /* Basic styling for the body */
         body {
-            font-family: 'Roboto', sans-serif; /* Using a common, readable sans-serif font */
-            margin: 0; /* Remove default margin */
-            padding: 20px 10px; /* Add padding for content */
-            background-color: var(--cv-bg-main); /* White background */
-            color: var(--cv-text-med); /* Medium Green for primary text */
-            min-height: 100vh; /* Ensure the background covers at least the full viewport height */
-            box-sizing: border-box; /* Include padding in height calculation */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px 10px;
+            background-color: var(--cv-bg-main);
+            color: var(--cv-text-med);
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        /* Import Roboto font */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         h1 {
             text-align: center;
-            color: var(--cv-text-dark); /* Dark Green for the heading */
-            text-shadow: none; /* Remove text shadow */
-            margin-bottom: 30px; /* Space below the heading */
-            font-family: 'Roboto', sans-serif; /* Consistent font for heading */
-            font-weight: 700; /* Bold heading */
+            color: var(--cv-text-dark);
+            text-shadow: none;
+            margin-bottom: 30px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
         }
 
-        /* Styling for the tab container */
         .tab-container {
-            display: flex; /* Use flexbox to align tabs horizontally */
-            margin-bottom: 20px; /* Space below the tabs */
-            border-bottom: 1px solid var(--cv-border); /* Light Green line below tabs */
-            flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--cv-border);
+            flex-wrap: wrap;
         }
 
-        /* Styling for the tab buttons */
         .tab-button {
-            flex-grow: 1; /* Allow buttons to grow and fill the space */
+            flex-grow: 1;
             padding: 10px 15px;
-            background-color: var(--cv-bg-sidebar); /* Light Green background */
-            color: var(--cv-text-dark); /* Dark Green text */
+            background-color: var(--cv-bg-sidebar);
+            color: var(--cv-text-dark);
             border: none;
             outline: none;
             cursor: pointer;
-            font-size: 15px; /* Slightly smaller font */
+            font-size: 15px;
             transition: background-color 0.3s ease, color 0.3s ease;
             text-align: center;
-            border-radius: 5px 5px 0 0; /* Rounded top corners */
-            margin-right: 3px; /* Reduced space between buttons */
+            border-radius: 5px 5px 0 0;
+            margin-right: 3px;
             font-weight: bold;
-            margin-bottom: -1px; /* Pull button down slightly to overlap border */
+            margin-bottom: -1px;
         }
 
         .tab-button:last-child {
-             margin-right: 0; /* No margin on the last button */
+             margin-right: 0;
         }
 
-        /* Styling for the active tab button */
         .tab-button.active {
-            background-color: var(--cv-bg-main); /* White background for active tab */
-            color: var(--cv-text-dark); /* Dark Green text */
-            border-top: 2px solid var(--cv-accent); /* Bright Green top border for active tab */
-            border-left: 1px solid var(--cv-border); /* Light Green border */
-            border-right: 1px solid var(--cv-border); /* Light Green border */
-            border-bottom: 1px solid var(--cv-bg-main); /* Match active background to hide container border */
+            background-color: var(--cv-bg-main);
+            color: var(--cv-text-dark);
+            border-top: 2px solid var(--cv-accent);
+            border-left: 1px solid var(--cv-border);
+            border-right: 1px solid var(--cv-border);
+            border-bottom: 1px solid var(--cv-bg-main);
         }
 
          .tab-button:hover:not(.active) {
-             background-color: var(--cv-border); /* Light Green on hover for inactive tabs */
-             color: var(--cv-text-dark); /* Dark Green text on hover */
+             background-color: var(--cv-border);
+             color: var(--cv-text-dark);
          }
 
-
-        /* Styling for the card container */
         .route-card {
-            background-color: var(--cv-bg-main); /* White background for the card */
-            border-radius: 8px; /* More rounded corners */
-            padding: 15px; /* Padding inside the card */
-            margin-bottom: 15px; /* Space between cards */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Subtle box shadow */
-            border: 1px solid var(--cv-border); /* Light Green border */
+            background-color: var(--cv-bg-main);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--cv-border);
         }
 
-        /* Styling for the date heading within the card */
         .route-card h2 {
-            margin-top: 0; /* Remove top margin */
-            margin-bottom: 10px; /* Space below the heading */
-            color: var(--cv-text-dark); /* Dark Green text for the heading */
-            font-size: 17px; /* Slightly larger font for the heading */
-            text-align: left; /* Align heading left */
-            border-bottom: 1px solid var(--cv-border); /* Add a subtle line below the heading */
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--cv-text-dark);
+            font-size: 17px;
+            text-align: left;
+            border-bottom: 1px solid var(--cv-border);
             padding-bottom: 8px;
             font-weight: bold;
         }
 
-        /* Styling for the route buttons inside the card */
         .route-button {
-            display: block; /* Make the link a block element to take full width */
-            width: 100%; /* Full width of its container */
-            padding: 12px 10px; /* Slightly less padding inside the button */
-            background-color: var(--cv-accent); /* Bright Green for button */
-            color: var(--cv-bg-main); /* White text for contrast - IMPROVED CONTRAST */
-            text-align: center; /* Center the text */
-            text-decoration: none; /* Remove underline from the link */
-            border-radius: 6px; /* Rounded corners for the button */
-            font-size: 15px; /* Font size */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* Subtle box shadow for the button */
-            border: none; /* Remove border from the button */
-            font-weight: bold; /* Bold text for readability */
-            line-height: 1.4; /* Add some space between lines */
-            margin-top: 10px; /* Space above the button */
+            display: block;
+            width: 100%;
+            padding: 12px 10px;
+            background-color: var(--cv-accent);
+            color: var(--cv-bg-main); /* White text on bright green - Low Contrast */
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border: none;
+            font-weight: bold;
+            line-height: 1.4;
+            margin-top: 10px;
         }
 
-        /* Hover effect for the buttons */
         .route-button:hover {
-            background-color: var(--cv-accent-hover); /* Darker Green on hover */
-            color: var(--cv-bg-main); /* White text on hover - IMPROVED CONTRAST */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.12); /* Slightly larger shadow on hover */
+            background-color: var(--cv-accent-hover);
+            color: var(--cv-bg-main); /* White text on darker bright green - Low Contrast */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
         }
 
-         /* Active state for the buttons (when clicked) */
         .route-button:active {
-            background-color: var(--cv-text-dark); /* Dark Green when active */
-            color: var(--cv-bg-main); /* White text when active - Already good contrast */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Smaller shadow when active */
+            background-color: var(--cv-text-dark);
+            color: var(--cv-bg-main);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
 
-        /* Styling for the details sections (flight and hotel) */
         .details-section {
-            border-radius: 8px; /* Rounded corners */
-            padding: 15px; /* Padding */
-            margin-bottom: 15px; /* Space below */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Very subtle shadow */
-            border: 1px solid var(--cv-border); /* Light Green border */
-            text-align: left; /* Align text left */
-            font-weight: normal; /* Normal font weight */
-            font-size: 14px; /* Smaller font size for details */
-            display: flex; /* Use flexbox for icon and text */
-            align-items: flex-start; /* Align items to the top */
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid var(--cv-border);
+            text-align: left;
+            font-weight: normal;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
         }
 
-         /* Specific styling for flight details section */
         .flight-details {
-            background-color: var(--cv-bg-sidebar); /* Light Green background for flights */
-            color: var(--cv-text-dark); /* Dark Green text for flights */
+            background-color: var(--cv-bg-sidebar);
+            color: var(--cv-text-dark);
         }
 
-        /* Specific styling for accommodation details section */
         .accommodation-details {
-             background-color: var(--cv-bg-main); /* White background for accommodation */
-             color: var(--cv-text-dark); /* Dark Green text for accommodation */
+             background-color: var(--cv-bg-main);
+             color: var(--cv-text-dark);
         }
-
 
          .details-section .icon {
-             margin-right: 10px; /* Space between icon and text */
-             flex-shrink: 0; /* Prevent icon from shrinking */
-             width: 24px; /* Icon width */
-             height: 24px; /* Icon height */
-             fill: var(--cv-text-dark); /* Set icon color to dark green */
+             margin-right: 10px;
+             flex-shrink: 0;
+             width: 24px;
+             height: 24px;
+             fill: var(--cv-text-dark);
          }
 
          .details-section .details-content {
-             flex-grow: 1; /* Allow content to take up remaining space */
+             flex-grow: 1;
          }
 
-
          .details-section p {
-             margin: 3px 0; /* Less space between paragraphs */
+             margin: 3px 0;
          }
 
          .details-section p strong {
-             color: var(--cv-text-dark); /* Dark Green for labels */
-             margin-right: 5px; /* Space after label */
+             color: var(--cv-text-dark);
+             margin-right: 5px;
          }
 
-         /* Styling for links within details sections */
          .details-section a {
-             color: var(--cv-text-dark); /* Dark Green for links */
-             text-decoration: none; /* Remove underline */
+             color: var(--cv-text-dark);
+             text-decoration: none;
              transition: color 0.2s ease;
+             font-weight: bold;
          }
 
          .details-section a:hover {
-             color: var(--cv-accent); /* Bright Green on hover */
-             text-decoration: underline; /* Underline on hover */
+             color: var(--cv-accent); /* Low contrast on light backgrounds */
+             text-decoration: underline;
          }
 
+        .flight-track-button {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: var(--cv-accent);
+            color: var(--cv-bg-main) !important; /* Forced white text - Low Contrast */
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-top: 8px;
+        }
+        .flight-track-button:hover {
+            background-color: var(--cv-accent-hover);
+            color: var(--cv-bg-main) !important; /* Forced white text - Low Contrast */
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .flight-track-button:active {
+            background-color: var(--cv-text-dark);
+            color: var(--cv-bg-main) !important; /* Forced white text */
+            text-decoration: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
 
-         /* Styling for tab content areas */
+        .availability-note {
+            font-size: 11px;
+            color: var(--cv-text-dim);
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+
+        /* Accordion Styles */
+        .accordion-button {
+          background-color: var(--cv-bg-sidebar);
+          color: var(--cv-text-dark);
+          cursor: pointer;
+          padding: 15px;
+          width: 100%;
+          border: 1px solid var(--cv-border);
+          text-align: left;
+          outline: none;
+          font-size: 16px;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+          border-radius: 6px;
+          margin-top: 15px;
+          margin-bottom: 0;
+          box-sizing: border-box;
+        }
+
+        .accordion-button:hover, .accordion-button.active-accordion {
+          background-color: var(--cv-border);
+        }
+
+        .accordion-button:after {
+          content: '\002B'; /* Plus sign (+) */
+          font-size: 16px;
+          font-weight: bold;
+          color: var(--cv-text-dark);
+          float: right;
+          margin-left: 5px;
+          transition: transform 0.2s ease-out;
+        }
+
+        .accordion-button.active-accordion:after {
+          content: "\2212"; /* Minus sign (-) */
+        }
+
+        .accordion-panel {
+          padding: 0 18px;
+          background-color: var(--cv-bg-main);
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+          border-left: 1px solid var(--cv-border);
+          border-right: 1px solid var(--cv-border);
+          border-bottom: 1px solid var(--cv-border);
+          border-radius: 0 0 6px 6px;
+          margin-bottom: 15px;
+        }
+        
+        .accordion-button.active-accordion + .accordion-panel {
+             border-top: none; 
+        }
+         .accordion-button:not(.active-accordion) {
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+         }
+         .accordion-button.active-accordion {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+         }
+
+        .accordion-panel.show-panel {
+            padding: 10px 18px;
+        }
+
+        .accordion-panel p, .accordion-panel ol, .accordion-panel ul {
+            color: var(--cv-text-med);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .accordion-panel ol, .accordion-panel ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 25px;
+        }
+         .accordion-panel li {
+            margin-bottom: 8px;
+        }
+        .accordion-panel a { 
+            color: var(--cv-text-dim); 
+            text-decoration: underline;
+            font-weight: normal; 
+        }
+        .accordion-panel a:hover {
+            color: var(--cv-accent);
+            text-decoration: underline;
+        }
+
          .tab-content {
-             display: none; /* Hide tab content by default */
-             padding-top: 10px; /* Space above content */
+             display: none;
+             padding-top: 10px;
          }
 
-         /* Styling for the active tab content */
          .tab-content.active {
-             display: block; /* Display active tab content */
+             display: block;
          }
     </style>
 </head>
@@ -228,6 +333,17 @@
     </div>
 
     <div id="DeirdreHannah" class="tab-content active">
+        
+        <button class="accordion-button">Baggage Drop-off Information (Marseille Airport - MRS)</button>
+        <div class="accordion-panel">
+            <p>For your Ryanair flight FR2959 from Marseille (MRS):</p>
+            <ul>
+                <li>Ryanair often operates from <strong>Terminal 2 (mp2)</strong> at Marseille Airport. However, always verify your specific terminal and check-in area on the airport departure screens upon arrival.</li>
+                <li>Proceed to the Ryanair check-in area / bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
+                <li>Marseille Airport may have an "Express Bag Drop" for Ryanair passengers who have already checked in online, often located in Terminal 2 (Level 1).</li>
+                <li><strong>Key Action:</strong> Look for Ryanair on the departure screens to find the correct zone and desk numbers.</li>
+            </ul>
+        </div>
         <div class="details-section flight-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
             <div class="details-content">
@@ -235,6 +351,8 @@
                 <p><strong>Date:</strong> Sunday, 15 June 25</p>
                 <p><strong>Departure Time:</strong> 13:55 (MRS)</p>
                 <p><strong>Arrival Time:</strong> 15:15 (TSF)</p>
+                <a href="https://flightaware.com/live/flight/RYR2959" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                <p class="availability-note">(Available closer to arrival)</p>
             </div>
         </div>
 
@@ -243,6 +361,13 @@
             <a href="https://www.google.com/maps/dir/Treviso+Airport,+Treviso,+Province+of+Treviso,+Italy/Peschiera+del+Garda,+VR,+Italy/data=!4m14!4m13!1m5!1m1!19sChIJD650C0Q2eUcR8pY1kRdlcP4!2m2!1d12.1944795!2d45.6498881!1m5!1m1!19sChIJoaAFNNXrgUcRlhb1HRKBrkY!2m2!1d10.686843999999999!2d45.439648299999995!3e0" class="route-button">Treviso Airport to ApartHotel in Peschiera del Garda</a>
         </div>
 
+        <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
+        <div class="accordion-panel">
+            <p>Peschiera del Garda, a UNESCO World Heritage site, sits at the southern end of Lake Garda where the Mincio River begins. Its Venetian fortress, canals, and historic center are prime for sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby Sirmione, known for its Scaligero Castle and Roman ruins. The town serves as an excellent gateway to the lower lake region.</p>
+            <p>For active pursuits, the Mincio River cycle path offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. Gardaland, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment, particularly appealing for younger visitors. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
+            <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts, local festivals with music (especially in summer), and live music in some bars or hotel gardens; check local listings upon arrival. For a grander musical experience, Verona and its famous Arena, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car). </p>
+            <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.illeonedilonato.it/en/" target="_blank">Il Leone Shopping Center</a> in Lonato or La Grande Mela Shoppingland near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
+        </div>
         <div class="details-section accommodation-details">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
@@ -259,6 +384,13 @@
             <a href="https://www.rome2rio.com/map/Peschiera-del-Garda/Venice" class="route-button" target="_blank">Peschiera del Garda to Venice (Travel Options)</a>
         </div>
 
+        <button class="accordion-button">About Venice & Things to Do</button>
+        <div class="accordion-panel">
+            <p>Venice, the enchanting "City of Canals," is a labyrinth of waterways and historic charm. Iconic sights like St. Mark's Square, home to the magnificent St. Mark's Basilica and the Doge's Palace, are essential visits. The Rialto Bridge offers famous views, while a gondola ride provides a classic Venetian experience. Wandering aimlessly through the narrow calli (streets) and campi (squares) often leads to delightful discoveries of hidden churches, local life, and picturesque scenes.</p>
+            <p>Venice has a deep and rich musical history, particularly from the Baroque period. Attending a classical music concert, especially performances of Vivaldi (a native Venetian), in one of the city's historic churches or scuolas can be a memorable experience. The renowned <a href="https://www.teatrolafenice.it/en/" target="_blank">Teatro La Fenice</a> offers opera performances, concerts, and tours of its opulent interior. Even street musicians and gondoliers' songs contribute to the city's unique soundscape.</p>
+            <p>For shopping, Venice offers a unique experience, from high-end designer boutiques clustered around Salizada San Moisè and Calle Larga XXII Marzo, to traditional artisan shops. Look for authentic Murano glass, intricate Burano lace, and handcrafted carnival masks. The <a href="https://www.dfs.com/en/venice" target="_blank">T Fondaco dei Tedeschi</a>, a beautifully restored historic building near the Rialto Bridge, is an upscale department store with a variety of international brands and a rooftop terrace offering panoramic city views (booking for the terrace is often recommended).</p>
+            <p>Beyond the main island, consider a vaporetto trip to the islands of Murano, famous for its glass-blowing studios, and Burano, with its brightly colored fishermen's houses and lace-making tradition. The Lido offers beaches and a different atmosphere. For comprehensive planning and ticketing for transport and attractions, the <a href="https://www.veneziaunica.it/en/" target="_blank">Venezia Unica</a> official city pass and tourism site is an invaluable resource.</p>
+        </div>
         <div class="details-section accommodation-details">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
@@ -272,6 +404,16 @@
             </div>
         </div>
 
+        <button class="accordion-button">Baggage Drop-off Information (Venice Marco Polo Airport - VCE)</button>
+        <div class="accordion-panel">
+            <p>For your Ryanair flight FR830 from Venice Marco Polo (VCE):</p>
+            <ul>
+                <li>Ryanair operates from <strong>Terminal 1</strong>.</li>
+                <li>The check-in and bag drop desks are located on the <strong>Ground Floor of Terminal 1</strong>.</li>
+                <li>Look for the Ryanair specific bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
+                <li><strong>Key Action:</strong> Always check the departure information screens in Terminal 1 for the assigned Ryanair desk numbers.</li>
+            </ul>
+        </div>
         <div class="details-section flight-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
             <div class="details-content">
@@ -279,11 +421,25 @@
                 <p><strong>Date:</strong> Friday, 20 June 25</p>
                 <p><strong>Departure Time:</strong> 14:20 (VCE)</p>
                 <p><strong>Arrival Time:</strong> 16:30 (DUB)</p>
+                <a href="https://flightaware.com/live/flight/RYR830" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                <p class="availability-note">(Available closer to departure)</p>
             </div>
         </div>
     </div>
 
     <div id="Donnacha" class="tab-content">
+
+        <button class="accordion-button">Baggage Drop-off Information (Dublin Airport - DUB)</button>
+        <div class="accordion-panel">
+            <p>For your Ryanair flight FR831 from Dublin (DUB):</p>
+            <ul>
+                <li>Ryanair flights typically depart from <strong>Terminal 1</strong>.</li>
+                <li>Proceed to the <strong>First Floor of Terminal 1</strong> for Ryanair check-in and bag drop.</li>
+                <li>Ryanair usually has designated check-in areas (e.g., Areas 7-12, but this can vary). Look for Ryanair signage and check the departure screens.</li>
+                <li>Bag drop desks generally open 2 hours before departure and close 40 minutes prior. Self-service bag drop kiosks may also be available for Ryanair.</li>
+                <li><strong>Key Action:</strong> Upon arrival at Terminal 1, check the flight information display screens for the specific Ryanair check-in/bag drop desk numbers for your flight.</li>
+            </ul>
+        </div>
         <div class="details-section flight-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
             <div class="details-content">
@@ -291,14 +447,39 @@
                 <p><strong>Date:</strong> Fri, 13 June 25</p>
                 <p><strong>Departure Time:</strong> 10:45 (DUB)</p>
                 <p><strong>Arrival Time:</strong> 14:25 (VCE)</p>
+                <a href="https://flightaware.com/live/flight/RYR831" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                <p class="availability-note">(Available closer to arrival)</p>
             </div>
+        </div>
+
+        <button class="accordion-button">Directions to Budget Car Hire (Venice Marco Polo Airport - VCE)</button>
+        <div class="accordion-panel">
+            <p>The Budget car rental desks at Venice Marco Polo Airport (VCE) are primarily located in the dedicated "Rent a Car" area.</p>
+            <p><strong>Steps from Arrivals Terminal:</strong></p>
+            <ol>
+                <li>After collecting your luggage and exiting the Arrivals hall, look to your left.</li>
+                <li>You should see a covered walkway. Follow the signs for "Autonoleggi" / "Car Rental" / "P1 Parking".</li>
+                <li>This walkway (approximately 300 meters, may have travelators) will lead you to the multi-storey car park P1.</li>
+                <li>Enter the P1 parking building and take the lift (elevator) to the <strong>3rd floor</strong>. This is often referred to as the "terrace" level.</li>
+                <li>The Budget rental office, along with other car rental agencies, will be located here.</li>
+            </ol>
+            <p><strong>Budget Preferred Service:</strong> Budget may also have a "Preferred Service" desk on Level 1 (Arrivals level) of the main terminal building, which you might encounter before the walkway to P1. This is often for loyalty program members, but your main check-in will likely be at the P1 3rd floor desk.</p>
+            <p><strong>Important:</strong> Even with a pre-booking, you generally need to go to the rental desk on the 3rd floor of P1 to complete paperwork before proceeding to collect your car.</p>
+            <p>Allow some extra time for this process, especially during busy periods.</p>
         </div>
 
          <div class="route-card">
             <h2>Friday, June 13 (Approx. 15:45)</h2>
             <a href="https://www.google.com/maps/dir/Budget+Car+Rental,+Multip+P1+Iii+P,+Viale+Luigi+Broglio,+30100+Venezia+VE,+Italy/Hotel+Terme+Patria,+Viale+delle+Terme,+56,+35031+Abano+Terme+PD,+Italy/@45.4746734,11.8981429,48775m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x477eb2f0caf3d22d:0x61e29f4f3b5cfea4!2m2!1d12.3384613!2d45.5066471!1m5!1m1!1s0x477edec69e346ffd:0xc0f6caa7b9124fbb!2m2!1d11.7853382!2d45.3561794!3e0?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" class="route-button">Budget car hire at Marco Polo Airport to Hotel Terme Patria, Padova</a>
         </div>
-
+        
+        <button class="accordion-button">About Padua (Padova) & Things to Do</button>
+        <div class="accordion-panel">
+            <p>Padua, a city of art and science in the Veneto region, is renowned for its historic university, one of the oldest in the world, where Galileo Galilei once taught. A key highlight for sightseeing is the Scrovegni Chapel, adorned with Giotto's groundbreaking fresco cycle. The imposing Basilica of Saint Anthony is a major pilgrimage site, and Prato della Valle stands out as one of Europe's largest and most picturesque squares, encircled by a canal and statues.</p>
+            <p>For those interested in hiking and nature, the nearby <a href="https://www.parcocollieuganei.com/" target="_blank">Euganean Hills Regional Park</a> offers a beautiful volcanic landscape with numerous walking trails, vineyards, and medieval villages like Arquà Petrarca. These hills provide a refreshing contrast to the city and are excellent for day trips. The Bacchiglione river also offers pleasant walking paths closer to the city.</p>
+            <p>Padua has a vibrant cultural and music scene. The city hosts various music events throughout the year, including the notable <a href="https://www.padovajazz.com/" target="_blank">Padova Jazz Festival</a> (check specific dates). Larger concerts are often held at venues like the Gran Teatro Geox. For classical music, opportunities may arise in churches or at the Conservatorio Cesare Pollini. Investigating local listings upon arrival or checking sites like Bandsintown can reveal current performances.</p>
+            <p>Beyond the main sights, Padua's historic center with its arcaded streets is perfect for exploring. The daily markets in Piazza delle Erbe and Piazza della Frutta offer a lively atmosphere and local produce. While not focused on large malls, the city offers a range of Italian boutiques and specialty shops. Consider a visit to <a href="https://www.hifirecord.it/" target="_blank">HiFi Record</a> for vinyl. For more information on Padua, the <a href="https://www.turismopadova.it/en" target="_blank">Padua Tourism Portal</a> is a great resource.</p>
+        </div>
         <div class="details-section accommodation-details">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
@@ -321,7 +502,14 @@
             <h2>Sunday, June 15 (Depart by 15:45)</h2>
             <a href="https://www.google.com/maps/dir/Treviso+Airport,+Treviso,+Province+of+Treviso,+Italy/Peschiera+del+Garda,+VR,+Italy/data=!4m14!4m13!1m5!1m1!19sChIJD650C0Q2eUcR8pY1kRdlcP4!2m2!1d12.1944795!2d45.6498881!1m5!1m1!19sChIJoaAFNNXrgUcRlhb1HRKBrkY!2m2!1d10.686843999999999!2d45.439648299999995!3e0" class="route-button">Treviso Airport to ApartHotel in Peschiera del Garda</a>
         </div>
-
+        
+        <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
+        <div class="accordion-panel">
+             <p>Peschiera del Garda, a UNESCO World Heritage site, sits at the southern end of Lake Garda where the Mincio River begins. Its Venetian fortress, canals, and historic center are prime for sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby Sirmione, known for its Scaligero Castle and Roman ruins. The town serves as an excellent gateway to the lower lake region.</p>
+            <p>For active pursuits, the Mincio River cycle path offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. Gardaland, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment, particularly appealing for younger visitors. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
+            <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts, local festivals with music (especially in summer), and live music in some bars or hotel gardens; check local listings upon arrival. For a grander musical experience, Verona and its famous Arena, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car). </p>
+            <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.illeonedilonato.it/en/" target="_blank">Il Leone Shopping Center</a> in Lonato or La Grande Mela Shoppingland near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
+        </div>
         <div class="details-section accommodation-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
@@ -339,6 +527,13 @@
             <a href="https://www.google.com/maps/dir/Aurora+Aparthotel,+Via+Porto+Vecchio,+10,+Peschiera+del+Garda+VR,+Italia/Hotel+Vittoria,+Via+Benamati,+118,+Toscolano+Maderno+BS,+Italia/data=!4m14!4m13!1m5!1m1!19sChIJaeS3XJvpgUcRtx083gJqJoE!2m2!1d10.698865399999999!2d45.4334341!1m5!1m1!19sChIJr2DlSnaMgUcRxuv6oZfg4d8!2m2!1d10.6028329!2d45.6382209!3e0" class="route-button">ApartHotel in Peschiera del Garda to Albergo Vittoria, Toscolano Maderno</a>
         </div>
 
+        <button class="accordion-button">About Toscolano Maderno (Lake Garda) & Things to Do</button>
+        <div class="accordion-panel">
+            <p>Toscolano Maderno, situated on the scenic western "Riviera dei Limoni" of Lake Garda, is a town rich in history and surrounded by impressive nature. Key sights include the ruins of a Roman villa in Toscolano, the historic Church of Sant'Andrea, and the unique Valle delle Cartiere (Paper Mill Valley), which offers insights into the area's traditional paper-making industry through its museum and trails. The lakeside promenade is perfect for relaxing strolls and enjoying the views.</p>
+            <p>For hiking, this area is a gem. It serves as a gateway to the <a href="https://www.parcoaltogarda.it/" target="_blank">Alto Garda Bresciano Park</a>, offering numerous trails of varying difficulty. A notable trek is the ascent of Monte Pizzocolo for truly breathtaking panoramic views of Lake Garda. The surrounding hills also provide excellent routes for mountain biking. Water sports such as sailing and canoeing are popular on the lake here.</p>
+            <p>The musical atmosphere in Toscolano Maderno is often tied to local festivals and seasonal events that may feature live performances; it's worth checking local schedules or the <a href="https://www.visittoscolanomaderno.info/en/" target="_blank">Toscolano Maderno tourism site</a> for any events during the stay. While the town has charming local shops, it's more geared towards a relaxed, nature-oriented visit rather than large-scale shopping. Nearby towns like Salò might offer a broader range of boutiques.</p>
+            <p>Consider a boat trip to explore other parts of Lake Garda, such as Isola del Garda. The region is also known for its olive oil and lemon groves ("limonaie"), some of which can be visited. Enjoying the local cuisine at lakeside restaurants and exploring the smaller hamlets in the hills can provide a truly authentic Italian lake experience.</p>
+        </div>
         <div class="details-section accommodation-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
@@ -357,7 +552,17 @@
             <h2>Saturday, June 21 (Depart by 08:00)</h2>
             <a href="https://www.google.com/maps/dir/Hotel+Vittoria,+Via+Benamati,+118,+Toscolano+Maderno+BS,+Italia/Budget+Autonoleggio+-+Bergamo+Aeroporto,+Via+Aeroporto,+Bergamo+BG,+Italia/data=!4m14!4m13!1m5!1m1!19sChIJr2DlSnaMgUcRxuv6oZfg4d8!2m2!1d10.6028329!2d45.6382209!1m5!1m1!19sChIJGYUjqHNQgUcR5K_4dd3kF3E!2m2!1d9.698647!2d45.665566999999996!3e0" class="route-button">Albergo Vittoria, Toscolano Maderno to Budget car hire at Bergamo Airport</a>
         </div>
-
+        
+        <button class="accordion-button">Baggage Drop-off Information (Milan Bergamo Airport - BGY)</button>
+        <div class="accordion-panel">
+            <p>For your Ryanair flight FR3394 from Milan Bergamo (BGY):</p>
+            <ul>
+                <li>Proceed to the <strong>Ground Floor</strong> of the terminal building. This is where check-in counters and self-service kiosks are generally located.</li>
+                <li>Look for the Ryanair check-in area or dedicated bag drop desks. Ryanair often requires online check-in, so these desks are primarily for baggage.</li>
+                <li>Bag drop desks typically open 2 hours before departure and close 40 minutes prior. For international flights, arriving 2-3 hours early is recommended.</li>
+                <li><strong>Key Action:</strong> Check the airport departure information screens for the specific Ryanair desk numbers.</li>
+            </ul>
+        </div>
         <div class="details-section flight-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
             <div class="details-content">
@@ -365,6 +570,8 @@
                 <p><strong>Date:</strong> Sat, 21 June 25</p>
                 <p><strong>Departure Time:</strong> 10:45 (BGY)</p>
                 <p><strong>Arrival Time:</strong> 12:50 (SDR)</p>
+                <a href="https://flightaware.com/live/flight/RYR3394" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                <p class="availability-note">(Available closer to departure)</p>
             </div>
         </div>
 
@@ -374,11 +581,17 @@
              <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">*(Transportation mode from airport not finalized)*</p>
         </div>
 
-
+        <button class="accordion-button">Exploring Near Santa Isabel de Quijas & Cantabrian Highlights</button>
+        <div class="accordion-panel">
+            <p>Santa Isabel de Quijas, located in the scenic Cantabrian countryside within the municipality of Reocín, serves as an excellent, tranquil base for exploring this verdant region of northern Spain. The immediate area is ideal for local walks, allowing for an immersion into the rural charm and rolling green hills typical of Cantabria. It's also strategically positioned for easy day trips to some of the region's most treasured historical and natural sites.</p>
+            <p>For significant sightseeing, the beautifully preserved medieval town of <a href="https://www.turismodecantabria.com/disfrutala/que-visitar/79-santillana-del-mar" target="_blank">Santillana del Mar</a> is very nearby and a must-visit. Close to Santillana, you can explore the world-renowned <a href="https://www.culturaydeporte.gob.es/museodealtamira/en/home.html" target="_blank">Altamira Museum and Neocave</a>, offering insights into Palaeolithic cave art. The historic gardens of <a href="https://www.spain.info/en/places-of-interest/puente-san-miguel-gardens/" target="_blank">Puente San Miguel</a> in Reocín itself are also worth a visit.</p>
+            <p>Hiking enthusiasts will find Santa Isabel de Quijas well-placed for accessing sections of the <a href="https://www.pilgrim.es/en/northern-way/" target="_blank">Camino del Norte</a>. Stages around Santillana del Mar or towards Comillas offer varied coastal and inland experiences. Further afield, but accessible for day trips, are the stunning coastal trails of the <a href="https://www.geoparquecostaquebrada.com/en/official-guided-tour-schedule/" target="_blank">Costa Quebrada Geological Park</a> or the unique ecosystems of the <a href="https://www.turismodecantabria.com/disfrutala/que-visitar/103-parque-natural-dunas-de-liencres-y-costa-quebrada" target="_blank">Parque Natural de las Dunas de Liencres</a>. Even a trip towards the Picos de Europa National Park, while a longer drive, could be considered for dramatic mountain scenery.</p>
+            <p>For music, while Quijas itself is small, the broader Cantabrian region has a rich tradition of folk music. Look out for local fiestas or cultural events in nearby towns like Torrelavega or the city of Santander, which might feature performances. Santander itself has venues like the <a href="https://palaciofestivales.com/" target="_blank">Palacio de Festivales de Cantabria</a> for more formal concerts. Exploring local bars in towns along the coast or inland might also yield spontaneous live music experiences. The <a href="https://turismodecantabria.com/en" target="_blank">official Cantabria tourism portal</a> is a key resource for events and regional exploration.</p>
+        </div>
         <div class="details-section accommodation-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
             <div class="details-content">
-                <p><strong>Accommodation in Spain:</strong> Annie's house</p>
+                <p><strong>Accommodation in Spain:</strong> Annie's house (Santa Isabel De Quijas)</p>
                 <p><strong>Check-in:</strong> Saturday, June 21</p>
                 <p><strong>Check-out:</strong> Friday, June 27</p>
                 <p><a href="https://www.google.com/maps/place/43%C2%B021'16.8%22N+4%C2%B007'04.3%22W/@43.35466,-4.1204266,790m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d43.35466!4d-4.1178517?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Directions to Annie's house</a></p>
@@ -386,7 +599,16 @@
             </div>
         </div>
 
-
+        <button class="accordion-button">Baggage Drop-off Information (Santander Airport - SDR)</button>
+        <div class="accordion-panel">
+            <p>For your Ryanair flight FR7153 from Santander (SDR):</p>
+            <ul>
+                <li>Proceed to the main Check-in hall, which is typically on <strong>Floor 0</strong>.</li>
+                <li>Look for the Ryanair check-in / bag drop desks. Santander is a smaller airport, so they should be relatively easy to find.</li>
+                <li>Bag drop desks usually open 2 hours before departure and close 40 minutes prior.</li>
+                <li><strong>Key Action:</strong> Confirm the specific Ryanair desk numbers on the airport departure screens.</li>
+            </ul>
+        </div>
         <div class="details-section flight-details">
              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
             <div class="details-content">
@@ -394,6 +616,8 @@
                 <p><strong>Date:</strong> Friday, 27 June 25</p>
                 <p><strong>Departure Time:</strong> 09:20 (SDR)</p>
                 <p><strong>Arrival Time:</strong> 10:20 (DUB)</p>
+                <a href="https://flightaware.com/live/flight/RYR7153" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                <p class="availability-note">(Available closer to departure)</p>
             </div>
         </div>
     </div>
@@ -402,27 +626,40 @@
         // JavaScript function to handle tab switching
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
-
-            // Get all elements with class="tab-content" and hide them
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
             }
-
-            // Get all elements with class="tab-button" and remove the "active" class
             tablinks = document.getElementsByClassName("tab-button");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
 
-        // Automatically open the first tab on page load
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementsByClassName("tab-button")[0].click();
+            // Automatically open the first tab on page load
+            if (document.getElementsByClassName("tab-button").length > 0) {
+                 document.getElementsByClassName("tab-button")[0].click();
+            }
+
+            // Accordion functionality
+            var acc = document.getElementsByClassName("accordion-button");
+            var i;
+            for (i = 0; i < acc.length; i++) {
+              acc[i].addEventListener("click", function() {
+                this.classList.toggle("active-accordion");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                  panel.style.maxHeight = null;
+                  panel.classList.remove("show-panel");
+                } else {
+                  panel.classList.add("show-panel");
+                  panel.style.maxHeight = panel.scrollHeight + "px";
+                } 
+              });
+            }
         });
     </script>
 
