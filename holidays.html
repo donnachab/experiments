@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Schedules</title>
+    <style>
+        /* Define the color palette from the CV */
+        :root {
+            --cv-bg-base: #f0fdf4;      /* Very Light Mint/Green Base (Original, not used for body) */
+            --cv-bg-main: #ffffff;      /* White Main Area */
+            --cv-bg-sidebar: #dcfce7;    /* Light Green Sidebar */
+            --cv-text-dark: #14532d;    /* Dark Green Text */
+            --cv-text-med: #166534;     /* Medium Green Text */
+            --cv-text-dim: #15803d;     /* Dimmer Green Text */
+            --cv-accent: #22c55e;       /* Bright Green Accent */
+            --cv-accent-hover: #16a34a; /* Darker Green Accent */
+            --cv-border: #86efac;      /* Light Green Border */
+            --cv-shadow: rgba(34, 197, 94, 0.15); /* Shadow color based on accent */
+        }
+
+        /* Basic styling for the body using a white background color */
+        body {
+            font-family: 'Roboto', sans-serif; /* Using a common, readable sans-serif font */
+            margin: 0; /* Remove default margin */
+            padding: 20px 10px; /* Add padding for content */
+            background-color: var(--cv-bg-main); /* White background */
+            color: var(--cv-text-med); /* Medium Green for primary text */
+            min-height: 100vh; /* Ensure the background covers at least the full viewport height */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+
+        /* Import Roboto font */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        h1 {
+            text-align: center;
+            color: var(--cv-text-dark); /* Dark Green for the heading */
+            text-shadow: none; /* Remove text shadow */
+            margin-bottom: 30px; /* Space below the heading */
+            font-family: 'Roboto', sans-serif; /* Consistent font for heading */
+            font-weight: 700; /* Bold heading */
+        }
+
+        /* Styling for the tab container */
+        .tab-container {
+            display: flex; /* Use flexbox to align tabs horizontally */
+            margin-bottom: 20px; /* Space below the tabs */
+            border-bottom: 1px solid var(--cv-border); /* Light Green line below tabs */
+            flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+        }
+
+        /* Styling for the tab buttons */
+        .tab-button {
+            flex-grow: 1; /* Allow buttons to grow and fill the space */
+            padding: 10px 15px;
+            background-color: var(--cv-bg-sidebar); /* Light Green background */
+            color: var(--cv-text-dark); /* Dark Green text */
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 15px; /* Slightly smaller font */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-align: center;
+            border-radius: 5px 5px 0 0; /* Rounded top corners */
+            margin-right: 3px; /* Reduced space between buttons */
+            font-weight: bold;
+            margin-bottom: -1px; /* Pull button down slightly to overlap border */
+        }
+
+        .tab-button:last-child {
+             margin-right: 0; /* No margin on the last button */
+        }
+
+        /* Styling for the active tab button */
+        .tab-button.active {
+            background-color: var(--cv-bg-main); /* White background for active tab */
+            color: var(--cv-text-dark); /* Dark Green text */
+            border-top: 2px solid var(--cv-accent); /* Bright Green top border for active tab */
+            border-left: 1px solid var(--cv-border); /* Light Green border */
+            border-right: 1px solid var(--cv-border); /* Light Green border */
+            border-bottom: 1px solid var(--cv-bg-main); /* Match active background to hide container border */
+        }
+
+         .tab-button:hover:not(.active) {
+             background-color: var(--cv-border); /* Light Green on hover for inactive tabs */
+             color: var(--cv-text-dark); /* Dark Green text on hover */
+         }
+
+
+        /* Styling for the card container */
+        .route-card {
+            background-color: var(--cv-bg-main); /* White background for the card */
+            border-radius: 8px; /* More rounded corners */
+            padding: 15px; /* Padding inside the card */
+            margin-bottom: 15px; /* Space between cards */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Subtle box shadow */
+            border: 1px solid var(--cv-border); /* Light Green border */
+        }
+
+        /* Styling for the date heading within the card */
+        .route-card h2 {
+            margin-top: 0; /* Remove top margin */
+            margin-bottom: 10px; /* Space below the heading */
+            color: var(--cv-text-dark); /* Dark Green text for the heading */
+            font-size: 17px; /* Slightly larger font for the heading */
+            text-align: left; /* Align heading left */
+            border-bottom: 1px solid var(--cv-border); /* Add a subtle line below the heading */
+            padding-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* Styling for the route buttons inside the card */
+        .route-button {
+            display: block; /* Make the link a block element to take full width */
+            width: 100%; /* Full width of its container */
+            padding: 12px 10px; /* Slightly less padding inside the button */
+            background-color: var(--cv-accent); /* Bright Green for button */
+            color: var(--cv-bg-main); /* White text for contrast - IMPROVED CONTRAST */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline from the link */
+            border-radius: 6px; /* Rounded corners for the button */
+            font-size: 15px; /* Font size */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* Subtle box shadow for the button */
+            border: none; /* Remove border from the button */
+            font-weight: bold; /* Bold text for readability */
+            line-height: 1.4; /* Add some space between lines */
+            margin-top: 10px; /* Space above the button */
+        }
+
+        /* Hover effect for the buttons */
+        .route-button:hover {
+            background-color: var(--cv-accent-hover); /* Darker Green on hover */
+            color: var(--cv-bg-main); /* White text on hover - IMPROVED CONTRAST */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12); /* Slightly larger shadow on hover */
+        }
+
+         /* Active state for the buttons (when clicked) */
+        .route-button:active {
+            background-color: var(--cv-text-dark); /* Dark Green when active */
+            color: var(--cv-bg-main); /* White text when active - Already good contrast */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Smaller shadow when active */
+        }
+
+        /* Styling for the details sections (flight and hotel) */
+        .details-section {
+            border-radius: 8px; /* Rounded corners */
+            padding: 15px; /* Padding */
+            margin-bottom: 15px; /* Space below */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Very subtle shadow */
+            border: 1px solid var(--cv-border); /* Light Green border */
+            text-align: left; /* Align text left */
+            font-weight: normal; /* Normal font weight */
+            font-size: 14px; /* Smaller font size for details */
+            display: flex; /* Use flexbox for icon and text */
+            align-items: flex-start; /* Align items to the top */
+        }
+
+         /* Specific styling for flight details section */
+        .flight-details {
+            background-color: var(--cv-bg-sidebar); /* Light Green background for flights */
+            color: var(--cv-text-dark); /* Dark Green text for flights */
+        }
+
+        /* Specific styling for accommodation details section */
+        .accommodation-details {
+             background-color: var(--cv-bg-main); /* White background for accommodation */
+             color: var(--cv-text-dark); /* Dark Green text for accommodation */
+        }
+
+
+         .details-section .icon {
+             margin-right: 10px; /* Space between icon and text */
+             flex-shrink: 0; /* Prevent icon from shrinking */
+             width: 24px; /* Icon width */
+             height: 24px; /* Icon height */
+             fill: var(--cv-text-dark); /* Set icon color to dark green */
+         }
+
+         .details-section .details-content {
+             flex-grow: 1; /* Allow content to take up remaining space */
+         }
+
+
+         .details-section p {
+             margin: 3px 0; /* Less space between paragraphs */
+         }
+
+         .details-section p strong {
+             color: var(--cv-text-dark); /* Dark Green for labels */
+             margin-right: 5px; /* Space after label */
+         }
+
+         /* Styling for links within details sections */
+         .details-section a {
+             color: var(--cv-text-dark); /* Dark Green for links */
+             text-decoration: none; /* Remove underline */
+             transition: color 0.2s ease;
+         }
+
+         .details-section a:hover {
+             color: var(--cv-accent); /* Bright Green on hover */
+             text-decoration: underline; /* Underline on hover */
+         }
+
+
+         /* Styling for tab content areas */
+         .tab-content {
+             display: none; /* Hide tab content by default */
+             padding-top: 10px; /* Space above content */
+         }
+
+         /* Styling for the active tab content */
+         .tab-content.active {
+             display: block; /* Display active tab content */
+         }
+    </style>
+</head>
+<body>
+
+    <h1>Trip Schedules</h1>
+
+    <div class="tab-container">
+        <button class="tab-button active" onclick="openTab(event, 'DeirdreHannah')">Deirdre & Hannah</button>
+        <button class="tab-button" onclick="openTab(event, 'Donnacha')">Donnacha</button>
+    </div>
+
+    <div id="DeirdreHannah" class="tab-content active">
+        <div class="details-section flight-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
+            <div class="details-content">
+                <p><strong>Flight Arrival:</strong> FR 2959 Marseille to Venice Treviso</p>
+                <p><strong>Date:</strong> Sunday, 15 June 25</p>
+                <p><strong>Arrival Time:</strong> 15:15 (TSF)</p>
+            </div>
+        </div>
+
+         <div class="route-card">
+            <h2>Sunday, June 15 (Depart by 15:45)</h2>
+            <a href="https://www.google.com/maps/dir/Treviso+Airport,+Treviso,+Province+of+Treviso,+Italy/Peschiera+del+Garda,+VR,+Italy/data=!4m14!4m13!1m5!1m1!19sChIJD650C0Q2eUcR8pY1kRdlcP4!2m2!1d12.1944795!2d45.6498881!1m5!1m1!19sChIJoaAFNNXrgUcRlhb1HRKBrkY!2m2!1d10.686843999999999!2d45.439648299999995!3e0" class="route-button">Treviso Airport to ApartHotel in Peschiera del Garda</a>
+        </div>
+
+        <div class="details-section accommodation-details">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
+            <div class="details-content">
+                <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
+                <p><strong>Check-in:</strong> Sunday, June 15</p>
+                <p><strong>Check-out:</strong> Wednesday, June 18</p>
+                <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details</a></p>
+            </div>
+        </div>
+
+        <div class="details-section flight-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
+            <div class="details-content">
+                <p><strong>Flight Departure:</strong> FR830 Venice Marco Polo to Dublin</p>
+                <p><strong>Date:</strong> Friday, 20 June 25</p>
+                <p><strong>Departure Time:</strong> 14:20 (VCE)</p>
+                <p><strong>Arrival Time:</strong> 16:30 (DUB)</p>
+            </div>
+        </div>
+        </div>
+
+    <div id="Donnacha" class="tab-content">
+        <div class="details-section flight-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
+            <div class="details-content">
+                <p><strong>Your Flight Arrival:</strong> FR 831 Dublin to Venice (Marco Polo)</p>
+                <p><strong>Date:</strong> Fri, 13 June 25</p>
+                <p><strong>Arrival Time:</strong> 14:25 (VCE)</p>
+            </div>
+        </div>
+
+         <div class="route-card">
+            <h2>Friday, June 13 (Approx. 15:45)</h2>
+            <a href="https://www.google.com/maps/dir/Budget+Car+Rental,+Multip+P1+Iii+P,+Viale+Luigi+Broglio,+30100+Venezia+VE,+Italy/Hotel+Terme+Patria,+Viale+delle+Terme,+56,+35031+Abano+Terme+PD,+Italy/@45.4746734,11.8981429,48775m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x477eb2f0caf3d22d:0x61e29f4f3b5cfea4!2m2!1d12.3384613!2d45.5066471!1m5!1m1!1s0x477edec69e346ffd:0xc0f6caa7b9124fbb!2m2!1d11.7853382!2d45.3561794!3e0?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" class="route-button">Budget car hire at Marco Polo Airport to Hotel Terme Patria, Padova</a>
+        </div>
+
+        <div class="details-section accommodation-details">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
+            <div class="details-content">
+                <p><strong>Hotel Terme Patria, Padova Stay:</strong></p>
+                <p><strong>Check-in:</strong> Friday, June 13</p>
+                <p><strong>Check-out:</strong> Sunday, June 15</p>
+                <p><strong>Confirmation Number:</strong> 4836897931</p>
+                <p><strong>PIN Code:</strong> 8758</p>
+                <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92423&aid=304142&auth_key=eyi9frUcn1LUH0oV&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
+            </div>
+        </div>
+
+        <div class="route-card">
+            <h2>Sunday, June 15 (Depart by 14:05)</h2>
+            <a href="https://www.google.com/maps/dir/Hotel+Terme+Patria,+Viale+delle+Terme,+56,+Abano+Terme+PD,+Italy/Treviso+Airport,+Treviso,+Province+of+Treviso,+Italy/data=!4m14!4m13!1m5!1m1!19sChIJ_W80nsbefkcRu08SuafK9sA!2m2!1d11.785274999999999!2d45.356139899999995!1m5!1m1!19sChIJD650C0Q2eUcR8pY1kRdlcP4!2m2!1d12.1944795!2d45.6498881!3e0" class="route-button">Hotel Terme Patria, Padova to Treviso Airport (To collect Deirdre and Hannah)</a>
+        </div>
+
+        <div class="route-card">
+            <h2>Sunday, June 15 (Depart by 15:45)</h2>
+            <a href="https://www.google.com/maps/dir/Treviso+Airport,+Treviso,+Province+of+Treviso,+Italy/Peschiera+del+Garda,+VR,+Italy/data=!4m14!4m13!1m5!1m1!19sChIJD650C0Q2eUcR8pY1kRdlcP4!2m2!1d12.1944795!2d45.6498881!1m5!1m1!19sChIJoaAFNNXrgUcRlhb1HRKBrkY!2m2!1d10.686843999999999!2d45.439648299999995!3e0" class="route-button">Treviso Airport to ApartHotel in Peschiera del Garda</a>
+        </div>
+
+        <div class="details-section accommodation-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
+            <div class="details-content">
+                <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
+                <p><strong>Check-in:</strong> Sunday, June 15</p>
+                <p><strong>Check-out:</strong> Wednesday, June 18</p>
+                <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details</a></p>
+            </div>
+        </div>
+
+
+        <div class="route-card">
+            <h2>Wednesday, June 18</h2>
+            <a href="https://www.google.com/maps/dir/Aurora+Aparthotel,+Via+Porto+Vecchio,+10,+Peschiera+del+Garda+VR,+Italia/Hotel+Vittoria,+Via+Benamati,+118,+Toscolano+Maderno+BS,+Italia/data=!4m14!4m13!1m5!1m1!19sChIJaeS3XJvpgUcRtx083gJqJoE!2m2!1d10.698865399999999!2d45.4334341!1m5!1m1!19sChIJr2DlSnaMgUcRxuv6oZfg4d8!2m2!1d10.6028329!2d45.6382209!3e0" class="route-button">ApartHotel in Peschiera del Garda to Albergo Vittoria, Toscolano Maderno</a>
+        </div>
+
+        <div class="details-section accommodation-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
+            <div class="details-content">
+                <p><strong>Albergo Vittoria, Toscolano Maderno Stay:</strong></p>
+                <p><strong>Check-in:</strong> Wednesday, June 18</p>
+                <p><strong>Check-out:</strong> Saturday, June 21</p>
+                <p><strong>Confirmation Number:</strong> 4656141419</p>
+                <p><strong>PIN Code:</strong> 7373</p>
+                <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92423&aid=304142&auth_key=HbPRZNESFwvMB8Lw&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
+            </div>
+        </div>
+
+
+        <div class="route-card">
+            <h2>Saturday, June 21 (Depart by 08:00)</h2>
+            <a href="https://www.google.com/maps/dir/Hotel+Vittoria,+Via+Benamati,+118,+Toscolano+Maderno+BS,+Italia/Budget+Autonoleggio+-+Bergamo+Aeroporto,+Via+Aeroporto,+Bergamo+BG,+Italia/data=!4m14!4m13!1m5!1m1!19sChIJr2DlSnaMgUcRxuv6oZfg4d8!2m2!1d10.6028329!2d45.6382209!1m5!1m1!19sChIJGYUjqHNQgUcR5K_4dd3kF3E!2m2!1d9.698647!2d45.665566999999996!3e0" class="route-button">Albergo Vittoria, Toscolano Maderno to Budget car hire at Bergamo Airport</a>
+        </div>
+
+        <div class="details-section flight-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
+            <div class="details-content">
+                <p><strong>Your Flight Departure:</strong> FR3394 Milan (Bergamo) to Santander</p>
+                <p><strong>Date:</strong> Sat, 21 June 25</p>
+                <p><strong>Departure Time:</strong> 10:45 (BGY)</p>
+                <p><strong>Arrival Time:</strong> 12:50 (SDR)</p>
+            </div>
+        </div>
+
+        <div class="route-card">
+             <h2>Saturday, June 21 (Approx. 13:30)</h2>
+             <a href="https://www.google.com/maps/place/43%C2%B021'16.8%22N+4%C2%B007'04.3%22W/@43.35466,-4.1204266,790m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d43.35466!4d-4.1178517?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" class="route-button">Santander Airport to Annie's house</a>
+             <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">*(Transportation mode from airport not finalized)*</p>
+        </div>
+
+
+        <div class="details-section accommodation-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
+            <div class="details-content">
+                <p><strong>Accommodation in Spain:</strong> Annie's house</p>
+                <p><strong>Check-in:</strong> Saturday, June 21</p>
+                <p><strong>Check-out:</strong> Friday, June 27</p>
+                <p><a href="https://www.google.com/maps/place/43%C2%B021'16.8%22N+4%C2%B007'04.3%22W/@43.35466,-4.1204266,790m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d43.35466!4d-4.1178517?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Directions to Annie's house</a></p>
+                <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">Duration of stay to be decided and accommodation elsewhere booked for some nights (Camino).</p>
+            </div>
+        </div>
+
+
+        <div class="details-section flight-details">
+             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
+            <div class="details-content">
+                <p><strong>Your Flight Departure:</strong> FR7153 Santander to Dublin</p>
+                <p><strong>Date:</strong> Friday, 27 June 25</p>
+                <p><strong>Departure Time:</strong> 09:20 (SDR)</p>
+                <p><strong>Arrival Time:</strong> 10:20 (DUB)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript function to handle tab switching
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tab-content" and hide them
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tab-button" and remove the "active" class
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Automatically open the first tab on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementsByClassName("tab-button")[0].click();
+        });
+    </script>
+
+</body>
+</html>
