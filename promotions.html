@@ -179,7 +179,6 @@
         }
 
         function initClient() {
-            // Ensure API_KEY and CLIENT_ID are not the placeholder values
             if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
                 const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script.";
                 console.error(errorMsg);
@@ -207,8 +206,6 @@
                 } else {
                     document.getElementById('selectedFilesDisplay').textContent = 'No images selected. Google services ready.';
                 }
-
-
             }).catch(error => {
                 console.error("Error initializing Google API client:", error);
                 const userFriendlyError = "Error: Could not initialize Google services. This might be due to incorrect API Key/Client ID, APIs not enabled in Google Cloud Console, or the web page not being served from an authorized origin (like localhost or your GitHub Pages site). Please check your setup.";
@@ -222,7 +219,7 @@
             const photosButton = document.getElementById('googlePhotosButton');
             const filesDisplay = document.getElementById('selectedFilesDisplay');
             if (isSignedIn) {
-                oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token; // Ensure to get fresh token
+                oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token;
                 driveButton.disabled = false;
                 photosButton.disabled = false;
                 if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
@@ -258,11 +255,9 @@
             createPickerView(type);
         }
 
-
         function createPickerView(type) {
             let view;
             let title = 'Select Images';
-
             if (type === 'drive') {
                 title = 'Select an image from Google Drive';
                 view = new google.picker.View(google.picker.ViewId.DOCS);
@@ -271,10 +266,7 @@
                 title = 'Select from Google Photos';
                 view = new google.picker.View(google.picker.ViewId.PHOTOS);
                 view.setMimeTypes("image/png,image/jpeg,image/jpg,image/gif");
-            } else {
-                console.error("Unknown picker type:", type);
-                return;
-            }
+            } else { console.error("Unknown picker type:", type); return; }
 
             const picker = new google.picker.PickerBuilder()
                 .enableFeature(google.picker.Feature.NAV_HIDDEN) 
@@ -298,12 +290,9 @@
                         imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
                         if (imageUrl) imageUrl = imageUrl.replace(/=s\d+$/, '=s0'); 
                     }
-                    
-                    if (imageUrl) {
-                        if (!selectedImageUrls.includes(imageUrl)) {
-                             selectedImageUrls.push(imageUrl);
-                        }
-                    } else {
+                    if (imageUrl && !selectedImageUrls.includes(imageUrl)) {
+                        selectedImageUrls.push(imageUrl);
+                    } else if (!imageUrl) {
                         console.warn("Could not get a usable image URL from picker for doc:", doc);
                     }
                 });
@@ -317,24 +306,18 @@
             const localFiles = Array.from(document.getElementById('imageFiles').files);
             const display = document.getElementById('selectedFilesDisplay');
             let fileNames = [];
-
             localFiles.forEach(file => fileNames.push(`Local: ${file.name.substring(0,20)}...`));
-            
             const validSelectedImageUrls = selectedImageUrls.filter(url => url);
-
             validSelectedImageUrls.forEach((url, index) => {
                 let name = `Cloud Image ${index + 1}`;
                 try {
                     const urlObj = new URL(url);
                     const pathParts = urlObj.pathname.split('/');
                     const potentialName = pathParts[pathParts.length -1];
-                    if (potentialName && potentialName.length > 3) { 
-                         name = potentialName;
-                    }
+                    if (potentialName && potentialName.length > 3) { name = potentialName; }
                 } catch (e) { /* ignore */ }
                 fileNames.push(`Cloud: ${name.substring(0,30)}...`);
             });
-            
             if (fileNames.length > 0) {
                 display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join('; ')}`;
             } else {
@@ -346,10 +329,8 @@
             }
         }
 
-
         document.addEventListener('DOMContentLoaded', function() {
             handleClientLoad(); 
-
             const today = new Date();
             let nextWednesday = new Date(today);
             nextWednesday.setDate(today.getDate() + (3 - today.getDay() + 7) % 7); 
@@ -362,13 +343,8 @@
             const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
             const dd = String(nextWednesday.getDate()).padStart(2, '0');
             document.getElementById('eventDate').value = `${yyyy}-${mm}-${dd}`;
-            
             document.getElementById('features').value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
-
-            const imageFilesInput = document.getElementById('imageFiles');
-            imageFilesInput.addEventListener('change', () => {
-                updateSelectedFilesDisplay();
-            });
+            document.getElementById('imageFiles').addEventListener('change', updateSelectedFilesDisplay);
         });
 
         function formatDate(dateStr) { 
@@ -376,20 +352,10 @@
             try {
                 const dateObj = new Date(dateStr + 'T00:00:00');
                 return dateObj.toLocaleDateString('en-IE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            } catch (e) {
-                console.error("Error formatting date:", e);
-                return dateStr;
-            }
+            } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
 
         async function generatePromotions() {
-            // Ensure API Key and Client ID are not placeholders before generating
-            if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
-                // This check is important, but since your actual keys are now in the code,
-                // we can assume they are correct if the initClient didn't throw an alert.
-                // However, if you were to copy this code elsewhere, this check would be vital.
-            }
-
             const details = {
                 eventName: document.getElementById('eventName').value || "Galway Jam Circle",
                 venue: document.getElementById('venue').value || "A Friendly Pub",
@@ -407,7 +373,6 @@
             const localImageFiles = document.getElementById('imageFiles').files;
             const localImagePromises = [];
             const maxCollageImages = 6; 
-            
             for (let i = 0; i < localImageFiles.length; i++) {
                 const file = localImageFiles[i];
                 localImagePromises.push(new Promise((resolve, reject) => {
@@ -417,20 +382,15 @@
                     reader.readAsDataURL(file);
                 }));
             }
-
             let localImageDataUrls = [];
-            try {
-                localImageDataUrls = await Promise.all(localImagePromises);
-            } catch (error) {
-                console.error("Error reading local image files:", error);
-            }
+            try { localImageDataUrls = await Promise.all(localImagePromises); } 
+            catch (error) { console.error("Error reading local image files:", error); }
 
             const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])]; 
             const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
 
             let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
             const defaultEventNamePlaceholder = encodeURIComponent(details.eventName.substring(0,25).replace(/\s+/g, '+'));
-            
             if (!posterPrimaryImageUrlForSocial) { 
                  posterPrimaryImageUrlForSocial = `https://placehold.co/800x600/4B0082/FFFFFF?text=${defaultEventNamePlaceholder}&font=montserrat`;
             }
@@ -467,19 +427,15 @@
                 <footer class="poster-footer" style="padding-top: 1rem;">
                     <p>Bring your instruments, voice, or just come to listen!</p>
                     ${details.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${details.contact_info}</p>` : ''}
-                </footer>
-            `;
+                </footer>`;
             document.getElementById('posterContainerContent').innerHTML = posterHtml;
 
             const socialMediaContentEl = document.getElementById('socialMediaContent');
             socialMediaContentEl.innerHTML = ''; 
-
             const imageCopyInstructions = "<strong>To use images:</strong> For the poster, take a screenshot. For social media, upload your chosen image(s) directly. You can right-click/long-press on individual images in the collage preview to save them.";
             const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(details.venue || "GalwayVenue").replace(/\s+/g, "")}`;
-            
             const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
 
-            // Corrected template literals for social media text
             const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${f}`).join("\n");
             const instagramText = `🎸 **${details.eventName} is ON!** 🥁
 
@@ -493,15 +449,14 @@ ${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
 💰 **Entry:** ${details.ticket_info}
 
 Bring your friends, instruments, and good energy! ✨
-${commonHashtags}`.trim();
+${commonHashtags}`;
              socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Instagram Post:</h4>
                     <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${instagramText}</div>
+                    <div class="social-output-text">${instagramText.trim()}</div>
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
-                </div>
-            `;
+                </div>`;
             
             const featuresBulletsFb = details.features.map(f => `✔️ ${f}`).join("\n");
             const facebookText = `🎉 **${details.eventName} - Join the Jam!** 🎉
@@ -518,16 +473,15 @@ ${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
 
 ${details.contact_info ? `For more info, contact: ${details.contact_info}\n` : ''}
 Share with your music-loving friends! Let's make some noise! 🎶
-${commonHashtags}`.trim();
+${commonHashtags}`;
 
             socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Facebook Post:</h4>
                     <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${facebookText}</div>
+                    <div class="social-output-text">${facebookText.trim()}</div>
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
-                </div>
-            `;
+                </div>`;
             
             const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
             const twitterText = `Jammin' in Galway! 🎶
@@ -536,16 +490,15 @@ ${commonHashtags}`.trim();
 📍 ${details.venue}
 📅 ${details.date_str}, ${details.time_str}
 Entry: ${details.ticket_info}
-${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`.trim();
+${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
 
             socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Twitter (X) Post:</h4>
                     <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${twitterText}</div>
+                    <div class="social-output-text">${twitterText.trim()}</div>
                      <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
-                </div>
-            `;
+                </div>`;
             selectedImageUrls = []; 
         }
     </script>
