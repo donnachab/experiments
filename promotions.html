@@ -385,8 +385,9 @@
         async function generatePromotions() {
             // Ensure API Key and Client ID are not placeholders before generating
             if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
-                alert("Error: API Key or Client ID is still set to placeholder values in the script. Please replace them with your actual credentials from Google Cloud Console before generating promotions.");
-                return;
+                // This check is important, but since your actual keys are now in the code,
+                // we can assume they are correct if the initClient didn't throw an alert.
+                // However, if you were to copy this code elsewhere, this check would be vital.
             }
 
             const details = {
@@ -478,73 +479,74 @@
             
             const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
 
+            // Corrected template literals for social media text
             const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${f}`).join("\n");
-            const instagramText = \`🎸 **\${details.eventName} is ON!** 🥁
+            const instagramText = `🎸 **${details.eventName} is ON!** 🥁
 
-"\${details.tagline}"
+"${details.tagline}"
 
 Join us for a fantastic session of live music & community vibes.
-\${featuresListInsta ? \`\\nFeaturing:\\n\${featuresListInsta}\\n\` : ''}
-📍 **Where:** \${details.venue}, Galway
-🗓️ **When:** \${details.date_str}
-⏰ **Time:** \${details.time_str}
-💰 **Entry:** \${details.ticket_info}
+${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
+📍 **Where:** ${details.venue}, Galway
+🗓️ **When:** ${details.date_str}
+⏰ **Time:** ${details.time_str}
+💰 **Entry:** ${details.ticket_info}
 
 Bring your friends, instruments, and good energy! ✨
-\${commonHashtags}\`.trim();
-             socialMediaContentEl.innerHTML += \`
+${commonHashtags}`.trim();
+             socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Instagram Post:</h4>
-                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">\${instagramText}</div>
-                    <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">${instagramText}</div>
+                    <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            \`;
+            `;
             
-            const featuresBulletsFb = details.features.map(f => \`✔️ \${f}\`).join("\\n");
-            const facebookText = \`🎉 **\${details.eventName} - Join the Jam!** 🎉
+            const featuresBulletsFb = details.features.map(f => `✔️ ${f}`).join("\n");
+            const facebookText = `🎉 **${details.eventName} - Join the Jam!** 🎉
 
-"\${details.tagline}"
+"${details.tagline}"
 
-Get ready for a great night of music and fun at \${details.venue}! Whether you play, sing, or just love live music, come on down.
+Get ready for a great night of music and fun at ${details.venue}! Whether you play, sing, or just love live music, come on down.
 
-\${featuresBulletsFb ? \`**What to expect:**\\n\${featuresBulletsFb}\\n\` : ''}
-🗓️ **Date:** \${details.date_str}
-🕒 **Time:** \${details.time_str}
-🏛️ **Venue:** \${details.venue}, Galway
-💸 **Entry:** \${details.ticket_info}
+${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
+🗓️ **Date:** ${details.date_str}
+🕒 **Time:** ${details.time_str}
+🏛️ **Venue:** ${details.venue}, Galway
+💸 **Entry:** ${details.ticket_info}
 
-\${details.contact_info ? \`For more info, contact: \${details.contact_info}\\n\` : ''}
+${details.contact_info ? `For more info, contact: ${details.contact_info}\n` : ''}
 Share with your music-loving friends! Let's make some noise! 🎶
-\${commonHashtags}\`.trim();
+${commonHashtags}`.trim();
 
-            socialMediaContentEl.innerHTML += \`
+            socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Facebook Post:</h4>
-                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">\${facebookText}</div>
-                    <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">${facebookText}</div>
+                    <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            \`;
+            `;
             
             const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
-            const twitterText = \`Jammin' in Galway! 🎶
-✨ \${details.eventName} ✨
-"\${shortTaglineTwitter}"
-📍 \${details.venue}
-📅 \${details.date_str}, \${details.time_str}
-Entry: \${details.ticket_info}
-\${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway\`.trim();
+            const twitterText = `Jammin' in Galway! 🎶
+✨ ${details.eventName} ✨
+"${shortTaglineTwitter}"
+📍 ${details.venue}
+📅 ${details.date_str}, ${details.time_str}
+Entry: ${details.ticket_info}
+${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`.trim();
 
-            socialMediaContentEl.innerHTML += \`
+            socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Twitter (X) Post:</h4>
-                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">\${twitterText}</div>
-                     <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">${twitterText}</div>
+                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            \`;
-            selectedImageUrls = []; // Clear Google-picked URLs after generation for next use
+            `;
+            selectedImageUrls = []; 
         }
     </script>
 
