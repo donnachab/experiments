@@ -188,7 +188,6 @@
                 const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script if you haven't already.";
                 console.error(errorMsg);
                 document.getElementById('selectedFilesDisplay').textContent = errorMsg;
-                // alert(errorMsg); // Commenting out alert as it might be annoying if user intentionally left placeholders
                 return;
             }
 
@@ -212,13 +211,13 @@
                     } else {
                         document.getElementById('selectedFilesDisplay').textContent = 'No images selected. Google services ready.';
                     }
-                }).catch(error => { // Catch errors from gapi.client.init() promise
+                }).catch(error => { 
                     console.error("Error initializing Google API client (promise catch):", error);
                     const userFriendlyError = "Error: Could not initialize Google services. This might be due to incorrect API Key/Client ID, APIs not enabled in Google Cloud Console, or the web page not being served from an authorized origin (like localhost or your GitHub Pages site). Please check your setup.";
                     document.getElementById('selectedFilesDisplay').textContent = userFriendlyError;
                     alert(userFriendlyError);
                 });
-            } catch (error) { // Catch synchronous errors if gapi.client.init itself throws
+            } catch (error) { 
                  console.error("Synchronous error during Google API client initialization:", error);
                  alert("A critical error occurred initializing Google services. Check console.");
             }
@@ -378,18 +377,26 @@
             } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
 
+        // Function to escape backticks for safe HTML injection within template literals
+        function escapeBackticks(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/`/g, '\\`');
+        }
+
         async function generatePromotions() {
             const details = {
-                eventName: document.getElementById('eventName').value || "Galway Jam Circle",
-                venue: document.getElementById('venue').value || "A Friendly Pub",
-                date_str_input: document.getElementById('eventDate').value,
-                time_str: document.getElementById('eventTime').value || "8 PM",
-                tagline: document.getElementById('tagline').value || "Join us for a night of music!",
-                features_raw: document.getElementById('features').value,
-                ticket_info: document.getElementById('ticketInfo').value || "Free Entry",
-                contact_info: document.getElementById('contactInfo').value
+                eventName: escapeBackticks(document.getElementById('eventName').value || "Galway Jam Circle"),
+                venue: escapeBackticks(document.getElementById('venue').value || "A Friendly Pub"),
+                date_str_input: document.getElementById('eventDate').value, // Date input doesn't need escaping
+                time_str: escapeBackticks(document.getElementById('eventTime').value || "8 PM"),
+                tagline: escapeBackticks(document.getElementById('tagline').value || "Join us for a night of music!"),
+                features_raw: escapeBackticks(document.getElementById('features').value), // Raw features string
+                ticket_info: escapeBackticks(document.getElementById('ticketInfo').value || "Free Entry"),
+                contact_info: escapeBackticks(document.getElementById('contactInfo').value)
             };
             details.date_str = formatDate(details.date_str_input);
+            
+            // Process features after escaping the raw string
             const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
             details.features = featuresArray.length > 0 ? featuresArray : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
             
@@ -459,7 +466,7 @@
             const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(details.venue || "GalwayVenue").replace(/\s+/g, "")}`;
             const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
 
-            const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${f}`).join("\n");
+            const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${escapeBackticks(f)}`).join("\n"); // Escape features too
             const instagramText = `🎸 **${details.eventName} is ON!** 🥁
 
 "${details.tagline}"
@@ -481,7 +488,7 @@ ${commonHashtags}`;
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
             
-            const featuresBulletsFb = details.features.map(f => `✔️ ${f}`).join("\n");
+            const featuresBulletsFb = details.features.map(f => `✔️ ${escapeBackticks(f)}`).join("\n"); // Escape features
             const facebookText = `🎉 **${details.eventName} - Join the Jam!** 🎉
 
 "${details.tagline}"
@@ -506,7 +513,7 @@ ${commonHashtags}`;
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
             
-            const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
+            const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline; // Tagline already escaped
             const twitterText = `Jammin' in Galway! 🎶
 ✨ ${details.eventName} ✨
 "${shortTaglineTwitter}"
