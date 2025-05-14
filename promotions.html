@@ -18,8 +18,8 @@
             --color-dark-text: rgb(33, 37, 41);
             --color-grey-text: rgb(108, 117, 125);
             --color-input-border: rgb(206, 212, 218);
-            --color-google-blue: #4285F4; /* Google's Blue */
-            --color-google-red: #DB4437; /* Google's Red */
+            --color-google-blue: #4285F4; 
+            --color-google-red: #DB4437; 
         }
 
         body {
@@ -120,9 +120,9 @@
                     <div>
                         <label>Upload Images:</label>
                         <input type="file" id="imageFiles" name="imageFiles" multiple accept="image/*" style="margin-bottom: 0.5rem;">
-                        <button type="button" id="googleDriveButton" class="button-base google-drive-button">Select from Google Drive</button>
-                        <button type="button" id="googlePhotosButton" class="button-base google-photos-button">Select from Google Photos</button>
-                        <div id="selectedFilesDisplay">No images selected.</div>
+                        <button type="button" id="googleDriveButton" class="button-base google-drive-button" disabled>Select from Google Drive</button>
+                        <button type="button" id="googlePhotosButton" class="button-base google-photos-button" disabled>Select from Google Photos</button>
+                        <div id="selectedFilesDisplay">No images selected. (Google buttons will enable after API loads & you sign in)</div>
                     </div>
 
                     <div>
@@ -161,13 +161,13 @@
 
     <script>
         // --- USER CONFIGURATION REQUIRED ---
-        // TODO: Replace with your own API Key and Client ID from Google Cloud Console
-        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Replace this!
-        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; // Replace this!
+        // Your provided credentials have been inserted below:
+        const API_KEY = 'AIzaSyA2_4BP7Qv6JYIONCg2KJ6upr2VbaNojkw'; 
+        const CLIENT_ID = '786809892671-cpohg98fo9vuf75756qgp0lc4laq43ka.apps.googleusercontent.com'; 
         // --- END USER CONFIGURATION ---
 
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
-        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; // Note: Picker might not directly use Photos API scope in the same way.
+        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
         
         let gapiLoaded = false;
         let pickerApiLoaded = false;
@@ -179,43 +179,62 @@
         }
 
         function initClient() {
+            // Ensure API_KEY and CLIENT_ID are not the placeholder values
+            if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+                const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script.";
+                console.error(errorMsg);
+                document.getElementById('selectedFilesDisplay').textContent = errorMsg;
+                alert(errorMsg);
+                return;
+            }
+
             gapi.client.init({
                 apiKey: API_KEY,
                 clientId: CLIENT_ID,
-                scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, // Request both scopes
+                scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
                 discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
             }).then(() => {
                 gapiLoaded = true;
-                pickerApiLoaded = true; // Picker is loaded as part of 'client:auth2:picker'
+                pickerApiLoaded = true; 
 
-                // Listen for sign-in state changes.
                 gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                // Handle the initial sign-in state.
                 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
                 document.getElementById('googleDriveButton').onclick = () => createPicker('drive');
                 document.getElementById('googlePhotosButton').onclick = () => createPicker('photos');
+                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    document.getElementById('selectedFilesDisplay').textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
+                } else {
+                    document.getElementById('selectedFilesDisplay').textContent = 'No images selected. Google services ready.';
+                }
+
 
             }).catch(error => {
                 console.error("Error initializing Google API client:", error);
-                alert("Could not initialize Google services. Please ensure API Key and Client ID are correct and APIs are enabled.");
+                const userFriendlyError = "Error: Could not initialize Google services. This might be due to incorrect API Key/Client ID, APIs not enabled in Google Cloud Console, or the web page not being served from an authorized origin (like localhost or your GitHub Pages site). Please check your setup.";
+                document.getElementById('selectedFilesDisplay').textContent = userFriendlyError;
+                alert(userFriendlyError);
             });
         }
 
         function updateSigninStatus(isSignedIn) {
             const driveButton = document.getElementById('googleDriveButton');
             const photosButton = document.getElementById('googlePhotosButton');
+            const filesDisplay = document.getElementById('selectedFilesDisplay');
             if (isSignedIn) {
-                oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+                oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token; // Ensure to get fresh token
                 driveButton.disabled = false;
                 photosButton.disabled = false;
+                if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
+                    filesDisplay.textContent = 'No images selected. Google services ready.';
+                }
             } else {
                 oauthToken = null;
                 driveButton.disabled = true;
                 photosButton.disabled = true;
-                // Optionally, prompt user to sign in or handle sign-in automatically
-                 console.log("User not signed in to Google. Picker buttons disabled.");
-                 // To auto-sign-in: gapi.auth2.getAuthInstance().signIn();
+                if(filesDisplay.textContent.includes('Google services ready') || filesDisplay.textContent.includes('No images selected')) {
+                     filesDisplay.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
+                }
             }
         }
         
@@ -225,10 +244,16 @@
                 return;
             }
             if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                gapi.auth2.getAuthInstance().signIn().then(() => {
-                     if(gapi.auth2.getAuthInstance().isSignedIn.get()) createPickerView(type); // Retry after sign-in
+                gapi.auth2.getAuthInstance().signIn().then(() => { 
+                     if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                        updateSigninStatus(true); 
+                        createPickerView(type); 
+                     }
+                }).catch(err => {
+                    console.error("Error during sign-in:", err);
+                    alert("Could not sign in to Google. Please try again or check your browser's pop-up blocker.");
                 });
-                return; // Don't proceed if not signed in
+                return; 
             }
             createPickerView(type);
         }
@@ -236,18 +261,14 @@
 
         function createPickerView(type) {
             let view;
-            let title;
+            let title = 'Select Images';
 
             if (type === 'drive') {
                 title = 'Select an image from Google Drive';
                 view = new google.picker.View(google.picker.ViewId.DOCS);
-                view.setMimeTypes("image/png,image/jpeg,image/jpg,image/gif"); // Show only images
+                view.setMimeTypes("image/png,image/jpeg,image/jpg,image/gif"); 
             } else if (type === 'photos') {
                 title = 'Select from Google Photos';
-                // For Google Photos, it's often better to use the dedicated Photos view if available
-                // or fall back to a more general approach if the specific Photos view isn't working as expected.
-                // The google.picker.ViewId.PHOTOS is a general one.
-                // For more specific albums/photos: google.picker.PhotosView()
                 view = new google.picker.View(google.picker.ViewId.PHOTOS);
                 view.setMimeTypes("image/png,image/jpeg,image/jpg,image/gif");
             } else {
@@ -256,12 +277,14 @@
             }
 
             const picker = new google.picker.PickerBuilder()
-                .enableFeature(google.picker.Feature.NAV_HIDDEN) // Optional: hide navigation
-                .setAppId(CLIENT_ID.split('.')[0]) // AppId is usually the numeric part of client ID
+                .enableFeature(google.picker.Feature.NAV_HIDDEN) 
+                .setAppId(CLIENT_ID.split('.')[0]) 
                 .setOAuthToken(oauthToken)
                 .addView(view)
                 .setDeveloperKey(API_KEY)
                 .setCallback(pickerCallback)
+                .setTitle(title)
+                .setMaxItems(6 - document.getElementById('imageFiles').files.length) 
                 .build();
             picker.setVisible(true);
         }
@@ -270,26 +293,23 @@
             if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                 const docs = data[google.picker.Response.DOCUMENTS];
                 docs.forEach(doc => {
-                    if (doc.url) { // Direct URL, often for Photos or publicly shared Drive items
-                        selectedImageUrls.push(doc.url);
-                    } else if (doc.thumbnails && doc.thumbnails.length > 0) {
-                        // Use the largest available thumbnail if no direct URL
-                        // Thumbnails might be lower resolution
-                        selectedImageUrls.push(doc.thumbnails[doc.thumbnails.length - 1].url);
-                    } else if (doc.id && doc.serviceId === 'drive') {
-                        // For Drive files, if only ID is returned, you'd typically need another API call
-                        // to get a webContentLink or webViewLink. For simplicity, we'll try to use what Picker gives.
-                        // This might require enabling "Allow users to access Google Drive with the Drive SDK API" in Drive settings.
-                        // A common pattern is to construct a view link if a direct image URL isn't available.
-                        // For this example, we'll log it and user might need to ensure file is shareable or use direct image types.
-                        console.warn("Google Drive file selected without direct URL. ID:", doc.id, "Ensure it's an image and accessible.");
-                        // A temporary solution: try to guess a thumbnail link (not reliable for all files)
-                        // Or, you could fetch the webContentLink using gapi.client.drive.files.get with fields='webContentLink,webViewLink'
-                        // selectedImageUrls.push(`https://lh3.googleusercontent.com/d/${doc.id}=s0`); // Example, might not work
+                    let imageUrl = doc.url; 
+                    if (!imageUrl && doc.thumbnails && doc.thumbnails.length > 0) {
+                        imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
+                        if (imageUrl) imageUrl = imageUrl.replace(/=s\d+$/, '=s0'); 
                     }
-                    // Add more sophisticated handling for Drive file IDs if needed
+                    
+                    if (imageUrl) {
+                        if (!selectedImageUrls.includes(imageUrl)) {
+                             selectedImageUrls.push(imageUrl);
+                        }
+                    } else {
+                        console.warn("Could not get a usable image URL from picker for doc:", doc);
+                    }
                 });
                 updateSelectedFilesDisplay();
+            } else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
+                console.log('Google Picker Canceled');
             }
         }
         
@@ -298,28 +318,37 @@
             const display = document.getElementById('selectedFilesDisplay');
             let fileNames = [];
 
-            localFiles.forEach(file => fileNames.push(`Local: ${file.name}`));
-            selectedImageUrls.forEach((url, index) => {
-                // Try to derive a name or just use index for Google Picker files
-                let name = `Google File ${index + 1}`;
+            localFiles.forEach(file => fileNames.push(`Local: ${file.name.substring(0,20)}...`));
+            
+            const validSelectedImageUrls = selectedImageUrls.filter(url => url);
+
+            validSelectedImageUrls.forEach((url, index) => {
+                let name = `Cloud Image ${index + 1}`;
                 try {
                     const urlObj = new URL(url);
                     const pathParts = urlObj.pathname.split('/');
-                    name = pathParts[pathParts.length -1] || name;
-                } catch (e) {}
+                    const potentialName = pathParts[pathParts.length -1];
+                    if (potentialName && potentialName.length > 3) { 
+                         name = potentialName;
+                    }
+                } catch (e) { /* ignore */ }
                 fileNames.push(`Cloud: ${name.substring(0,30)}...`);
             });
             
             if (fileNames.length > 0) {
-                display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join(', ')}`;
+                display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join('; ')}`;
             } else {
-                display.textContent = 'No images selected.';
+                 if (gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    display.textContent = 'No images selected. Google services ready.';
+                } else {
+                    display.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
+                }
             }
         }
 
 
         document.addEventListener('DOMContentLoaded', function() {
-            handleClientLoad(); // Load Google API Client
+            handleClientLoad(); 
 
             const today = new Date();
             let nextWednesday = new Date(today);
@@ -329,7 +358,7 @@
             } else if (today.getDay() === 3 && today.getHours() <=12) {
                 nextWednesday.setDate(today.getDate());
             }
-            const yyyy = nextWednesday.getFullYear();
+            const<y_bin_46> = nextWednesday.getFullYear();
             const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
             const dd = String(nextWednesday.getDate()).padStart(2, '0');
             document.getElementById('eventDate').value = `${yyyy}-${mm}-${dd}`;
@@ -337,23 +366,47 @@
             document.getElementById('features').value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
 
             const imageFilesInput = document.getElementById('imageFiles');
-            imageFilesInput.addEventListener('change', updateSelectedFilesDisplay);
+            imageFilesInput.addEventListener('change', () => {
+                updateSelectedFilesDisplay();
+            });
         });
 
-        function formatDate(dateStr) { /* ... (same as before) ... */ }
+        function formatDate(dateStr) { 
+            if (!dateStr) return "TBC";
+            try {
+                const dateObj = new Date(dateStr + 'T00:00:00');
+                return dateObj.toLocaleDateString('en-IE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            } catch (e) {
+                console.error("Error formatting date:", e);
+                return dateStr;
+            }
+        }
 
         async function generatePromotions() {
-            const details = { /* ... (same as before, get form values) ... */ };
+            // Ensure API Key and Client ID are not placeholders before generating
+            if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+                alert("Error: API Key or Client ID is still set to placeholder values in the script. Please replace them with your actual credentials from Google Cloud Console before generating promotions.");
+                return;
+            }
+
+            const details = {
+                eventName: document.getElementById('eventName').value || "Galway Jam Circle",
+                venue: document.getElementById('venue').value || "A Friendly Pub",
+                date_str_input: document.getElementById('eventDate').value,
+                time_str: document.getElementById('eventTime').value || "8 PM",
+                tagline: document.getElementById('tagline').value || "Join us for a night of music!",
+                features_raw: document.getElementById('features').value,
+                ticket_info: document.getElementById('ticketInfo').value || "Free Entry",
+                contact_info: document.getElementById('contactInfo').value
+            };
             details.date_str = formatDate(details.date_str_input);
             const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
             details.features = featuresArray.length > 0 ? featuresArray : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
             
-            // --- Image File Handling ---
             const localImageFiles = document.getElementById('imageFiles').files;
             const localImagePromises = [];
             const maxCollageImages = 6; 
             
-            // Process local files
             for (let i = 0; i < localImageFiles.length; i++) {
                 const file = localImageFiles[i];
                 localImagePromises.push(new Promise((resolve, reject) => {
@@ -371,10 +424,8 @@
                 console.error("Error reading local image files:", error);
             }
 
-            // Combine local and Google Picker URLs, ensuring no duplicates if a user re-selects
-            const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls])];
+            const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])]; 
             const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
-            // --- End Image File Handling ---
 
             let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
             const defaultEventNamePlaceholder = encodeURIComponent(details.eventName.substring(0,25).replace(/\s+/g, '+'));
@@ -384,7 +435,6 @@
             }
             const fallbackImageUrl = `https://placehold.co/800x600/6A0DAD/FFFFFF?text=Image+Not+Found&font=montserrat`;
 
-            // --- Generate Collage HTML ---
             let collageHtml = '';
             if (finalCollageUrls.length > 0) {
                 const imgCountClass = `count-${finalCollageUrls.length > 4 ? 'gt-4' : finalCollageUrls.length}`;
@@ -394,7 +444,6 @@
             } else {
                 collageHtml = `<img src="${posterPrimaryImageUrlForSocial || fallbackImageUrl}" alt="Placeholder for ${details.eventName}" class="poster-collage-image count-1">`;
             }
-            // --- End Generate Collage HTML ---
 
             const posterHtml = `
                 <header style="margin-bottom: 1rem;">
@@ -421,7 +470,6 @@
             `;
             document.getElementById('posterContainerContent').innerHTML = posterHtml;
 
-            // Generate Social Media Posts
             const socialMediaContentEl = document.getElementById('socialMediaContent');
             socialMediaContentEl.innerHTML = ''; 
 
@@ -430,73 +478,74 @@
             
             const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
 
-            // Instagram, Facebook, Twitter text generation (same as before, using socialPreviewImageUrl)
-            // ... (omitted for brevity, but it's the same logic as your previous version) ...
-            // Make sure to replace `posterImageUrl` in those text generations with `socialPreviewImageUrl`
-
-            // Example for Instagram (ensure this structure is repeated for Facebook & Twitter)
             const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${f}`).join("\n");
-            const instagramText = `🎸 **${details.eventName} is ON!** 🥁 ... (rest of text) ... ${commonHashtags}`.trim();
-             socialMediaContentEl.innerHTML += `
+            const instagramText = \`🎸 **\${details.eventName} is ON!** 🥁
+
+"\${details.tagline}"
+
+Join us for a fantastic session of live music & community vibes.
+\${featuresListInsta ? \`\\nFeaturing:\\n\${featuresListInsta}\\n\` : ''}
+📍 **Where:** \${details.venue}, Galway
+🗓️ **When:** \${details.date_str}
+⏰ **Time:** \${details.time_str}
+💰 **Entry:** \${details.ticket_info}
+
+Bring your friends, instruments, and good energy! ✨
+\${commonHashtags}\`.trim();
+             socialMediaContentEl.innerHTML += \`
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Instagram Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${instagramText}</div>
-                    <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">\${instagramText}</div>
+                    <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            `;
-            // ... (Repeat for Facebook and Twitter, using socialPreviewImageUrl) ...
-             // Facebook
-            const featuresBulletsFb = details.features.map(f => `✔️ ${f}`).join("\n");
-            const facebookText = `🎉 **${details.eventName} - Join the Jam!** 🎉
+            \`;
+            
+            const featuresBulletsFb = details.features.map(f => \`✔️ \${f}\`).join("\\n");
+            const facebookText = \`🎉 **\${details.eventName} - Join the Jam!** 🎉
 
-"${details.tagline}"
+"\${details.tagline}"
 
-Get ready for a great night of music and fun at ${details.venue}! Whether you play, sing, or just love live music, come on down.
+Get ready for a great night of music and fun at \${details.venue}! Whether you play, sing, or just love live music, come on down.
 
-${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
-🗓️ **Date:** ${details.date_str}
-🕒 **Time:** ${details.time_str}
-🏛️ **Venue:** ${details.venue}, Galway
-💸 **Entry:** ${details.ticket_info}
+\${featuresBulletsFb ? \`**What to expect:**\\n\${featuresBulletsFb}\\n\` : ''}
+🗓️ **Date:** \${details.date_str}
+🕒 **Time:** \${details.time_str}
+🏛️ **Venue:** \${details.venue}, Galway
+💸 **Entry:** \${details.ticket_info}
 
-${details.contact_info ? `For more info, contact: ${details.contact_info}\n` : ''}
+\${details.contact_info ? \`For more info, contact: \${details.contact_info}\\n\` : ''}
 Share with your music-loving friends! Let's make some noise! 🎶
-${commonHashtags}`.trim();
+\${commonHashtags}\`.trim();
 
-            socialMediaContentEl.innerHTML += `
+            socialMediaContentEl.innerHTML += \`
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Facebook Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${facebookText}</div>
-                    <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">\${facebookText}</div>
+                    <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            `;
+            \`;
             
-            // Twitter
             const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
-            const twitterText = `Jammin' in Galway! 🎶
-✨ ${details.eventName} ✨
-"${shortTaglineTwitter}"
-📍 ${details.venue}
-📅 ${details.date_str}, ${details.time_str}
-Entry: ${details.ticket_info}
-${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`.trim();
+            const twitterText = \`Jammin' in Galway! 🎶
+✨ \${details.eventName} ✨
+"\${shortTaglineTwitter}"
+📍 \${details.venue}
+📅 \${details.date_str}, \${details.time_str}
+Entry: \${details.ticket_info}
+\${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway\`.trim();
 
-            socialMediaContentEl.innerHTML += `
+            socialMediaContentEl.innerHTML += \`
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Twitter (X) Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${twitterText}</div>
-                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
+                    <img src="\${socialPreviewImageUrl}" alt="Social media preview for \${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text">\${twitterText}</div>
+                     <p class="social-note">\${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>
-            `;
-
-            // Clear selected Google image URLs after generation to avoid re-adding them on next click without new selection
-            selectedImageUrls = []; 
+            \`;
+            selectedImageUrls = []; // Clear Google-picked URLs after generation for next use
         }
-        // Ensure formatDate is defined (it was in your previous script)
-        // function formatDate(dateStr) { ... } 
     </script>
 
 </body>
