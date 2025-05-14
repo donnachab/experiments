@@ -175,63 +175,77 @@
         let selectedImageUrls = []; // Store URLs from both local and Google Picker
 
         function handleClientLoad() {
-            gapi.load('client:auth2:picker', initClient);
+            try {
+                gapi.load('client:auth2:picker', initClient);
+            } catch (error) {
+                console.error("Error loading GAPI client:", error);
+                alert("Failed to load Google API script. Please check your internet connection and browser console for errors.");
+            }
         }
 
         function initClient() {
             if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
-                const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script.";
+                const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script if you haven't already.";
                 console.error(errorMsg);
                 document.getElementById('selectedFilesDisplay').textContent = errorMsg;
-                alert(errorMsg);
+                // alert(errorMsg); // Commenting out alert as it might be annoying if user intentionally left placeholders
                 return;
             }
 
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
-                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
-            }).then(() => {
-                gapiLoaded = true;
-                pickerApiLoaded = true; 
+            try {
+                gapi.client.init({
+                    apiKey: API_KEY,
+                    clientId: CLIENT_ID,
+                    scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
+                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
+                }).then(() => {
+                    gapiLoaded = true;
+                    pickerApiLoaded = true; 
 
-                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
-                document.getElementById('googleDriveButton').onclick = () => createPicker('drive');
-                document.getElementById('googlePhotosButton').onclick = () => createPicker('photos');
-                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    document.getElementById('selectedFilesDisplay').textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
-                } else {
-                    document.getElementById('selectedFilesDisplay').textContent = 'No images selected. Google services ready.';
-                }
-            }).catch(error => {
-                console.error("Error initializing Google API client:", error);
-                const userFriendlyError = "Error: Could not initialize Google services. This might be due to incorrect API Key/Client ID, APIs not enabled in Google Cloud Console, or the web page not being served from an authorized origin (like localhost or your GitHub Pages site). Please check your setup.";
-                document.getElementById('selectedFilesDisplay').textContent = userFriendlyError;
-                alert(userFriendlyError);
-            });
+                    document.getElementById('googleDriveButton').onclick = () => createPicker('drive');
+                    document.getElementById('googlePhotosButton').onclick = () => createPicker('photos');
+                    if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                        document.getElementById('selectedFilesDisplay').textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
+                    } else {
+                        document.getElementById('selectedFilesDisplay').textContent = 'No images selected. Google services ready.';
+                    }
+                }).catch(error => { // Catch errors from gapi.client.init() promise
+                    console.error("Error initializing Google API client (promise catch):", error);
+                    const userFriendlyError = "Error: Could not initialize Google services. This might be due to incorrect API Key/Client ID, APIs not enabled in Google Cloud Console, or the web page not being served from an authorized origin (like localhost or your GitHub Pages site). Please check your setup.";
+                    document.getElementById('selectedFilesDisplay').textContent = userFriendlyError;
+                    alert(userFriendlyError);
+                });
+            } catch (error) { // Catch synchronous errors if gapi.client.init itself throws
+                 console.error("Synchronous error during Google API client initialization:", error);
+                 alert("A critical error occurred initializing Google services. Check console.");
+            }
         }
 
         function updateSigninStatus(isSignedIn) {
             const driveButton = document.getElementById('googleDriveButton');
             const photosButton = document.getElementById('googlePhotosButton');
             const filesDisplay = document.getElementById('selectedFilesDisplay');
-            if (isSignedIn) {
-                oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token;
-                driveButton.disabled = false;
-                photosButton.disabled = false;
-                if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
-                    filesDisplay.textContent = 'No images selected. Google services ready.';
+            try {
+                if (isSignedIn) {
+                    oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token;
+                    driveButton.disabled = false;
+                    photosButton.disabled = false;
+                    if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
+                        filesDisplay.textContent = 'No images selected. Google services ready.';
+                    }
+                } else {
+                    oauthToken = null;
+                    driveButton.disabled = true;
+                    photosButton.disabled = true;
+                    if(filesDisplay.textContent.includes('Google services ready') || filesDisplay.textContent.includes('No images selected')) {
+                         filesDisplay.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
+                    }
                 }
-            } else {
-                oauthToken = null;
-                driveButton.disabled = true;
-                photosButton.disabled = true;
-                if(filesDisplay.textContent.includes('Google services ready') || filesDisplay.textContent.includes('No images selected')) {
-                     filesDisplay.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
-                }
+            } catch (error) {
+                console.error("Error in updateSigninStatus:", error);
             }
         }
         
@@ -240,19 +254,24 @@
                 alert("Google API not loaded yet. Please wait and try again.");
                 return;
             }
-            if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                gapi.auth2.getAuthInstance().signIn().then(() => { 
-                     if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                        updateSigninStatus(true); 
-                        createPickerView(type); 
-                     }
-                }).catch(err => {
-                    console.error("Error during sign-in:", err);
-                    alert("Could not sign in to Google. Please try again or check your browser's pop-up blocker.");
-                });
-                return; 
+            try {
+                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    gapi.auth2.getAuthInstance().signIn().then(() => { 
+                         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                            updateSigninStatus(true); 
+                            createPickerView(type); 
+                         }
+                    }).catch(err => {
+                        console.error("Error during sign-in for picker:", err);
+                        alert("Could not sign in to Google. Please try again or check your browser's pop-up blocker.");
+                    });
+                    return; 
+                }
+                createPickerView(type);
+            } catch (error) {
+                 console.error("Error in createPicker:", error);
+                 alert("An error occurred trying to open the Google file picker.");
             }
-            createPickerView(type);
         }
 
         function createPickerView(type) {
@@ -282,23 +301,27 @@
         }
 
         function pickerCallback(data) {
-            if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-                const docs = data[google.picker.Response.DOCUMENTS];
-                docs.forEach(doc => {
-                    let imageUrl = doc.url; 
-                    if (!imageUrl && doc.thumbnails && doc.thumbnails.length > 0) {
-                        imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
-                        if (imageUrl) imageUrl = imageUrl.replace(/=s\d+$/, '=s0'); 
-                    }
-                    if (imageUrl && !selectedImageUrls.includes(imageUrl)) {
-                        selectedImageUrls.push(imageUrl);
-                    } else if (!imageUrl) {
-                        console.warn("Could not get a usable image URL from picker for doc:", doc);
-                    }
-                });
-                updateSelectedFilesDisplay();
-            } else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
-                console.log('Google Picker Canceled');
+            try {
+                if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+                    const docs = data[google.picker.Response.DOCUMENTS];
+                    docs.forEach(doc => {
+                        let imageUrl = doc.url; 
+                        if (!imageUrl && doc.thumbnails && doc.thumbnails.length > 0) {
+                            imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
+                            if (imageUrl) imageUrl = imageUrl.replace(/=s\d+$/, '=s0'); 
+                        }
+                        if (imageUrl && !selectedImageUrls.includes(imageUrl)) {
+                            selectedImageUrls.push(imageUrl);
+                        } else if (!imageUrl) {
+                            console.warn("Could not get a usable image URL from picker for doc:", doc);
+                        }
+                    });
+                    updateSelectedFilesDisplay();
+                } else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
+                    console.log('Google Picker Canceled');
+                }
+            } catch (error) {
+                 console.error("Error in pickerCallback:", error);
             }
         }
         
@@ -321,7 +344,7 @@
             if (fileNames.length > 0) {
                 display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join('; ')}`;
             } else {
-                 if (gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                 if (gapi && gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
                     display.textContent = 'No images selected. Google services ready.';
                 } else {
                     display.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
