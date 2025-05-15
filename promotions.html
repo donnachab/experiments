@@ -377,34 +377,42 @@
             } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
 
-        function escapeBackticksAndHTML(str) {
+        function escapeForHTML(str) {
             if (typeof str !== 'string') return str;
-            let newStr = str.replace(/`/g, '\\`'); // Escape backticks for JS template literals
-            // Basic HTML escaping for content that will be displayed as text
-            newStr = newStr.replace(/&/g, '&amp;')
-                           .replace(/</g, '&lt;')
-                           .replace(/>/g, '&gt;')
-                           .replace(/"/g, '&quot;')
-                           .replace(/'/g, '&#039;');
-            return newStr;
+            return str.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;')
+                      .replace(/`/g, '&#96;'); // Escape backticks for HTML context
         }
 
 
         async function generatePromotions() {
             const details = {
-                eventName: escapeBackticksAndHTML(document.getElementById('eventName').value || "Galway Jam Circle"),
-                venue: escapeBackticksAndHTML(document.getElementById('venue').value || "A Friendly Pub"),
+                eventName: document.getElementById('eventName').value || "Galway Jam Circle",
+                venue: document.getElementById('venue').value || "A Friendly Pub",
                 date_str_input: document.getElementById('eventDate').value,
-                time_str: escapeBackticksAndHTML(document.getElementById('eventTime').value || "8 PM"),
-                tagline: escapeBackticksAndHTML(document.getElementById('tagline').value || "Join us for a night of music!"),
-                features_raw: document.getElementById('features').value, // Raw features string, will be escaped per item
-                ticket_info: escapeBackticksAndHTML(document.getElementById('ticketInfo').value || "Free Entry"),
-                contact_info: escapeBackticksAndHTML(document.getElementById('contactInfo').value)
+                time_str: document.getElementById('eventTime').value || "8 PM",
+                tagline: document.getElementById('tagline').value || "Join us for a night of music!",
+                features_raw: document.getElementById('features').value, 
+                ticket_info: document.getElementById('ticketInfo').value || "Free Entry",
+                contact_info: document.getElementById('contactInfo').value
             };
-            details.date_str = formatDate(details.date_str_input);
             
+            // Escape details for safe HTML injection and use in text content
+            const escapedDetails = {
+                eventName: escapeForHTML(details.eventName),
+                venue: escapeForHTML(details.venue),
+                time_str: escapeForHTML(details.time_str),
+                tagline: escapeForHTML(details.tagline),
+                ticket_info: escapeForHTML(details.ticket_info),
+                contact_info: escapeForHTML(details.contact_info),
+                date_str: formatDate(details.date_str_input) // Date is formatted, not directly user input for HTML
+            };
+
             const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
-            details.features = featuresArray.length > 0 ? featuresArray.map(f => escapeBackticksAndHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
+            escapedDetails.features = featuresArray.length > 0 ? featuresArray.map(f => escapeForHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
             
             const localImageFiles = document.getElementById('imageFiles').files;
             const localImagePromises = [];
@@ -426,7 +434,7 @@
             const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
 
             let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
-            const defaultEventNamePlaceholder = encodeURIComponent(details.eventName.substring(0,25).replace(/\s+/g, '+'));
+            const defaultEventNamePlaceholder = encodeURIComponent(escapedDetails.eventName.substring(0,25).replace(/\s+/g, '+'));
             if (!posterPrimaryImageUrlForSocial) { 
                  posterPrimaryImageUrlForSocial = `https://placehold.co/800x600/4B0082/FFFFFF?text=${defaultEventNamePlaceholder}&font=montserrat`;
             }
@@ -436,107 +444,111 @@
             if (finalCollageUrls.length > 0) {
                 const imgCountClass = `count-${finalCollageUrls.length > 4 ? 'gt-4' : finalCollageUrls.length}`;
                 finalCollageUrls.forEach(dataUrl => {
-                    collageHtml += `<img src="${dataUrl}" alt="Collage image for ${details.eventName}" class="poster-collage-image ${imgCountClass}" onerror="this.src='${fallbackImageUrl}';">`;
+                    collageHtml += `<img src="${escapeForHTML(dataUrl)}" alt="Collage image for ${escapedDetails.eventName}" class="poster-collage-image ${imgCountClass}" onerror="this.src='${fallbackImageUrl}';">`;
                 });
             } else {
-                collageHtml = `<img src="${posterPrimaryImageUrlForSocial || fallbackImageUrl}" alt="Placeholder for ${details.eventName}" class="poster-collage-image count-1">`;
+                collageHtml = `<img src="${escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl}" alt="Placeholder for ${escapedDetails.eventName}" class="poster-collage-image count-1">`;
             }
 
-            // Poster HTML construction (variables are already escaped)
             const posterHtml = `
                 <header style="margin-bottom: 1rem;">
                     <h1 class="poster-header-title">Open Music Session</h1>
-                    <h2 class="poster-event-name-title">${details.eventName}</h2>
-                    <p class="poster-tagline-text">"${details.tagline}"</p>
+                    <h2 class="poster-event-name-title">${escapedDetails.eventName}</h2>
+                    <p class="poster-tagline-text">"${escapedDetails.tagline}"</p>
                 </header>
                 <section class="poster-image-section" id="posterCollageContainer">
                     ${collageHtml}
                 </section>
                 <section class="poster-details-text" style="margin-bottom: 1.5rem;">
-                    <p><strong style="font-weight: 700;">WHERE:</strong> ${details.venue}, Galway</p>
-                    <p><strong style="font-weight: 700;">WHEN:</strong> ${details.date_str}</p>
-                    <p><strong style="font-weight: 700;">TIME:</strong> ${details.time_str}</p>
+                    <p><strong style="font-weight: 700;">WHERE:</strong> ${escapedDetails.venue}, Galway</p>
+                    <p><strong style="font-weight: 700;">WHEN:</strong> ${escapedDetails.date_str}</p>
+                    <p><strong style="font-weight: 700;">TIME:</strong> ${escapedDetails.time_str}</p>
                 </section>
                 <section class="poster-ticket-info" style="margin-bottom: 1.5rem;">
-                    <p>${details.ticket_info}</p>
-                    ${details.ticket_info.toLowerCase().includes("free") ? '' : '<a href="#" class="poster-cta-button">More Info</a>'}
+                    <p>${escapedDetails.ticket_info}</p>
+                    ${escapedDetails.ticket_info.toLowerCase().includes("free") ? '' : '<a href="#" class="poster-cta-button">More Info</a>'}
                 </section>
                 <footer class="poster-footer" style="padding-top: 1rem;">
                     <p>Bring your instruments, voice, or just come to listen!</p>
-                    ${details.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${details.contact_info}</p>` : ''}
+                    ${escapedDetails.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${escapedDetails.contact_info}</p>` : ''}
                 </footer>`;
             document.getElementById('posterContainerContent').innerHTML = posterHtml;
 
             const socialMediaContentEl = document.getElementById('socialMediaContent');
             socialMediaContentEl.innerHTML = ''; 
             const imageCopyInstructions = "<strong>To use images:</strong> For the poster, take a screenshot. For social media, upload your chosen image(s) directly. You can right-click/long-press on individual images in the collage preview to save them.";
-            const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(details.venue || "GalwayVenue").replace(/\s+/g, "")}`;
-            const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
+            const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(escapedDetails.venue || "GalwayVenue").replace(/\s+/g, "")}`;
+            const socialPreviewImageUrl = escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl;
 
-            // Removed Emojis and ensured variables are escaped before interpolation
-            const featuresListInsta = details.features.slice(0, 3).map(f => `- ${f}`).join("\n");
-            const instagramText = `**${details.eventName} is ON!**
+            const featuresListInsta = escapedDetails.features.slice(0, 3).map(f => `- ${f}`).join("\n");
+            const instagramText = 
+`**${escapedDetails.eventName} is ON!**
 
-"${details.tagline}"
+"${escapedDetails.tagline}"
 
 Join us for a fantastic session of live music & community vibes.
 ${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
-**Where:** ${details.venue}, Galway
-**When:** ${details.date_str}
-**Time:** ${details.time_str}
-**Entry:** ${details.ticket_info}
+**Where:** ${escapedDetails.venue}, Galway
+**When:** ${escapedDetails.date_str}
+**Time:** ${escapedDetails.time_str}
+**Entry:** ${escapedDetails.ticket_info}
 
 Bring your friends, instruments, and good energy!
 ${commonHashtags}`;
              socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Instagram Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${instagramText.trim()}</div>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text"></div>
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
+            socialMediaContentEl.querySelector('.social-media-item:last-child .social-output-text').textContent = instagramText.trim();
             
-            const featuresBulletsFb = details.features.map(f => `- ${f}`).join("\n");
-            const facebookText = `**${details.eventName} - Join the Jam!**
+            const featuresBulletsFb = escapedDetails.features.map(f => `- ${f}`).join("\n");
+            const facebookText = 
+`**${escapedDetails.eventName} - Join the Jam!**
 
-"${details.tagline}"
+"${escapedDetails.tagline}"
 
-Get ready for a great night of music and fun at ${details.venue}! Whether you play, sing, or just love live music, come on down.
+Get ready for a great night of music and fun at ${escapedDetails.venue}! Whether you play, sing, or just love live music, come on down.
 
 ${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
-**Date:** ${details.date_str}
-**Time:** ${details.time_str}
-**Venue:** ${details.venue}, Galway
-**Entry:** ${details.ticket_info}
+**Date:** ${escapedDetails.date_str}
+**Time:** ${escapedDetails.time_str}
+**Venue:** ${escapedDetails.venue}, Galway
+**Entry:** ${escapedDetails.ticket_info}
 
-${details.contact_info ? `For more info, contact: ${details.contact_info}\n` : ''}
+${escapedDetails.contact_info ? `For more info, contact: ${escapedDetails.contact_info}\n` : ''}
 Share with your music-loving friends! Let's make some noise!
 ${commonHashtags}`;
 
             socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Facebook Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${facebookText.trim()}</div>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text"></div>
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
+            socialMediaContentEl.querySelector('.social-media-item:last-child .social-output-text').textContent = facebookText.trim();
             
-            const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
-            const twitterText = `Jammin' in Galway!
-**${details.eventName}**
+            const shortTaglineTwitter = escapedDetails.tagline.length > 60 ? escapedDetails.tagline.substring(0, 57) + "..." : escapedDetails.tagline;
+            const twitterText = 
+`Jammin' in Galway!
+**${escapedDetails.eventName}**
 "${shortTaglineTwitter}"
-At: ${details.venue}
-On: ${details.date_str}, ${details.time_str}
-Entry: ${details.ticket_info}
+At: ${escapedDetails.venue}
+On: ${escapedDetails.date_str}, ${escapedDetails.time_str}
+Entry: ${escapedDetails.ticket_info}
 ${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
 
             socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
                     <h4 class="social-platform-title">Twitter (X) Post:</h4>
-                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${details.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                    <div class="social-output-text">${twitterText.trim()}</div>
+                    <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
+                    <div class="social-output-text"></div>
                      <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
+            socialMediaContentEl.querySelector('.social-media-item:last-child .social-output-text').textContent = twitterText.trim();
             selectedImageUrls = []; 
         }
     </script>
