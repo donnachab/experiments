@@ -160,8 +160,15 @@
     </div>
 
     <script>
+        // --- IMPORTANT NOTE FOR GOOGLE PICKER API ---
+        // For the Google Drive/Photos buttons to work, this HTML file MUST be served via a web server
+        // (e.g., using Python's http.server, VS Code Live Server, or hosted on GitHub Pages).
+        // It WILL NOT WORK if you open the file directly using a file:/// URL due to browser security (CORS).
+        // Also, ensure your API_KEY, CLIENT_ID are correct and "Authorized JavaScript origins"
+        // in your Google Cloud Console OAuth Client ID settings match the origin you are using.
+        // --- END IMPORTANT NOTE ---
+
         // --- USER CONFIGURATION REQUIRED ---
-        // Your provided credentials have been inserted below:
         const API_KEY = 'AIzaSyA2_4BP7Qv6JYIONCg2KJ6upr2VbaNojkw'; 
         const CLIENT_ID = '786809892671-cpohg98fo9vuf75756qgp0lc4laq43ka.apps.googleusercontent.com'; 
         // --- END USER CONFIGURATION ---
@@ -174,10 +181,10 @@
         let oauthToken = null;
         let selectedImageUrls = []; 
 
-        console.log("Script start"); // DEBUG
+        console.log("Script start"); 
 
         function handleClientLoad() {
-            console.log("handleClientLoad called"); // DEBUG
+            console.log("handleClientLoad called"); 
             try {
                 gapi.load('client:auth2:picker', initClient);
             } catch (error) {
@@ -187,7 +194,7 @@
         }
 
         function initClient() {
-            console.log("initClient called"); // DEBUG
+            console.log("initClient called"); 
             if (API_KEY === 'YOUR_GOOGLE_API_KEY' || CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
                 const errorMsg = "Error: API Key or Client ID is still set to placeholder values. Please replace them with your actual credentials in the script if you haven't already.";
                 console.error(errorMsg);
@@ -202,7 +209,7 @@
                     scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
                     discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
                 }).then(() => {
-                    console.log("GAPI client initialized successfully"); // DEBUG
+                    console.log("GAPI client initialized successfully"); 
                     gapiLoaded = true;
                     pickerApiLoaded = true; 
 
@@ -229,14 +236,14 @@
         }
 
         function updateSigninStatus(isSignedIn) {
-            console.log("updateSigninStatus called, isSignedIn:", isSignedIn); // DEBUG
+            console.log("updateSigninStatus called, isSignedIn:", isSignedIn); 
             const driveButton = document.getElementById('googleDriveButton');
             const photosButton = document.getElementById('googlePhotosButton');
             const filesDisplay = document.getElementById('selectedFilesDisplay');
             try {
                 if (isSignedIn) {
                     oauthToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse(true).access_token;
-                    console.log("OAuth token obtained:", oauthToken ? "Yes" : "No"); // DEBUG
+                    console.log("OAuth token obtained:", oauthToken ? "Yes" : "No"); 
                     driveButton.disabled = false;
                     photosButton.disabled = false;
                     if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
@@ -256,17 +263,17 @@
         }
         
         function createPicker(type) {
-            console.log("createPicker called for type:", type); // DEBUG
+            console.log("createPicker called for type:", type); 
             if (!gapiLoaded || !pickerApiLoaded) {
                 alert("Google API not loaded yet. Please wait and try again.");
                 return;
             }
             try {
                 if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    console.log("User not signed in, attempting signIn for picker..."); // DEBUG
+                    console.log("User not signed in, attempting signIn for picker..."); 
                     gapi.auth2.getAuthInstance().signIn().then(() => { 
                          if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                            console.log("Sign-in successful, proceeding with picker view."); // DEBUG
+                            console.log("Sign-in successful, proceeding with picker view."); 
                             updateSigninStatus(true); 
                             createPickerView(type); 
                          }
@@ -284,7 +291,7 @@
         }
 
         function createPickerView(type) {
-            console.log("createPickerView called for type:", type); // DEBUG
+            console.log("createPickerView called for type:", type); 
             let view;
             let title = 'Select Images';
             if (type === 'drive') {
@@ -308,15 +315,15 @@
                 .setMaxItems(6 - document.getElementById('imageFiles').files.length) 
                 .build();
             picker.setVisible(true);
-            console.log("Picker should be visible now."); // DEBUG
+            console.log("Picker should be visible now."); 
         }
 
         function pickerCallback(data) {
-            console.log("pickerCallback data:", data); // DEBUG
+            console.log("pickerCallback data:", data); 
             try {
                 if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                     const docs = data[google.picker.Response.DOCUMENTS];
-                    console.log("Picked documents:", docs); // DEBUG
+                    console.log("Picked documents:", docs); 
                     docs.forEach(doc => {
                         let imageUrl = doc.url; 
                         if (!imageUrl && doc.thumbnails && doc.thumbnails.length > 0) {
@@ -363,26 +370,57 @@
                     display.textContent = 'No images selected. (Sign in to Google to enable Drive/Photos buttons)';
                 }
             }
-             console.log("Updated selected files display:", display.textContent); // DEBUG
+             console.log("Updated selected files display:", display.textContent); 
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded event"); // DEBUG
+            console.log("DOMContentLoaded event"); 
             handleClientLoad(); 
-            const today = new Date();
-            let nextWednesday = new Date(today);
-            nextWednesday.setDate(today.getDate() + (3 - today.getDay() + 7) % 7); 
-             if (today.getDay() === 3 && today.getHours() > 12) { 
-                 nextWednesday.setDate(today.getDate() + 7);
-            } else if (today.getDay() === 3 && today.getHours() <=12) {
-                nextWednesday.setDate(today.getDate());
+
+            try {
+                const today = new Date();
+                let nextWednesday = new Date(today);
+                const dayOfWeek = today.getDay();
+                let daysUntilWednesday = (3 - dayOfWeek + 7) % 7;
+                if (daysUntilWednesday === 0 && today.getHours() >= 12) { 
+                    daysUntilWednesday = 7; 
+                }
+                nextWednesday.setDate(today.getDate() + daysUntilWednesday);
+                
+                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
+                const yyyy = nextWednesday.getFullYear(); 
+                console.log("After yyyy calculation. yyyy is:", yyyy); 
+
+                const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
+                const dd = String(nextWednesday.getDate()).padStart(2, '0');
+                const dateInput = document.getElementById('eventDate');
+                if (dateInput) {
+                    dateInput.value = `${yyyy}-${mm}-${dd}`; 
+                } else {
+                    console.error("Element with ID 'eventDate' not found.");
+                }
+                
+                const featuresInput = document.getElementById('features');
+                if (featuresInput) {
+                    featuresInput.value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
+                } else {
+                     console.error("Element with ID 'features' not found.");
+                }
+
+                const imageFilesInput = document.getElementById('imageFiles');
+                if (imageFilesInput) {
+                    imageFilesInput.addEventListener('change', updateSelectedFilesDisplay);
+                } else {
+                    console.error("Element with ID 'imageFiles' not found.");
+                }
+            } catch (e) {
+                console.error("Error specifically within DOMContentLoaded's date logic or element access:", e);
+                const selectedFilesDisplay = document.getElementById('selectedFilesDisplay');
+                if (selectedFilesDisplay) {
+                    selectedFilesDisplay.textContent = 'Error in page setup. Check console.';
+                }
             }
-            const<y_bin_46> = nextWednesday.getFullYear();
-            const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
-            const dd = String(nextWednesday.getDate()).padStart(2, '0');
-            document.getElementById('eventDate').value = `${yyyy}-${mm}-${dd}`;
-            document.getElementById('features').value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
-            document.getElementById('imageFiles').addEventListener('change', updateSelectedFilesDisplay);
+            console.log("DOMContentLoaded event - END"); 
         });
 
         function formatDate(dateStr) { 
@@ -404,7 +442,7 @@
         }
 
         async function generatePromotions() {
-            console.log("generatePromotions function called"); // DEBUG
+            console.log("generatePromotions function called - START"); 
             try {
                 const details = {
                     eventName: document.getElementById('eventName').value || "Galway Jam Circle",
@@ -430,7 +468,7 @@
                 const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
                 escapedDetails.features = featuresArray.length > 0 ? featuresArray.map(f => escapeForHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
                 
-                console.log("Details collected and escaped:", escapedDetails); // DEBUG
+                console.log("Details collected and escaped:", escapedDetails); 
 
                 const localImageFiles = document.getElementById('imageFiles').files;
                 const localImagePromises = [];
@@ -450,7 +488,7 @@
 
                 const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])]; 
                 const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
-                console.log("Final collage URLs:", finalCollageUrls); // DEBUG
+                console.log("Final collage URLs:", finalCollageUrls); 
 
 
                 let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
@@ -469,7 +507,7 @@
                 } else {
                     collageHtml = `<img src="${escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl}" alt="Placeholder for ${escapedDetails.eventName}" class="poster-collage-image count-1">`;
                 }
-                console.log("Collage HTML generated"); // DEBUG
+                console.log("Collage HTML generated"); 
 
 
                 const posterHtml = `
@@ -495,7 +533,7 @@
                         ${escapedDetails.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${escapedDetails.contact_info}</p>` : ''}
                     </footer>`;
                 document.getElementById('posterContainerContent').innerHTML = posterHtml;
-                console.log("Poster HTML injected"); // DEBUG
+                console.log("Poster HTML injected"); 
 
                 const socialMediaContentEl = document.getElementById('socialMediaContent');
                 socialMediaContentEl.innerHTML = ''; 
@@ -503,8 +541,8 @@
                 const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(escapedDetails.venue || "GalwayVenue").replace(/\s+/g, "")}`;
                 const socialPreviewImageUrl = escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl;
 
-                // --- Instagram Post ---
-                console.log("Generating Instagram text..."); // DEBUG
+                // --- Restored Social Media Text Generation ---
+                console.log("Generating Instagram text...");
                 const featuresListInsta = escapedDetails.features.slice(0, 3).map(f => `- ${f}`).join("\n");
                 const instagramText = 
 `**${escapedDetails.eventName} is ON!**
@@ -520,21 +558,16 @@ ${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
 
 Bring your friends, instruments, and good energy!
 ${commonHashtags}`;
-                console.log("Instagram text created:", instagramText.substring(0,100) + "..."); // DEBUG
+                console.log("Instagram text created:", instagramText.substring(0,100) + "..."); 
 
                 const instagramDiv = document.createElement('div');
                 instagramDiv.className = 'social-media-item';
-                instagramDiv.innerHTML = `
-                        <h4 class="social-platform-title">Instagram Post:</h4>
-                        <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                        <div class="social-output-text"></div>
-                        <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>`;
+                instagramDiv.innerHTML = `<h4 class="social-platform-title">Instagram Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 instagramDiv.querySelector('.social-output-text').textContent = instagramText.trim();
                 socialMediaContentEl.appendChild(instagramDiv);
-                console.log("Instagram post HTML injected."); // DEBUG
+                console.log("Instagram post HTML injected."); 
 
-                // --- Facebook Post ---
-                console.log("Generating Facebook text..."); // DEBUG
+                console.log("Generating Facebook text...");
                 const featuresBulletsFb = escapedDetails.features.map(f => `- ${f}`).join("\n");
                 const facebookText = 
 `**${escapedDetails.eventName} - Join the Jam!**
@@ -552,21 +585,16 @@ ${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
 ${escapedDetails.contact_info ? `For more info, contact: ${escapedDetails.contact_info}\n` : ''}
 Share with your music-loving friends! Let's make some noise!
 ${commonHashtags}`;
-                console.log("Facebook text created:", facebookText.substring(0,100) + "..."); // DEBUG
+                console.log("Facebook text created:", facebookText.substring(0,100) + "...");
 
                 const facebookDiv = document.createElement('div');
                 facebookDiv.className = 'social-media-item';
-                facebookDiv.innerHTML = `
-                        <h4 class="social-platform-title">Facebook Post:</h4>
-                        <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                        <div class="social-output-text"></div>
-                        <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>`;
+                facebookDiv.innerHTML = `<h4 class="social-platform-title">Facebook Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 facebookDiv.querySelector('.social-output-text').textContent = facebookText.trim();
                 socialMediaContentEl.appendChild(facebookDiv);
-                console.log("Facebook post HTML injected."); // DEBUG
+                console.log("Facebook post HTML injected.");
             
-                // --- Twitter Post ---
-                console.log("Generating Twitter text..."); // DEBUG
+                console.log("Generating Twitter text...");
                 const shortTaglineTwitter = escapedDetails.tagline.length > 60 ? escapedDetails.tagline.substring(0, 57) + "..." : escapedDetails.tagline;
                 const twitterText = 
 `Jammin' in Galway!
@@ -576,26 +604,23 @@ At: ${escapedDetails.venue}
 On: ${escapedDetails.date_str}, ${escapedDetails.time_str}
 Entry: ${escapedDetails.ticket_info}
 ${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
-                console.log("Twitter text created:", twitterText.substring(0,100) + "..."); // DEBUG
-
+                console.log("Twitter text created:", twitterText.substring(0,100) + "...");
+                
                 const twitterDiv = document.createElement('div');
                 twitterDiv.className = 'social-media-item';
-                twitterDiv.innerHTML = `
-                        <h4 class="social-platform-title">Twitter (X) Post:</h4>
-                        <img src="${socialPreviewImageUrl}" alt="Social media preview for ${escapedDetails.eventName}" class="social-image-preview" onerror="this.style.display='none'; this.alt='Image preview unavailable.';">
-                        <div class="social-output-text"></div>
-                         <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>`;
+                twitterDiv.innerHTML = `<h4 class="social-platform-title">Twitter (X) Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 twitterDiv.querySelector('.social-output-text').textContent = twitterText.trim();
                 socialMediaContentEl.appendChild(twitterDiv);
-                console.log("Twitter post HTML injected."); // DEBUG
+                console.log("Twitter post HTML injected.");
 
                 selectedImageUrls = []; 
-                console.log("generatePromotions function finished."); // DEBUG
+                console.log("generatePromotions function finished successfully."); 
             } catch (error) {
                 console.error("Error in generatePromotions:", error);
                 alert("An error occurred while generating promotions. Please check the console for details.");
             }
         }
+        console.log("Script end"); 
     </script>
 
 </body>
