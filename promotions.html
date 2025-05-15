@@ -172,7 +172,7 @@
         let gapiLoaded = false;
         let pickerApiLoaded = false;
         let oauthToken = null;
-        let selectedImageUrls = []; // Store URLs from both local and Google Picker
+        let selectedImageUrls = []; 
 
         function handleClientLoad() {
             try {
@@ -377,28 +377,34 @@
             } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
 
-        // Function to escape backticks for safe HTML injection within template literals
-        function escapeBackticks(str) {
+        function escapeBackticksAndHTML(str) {
             if (typeof str !== 'string') return str;
-            return str.replace(/`/g, '\\`');
+            let newStr = str.replace(/`/g, '\\`'); // Escape backticks for JS template literals
+            // Basic HTML escaping for content that will be displayed as text
+            newStr = newStr.replace(/&/g, '&amp;')
+                           .replace(/</g, '&lt;')
+                           .replace(/>/g, '&gt;')
+                           .replace(/"/g, '&quot;')
+                           .replace(/'/g, '&#039;');
+            return newStr;
         }
+
 
         async function generatePromotions() {
             const details = {
-                eventName: escapeBackticks(document.getElementById('eventName').value || "Galway Jam Circle"),
-                venue: escapeBackticks(document.getElementById('venue').value || "A Friendly Pub"),
-                date_str_input: document.getElementById('eventDate').value, // Date input doesn't need escaping
-                time_str: escapeBackticks(document.getElementById('eventTime').value || "8 PM"),
-                tagline: escapeBackticks(document.getElementById('tagline').value || "Join us for a night of music!"),
-                features_raw: escapeBackticks(document.getElementById('features').value), // Raw features string
-                ticket_info: escapeBackticks(document.getElementById('ticketInfo').value || "Free Entry"),
-                contact_info: escapeBackticks(document.getElementById('contactInfo').value)
+                eventName: escapeBackticksAndHTML(document.getElementById('eventName').value || "Galway Jam Circle"),
+                venue: escapeBackticksAndHTML(document.getElementById('venue').value || "A Friendly Pub"),
+                date_str_input: document.getElementById('eventDate').value,
+                time_str: escapeBackticksAndHTML(document.getElementById('eventTime').value || "8 PM"),
+                tagline: escapeBackticksAndHTML(document.getElementById('tagline').value || "Join us for a night of music!"),
+                features_raw: document.getElementById('features').value, // Raw features string, will be escaped per item
+                ticket_info: escapeBackticksAndHTML(document.getElementById('ticketInfo').value || "Free Entry"),
+                contact_info: escapeBackticksAndHTML(document.getElementById('contactInfo').value)
             };
             details.date_str = formatDate(details.date_str_input);
             
-            // Process features after escaping the raw string
             const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
-            details.features = featuresArray.length > 0 ? featuresArray : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
+            details.features = featuresArray.length > 0 ? featuresArray.map(f => escapeBackticksAndHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
             
             const localImageFiles = document.getElementById('imageFiles').files;
             const localImagePromises = [];
@@ -436,6 +442,7 @@
                 collageHtml = `<img src="${posterPrimaryImageUrlForSocial || fallbackImageUrl}" alt="Placeholder for ${details.eventName}" class="poster-collage-image count-1">`;
             }
 
+            // Poster HTML construction (variables are already escaped)
             const posterHtml = `
                 <header style="margin-bottom: 1rem;">
                     <h1 class="poster-header-title">Open Music Session</h1>
@@ -466,19 +473,20 @@
             const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(details.venue || "GalwayVenue").replace(/\s+/g, "")}`;
             const socialPreviewImageUrl = posterPrimaryImageUrlForSocial || fallbackImageUrl;
 
-            const featuresListInsta = details.features.slice(0, 3).map(f => `🎶 ${escapeBackticks(f)}`).join("\n"); // Escape features too
-            const instagramText = `🎸 **${details.eventName} is ON!** 🥁
+            // Removed Emojis and ensured variables are escaped before interpolation
+            const featuresListInsta = details.features.slice(0, 3).map(f => `- ${f}`).join("\n");
+            const instagramText = `**${details.eventName} is ON!**
 
 "${details.tagline}"
 
 Join us for a fantastic session of live music & community vibes.
 ${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
-📍 **Where:** ${details.venue}, Galway
-🗓️ **When:** ${details.date_str}
-⏰ **Time:** ${details.time_str}
-💰 **Entry:** ${details.ticket_info}
+**Where:** ${details.venue}, Galway
+**When:** ${details.date_str}
+**Time:** ${details.time_str}
+**Entry:** ${details.ticket_info}
 
-Bring your friends, instruments, and good energy! ✨
+Bring your friends, instruments, and good energy!
 ${commonHashtags}`;
              socialMediaContentEl.innerHTML += `
                 <div class="social-media-item">
@@ -488,21 +496,21 @@ ${commonHashtags}`;
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
             
-            const featuresBulletsFb = details.features.map(f => `✔️ ${escapeBackticks(f)}`).join("\n"); // Escape features
-            const facebookText = `🎉 **${details.eventName} - Join the Jam!** 🎉
+            const featuresBulletsFb = details.features.map(f => `- ${f}`).join("\n");
+            const facebookText = `**${details.eventName} - Join the Jam!**
 
 "${details.tagline}"
 
 Get ready for a great night of music and fun at ${details.venue}! Whether you play, sing, or just love live music, come on down.
 
 ${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
-🗓️ **Date:** ${details.date_str}
-🕒 **Time:** ${details.time_str}
-🏛️ **Venue:** ${details.venue}, Galway
-💸 **Entry:** ${details.ticket_info}
+**Date:** ${details.date_str}
+**Time:** ${details.time_str}
+**Venue:** ${details.venue}, Galway
+**Entry:** ${details.ticket_info}
 
 ${details.contact_info ? `For more info, contact: ${details.contact_info}\n` : ''}
-Share with your music-loving friends! Let's make some noise! 🎶
+Share with your music-loving friends! Let's make some noise!
 ${commonHashtags}`;
 
             socialMediaContentEl.innerHTML += `
@@ -513,12 +521,12 @@ ${commonHashtags}`;
                     <p class="social-note">${imageCopyInstructions}<br>Remember to upload your image(s) when posting!</p>
                 </div>`;
             
-            const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline; // Tagline already escaped
-            const twitterText = `Jammin' in Galway! 🎶
-✨ ${details.eventName} ✨
+            const shortTaglineTwitter = details.tagline.length > 60 ? details.tagline.substring(0, 57) + "..." : details.tagline;
+            const twitterText = `Jammin' in Galway!
+**${details.eventName}**
 "${shortTaglineTwitter}"
-📍 ${details.venue}
-📅 ${details.date_str}, ${details.time_str}
+At: ${details.venue}
+On: ${details.date_str}, ${details.time_str}
 Entry: ${details.ticket_info}
 ${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
 
