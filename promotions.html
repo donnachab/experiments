@@ -181,7 +181,7 @@
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - DOMContentLoaded Typo Fixed"); 
+        console.log("Script start - Aggressive DOMContentLoaded Debug"); 
 
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
@@ -394,10 +394,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded event"); 
+            console.log("DOMContentLoaded event - Aggressive Debug"); 
             
-            window.gapiLoadCallback = gapiLibraryLoadCallback; // Corrected function name
-            window.gisLoadCallback = gisLibraryLoadCallback;   // Corrected function name
+            window.gapiLoadCallback = gapiLibraryLoadCallback; 
+            window.gisLoadCallback = gisLibraryLoadCallback;   
 
             const gapiScriptTag = document.createElement('script');
             gapiScriptTag.src = 'https://apis.google.com/js/api.js?onload=gapiLoadCallback';
@@ -405,73 +405,47 @@
             gapiScriptTag.defer = true;
             document.head.appendChild(gapiScriptTag);
 
-            // The GIS script is already in the <head> with async defer.
-            // We need to ensure its onload callback is set correctly.
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
             if (gisScript) {
-                // Check if google object is already available (script might have loaded before DOMContentLoaded)
                 if (typeof google !== 'undefined' && google.accounts) {
                     console.log("GIS script likely already loaded, calling gisLoadCallback directly.");
-                    gisLibraryLoadCallback(); // Corrected function name
+                    gisLibraryLoadCallback(); 
                 } else {
-                    gisScript.onload = gisLibraryLoadCallback; // Corrected function name
+                    gisScript.onload = gisLibraryLoadCallback; 
                 }
             } else {
-                // Fallback if somehow the script tag isn't found (shouldn't happen with current HTML structure)
                 console.error("GIS script tag not found! This is unexpected.");
                 const newGisScriptTag = document.createElement('script');
                 newGisScriptTag.src = 'https://accounts.google.com/gsi/client';
                 newGisScriptTag.async = true;
                 newGisScriptTag.defer = true;
-                newGisScriptTag.onload = gisLibraryLoadCallback; // Corrected function name
+                newGisScriptTag.onload = gisLibraryLoadCallback; 
                 document.head.appendChild(newGisScriptTag);
             }
 
-
+            // --- MINIMAL DOMContentLoaded LOGIC FOR DEBUGGING ---
             try {
-                const today = new Date();
-                let nextWednesday = new Date(today);
-                const dayOfWeek = today.getDay();
-                let daysUntilWednesday = (3 - dayOfWeek + 7) % 7;
-                if (daysUntilWednesday === 0 && today.getHours() >= 12) { 
-                    daysUntilWednesday = 7; 
-                }
-                nextWednesday.setDate(today.getDate() + daysUntilWednesday);
-                
-                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
-                const yyyy = nextWednesday.getFullYear(); // Corrected variable name
-                console.log("After yyyy calculation. yyyy is:", yyyy); // Corrected variable name
-
-                const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
-                const dd = String(nextWednesday.getDate()).padStart(2, '0');
-                const dateInput = document.getElementById('eventDate');
-                if (dateInput) {
-                    dateInput.value = `${yyyy}-${mm}-${dd}`; // Corrected variable name
-                } else {
-                    console.error("Element with ID 'eventDate' not found.");
-                }
-                
-                const featuresInput = document.getElementById('features');
-                if (featuresInput) {
-                    featuresInput.value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
-                } else {
-                     console.error("Element with ID 'features' not found.");
-                }
-
+                console.log("DOMContentLoaded: Attaching local file input listener.");
                 const imageFilesInput = document.getElementById('imageFiles');
                 if (imageFilesInput) {
                     imageFilesInput.addEventListener('change', updateSelectedFilesDisplay);
                 } else {
-                    console.error("Element with ID 'imageFiles' not found.");
+                    console.error("Element with ID 'imageFiles' not found for listener attachment.");
                 }
+                // Minimal date setting to avoid errors if elements aren't found, but keep it simple
+                const dateInput = document.getElementById('eventDate');
+                if(dateInput) {
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    dateInput.value = `${yyyy}-${mm}-${dd}`; // Simple default to today
+                }
+
             } catch (e) {
-                console.error("Error specifically within DOMContentLoaded's date logic or element access:", e);
-                const selectedFilesDisplay = document.getElementById('selectedFilesDisplay');
-                if (selectedFilesDisplay) {
-                    selectedFilesDisplay.textContent = 'Error in page setup. Check console.';
-                }
+                console.error("Error in simplified DOMContentLoaded:", e);
             }
-            console.log("DOMContentLoaded event - END"); 
+            console.log("DOMContentLoaded event - END (Aggressive Debug)"); 
         });
 
         function formatDate(dateStr) { 
@@ -509,7 +483,7 @@
                 alert("Error in simplified generatePromotions. Check console.");
             }
         }
-        console.log("Script end - DOMContentLoaded Typo Fixed"); 
+        console.log("Script end - Aggressive DOMContentLoaded Debug"); 
     </script>
 
 </body>
