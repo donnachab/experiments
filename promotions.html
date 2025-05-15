@@ -175,28 +175,25 @@
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
         const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; 
         
-        let gapiPickerLoaded = false; // For gapi.load('picker')
-        let gisInited = false;  // For Google Identity Services (GIS)
+        let gapiPickerLoaded = false; 
+        let gisInited = false;  
         let tokenClient; 
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Finalized"); 
+        console.log("Script start - DOMContentLoaded Typo Fixed"); 
 
-        // Called after GAPI script (api.js) is loaded
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
-            gapi.load('picker', onPickerApiLoad); // Load only the Picker API module
+            gapi.load('picker', onPickerApiLoad); 
         }
 
-        // Called after Picker API module is loaded
         function onPickerApiLoad() {
             console.log("onPickerApiLoad called (Picker API module loaded)");
             gapiPickerLoaded = true;
             checkEnablePickerButtons(); 
         }
         
-        // Called after GIS script (gsi/client) is loaded
         function gisLibraryLoadCallback() {
             console.log("gisLibraryLoadCallback (Google Identity Services SCRIPT loaded)");
             if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
@@ -208,7 +205,7 @@
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, // For "Sign In With Google" button or One Tap
+                    callback: handleGisCredentialResponse, 
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
@@ -216,12 +213,11 @@
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
-                    callback: (tokenResponse) => { // This callback handles the response from requestAccessToken
+                    callback: (tokenResponse) => { 
                         if (tokenResponse && tokenResponse.access_token) {
                             currentAccessToken = tokenResponse.access_token;
                             console.log("GIS Access Token obtained via tokenClient:", currentAccessToken ? "Yes" : "No");
                             enablePickerButtons(true);
-                            // If a picker was waiting for this token, it might need to be re-triggered by user
                         } else {
                             currentAccessToken = null;
                             enablePickerButtons(false);
@@ -232,10 +228,8 @@
                         console.error("GIS initTokenClient error_callback:", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
                         currentAccessToken = null;
                         enablePickerButtons(false);
-                        // Don't alert here as it can be triggered by silent token failure
                     }
                 });
-                // Attempt a silent token request. If successful, buttons can be enabled sooner.
                 tokenClient.requestAccessToken({prompt: 'none'});
                 checkEnablePickerButtons(); 
             } catch (error) {
@@ -244,16 +238,14 @@
             }
         }
         
-        // This callback is for "Sign In With Google" button or One Tap flow.
         function handleGisCredentialResponse(response) {
-            console.log("GIS handleCredentialResponse (e.g., from One Tap or Sign In button):", response);
-            if (response.credential) { // This is an ID Token
-                console.log("ID Token received. User is signed in with Google.");
-                // We still need an access token for the Picker.
+            console.log("GIS handleCredentialResponse :", response);
+            if (response.credential) { 
+                console.log("ID Token received (indicates sign-in)");
                 if (!currentAccessToken && tokenClient) {
-                    requestAccessTokenForPicker('consent'); // Now request access token with user interaction if needed
+                    requestAccessTokenForPicker('consent'); 
                 } else if (currentAccessToken) {
-                    enablePickerButtons(true); // Already have an access token
+                    enablePickerButtons(true); 
                 }
             } else {
                 console.log("GIS Credential response does not contain credential.");
@@ -286,10 +278,9 @@
         }
 
         function checkEnablePickerButtons() {
-            // Enable if Picker API is loaded AND GIS is initialized (so tokenClient exists)
             if (gapiPickerLoaded && gisInited && tokenClient) {
                 console.log("Picker API and GIS ready. Buttons might be enabled or prompt for token on click.");
-                enablePickerButtons(true); // Enable buttons; token request will happen on click if needed
+                enablePickerButtons(true); 
             } else {
                 console.log(`Picker buttons not enabled yet. gapiPickerLoaded: ${gapiPickerLoaded}, gisInited: ${gisInited}`);
                 enablePickerButtons(false);
@@ -331,7 +322,7 @@
             } else { console.error("Unknown picker type:", type); return; }
 
             const picker = new google.picker.PickerBuilder()
-                .setAppId(CLIENT_ID.split('.')[0]) // AppId is not strictly needed for Picker with OAuth token
+                .setAppId(CLIENT_ID.split('.')[0]) 
                 .setOAuthToken(currentAccessToken) 
                 .addView(view)
                 .setDeveloperKey(API_KEY) 
@@ -405,8 +396,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOMContentLoaded event"); 
             
-            window.gapiLoadCallback = gapiLoadCallback; 
-            window.gisLoadCallback = gisLoadCallback;   
+            window.gapiLoadCallback = gapiLibraryLoadCallback; // Corrected function name
+            window.gisLoadCallback = gisLibraryLoadCallback;   // Corrected function name
 
             const gapiScriptTag = document.createElement('script');
             gapiScriptTag.src = 'https://apis.google.com/js/api.js?onload=gapiLoadCallback';
@@ -414,27 +405,26 @@
             gapiScriptTag.defer = true;
             document.head.appendChild(gapiScriptTag);
 
+            // The GIS script is already in the <head> with async defer.
+            // We need to ensure its onload callback is set correctly.
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
             if (gisScript) {
-                // If script tag is already in HTML with async defer, its onload will be called by browser.
-                // We need to ensure our gisLoadCallback is attached if it loads *after* this DOMContentLoaded.
-                // A common pattern is to have the script tag itself call a global init function.
-                // For this setup, we assume the gisLoadCallback will be called by the async defer script.
-                // If it's already loaded, the 'load' event might not fire again.
-                // So, we also check if 'google' object is already available.
+                // Check if google object is already available (script might have loaded before DOMContentLoaded)
                 if (typeof google !== 'undefined' && google.accounts) {
-                    gisLoadCallback();
-                } else if (gisScript) {
-                     gisScript.onload = gisLoadCallback; 
+                    console.log("GIS script likely already loaded, calling gisLoadCallback directly.");
+                    gisLibraryLoadCallback(); // Corrected function name
+                } else {
+                    gisScript.onload = gisLibraryLoadCallback; // Corrected function name
                 }
             } else {
+                // Fallback if somehow the script tag isn't found (shouldn't happen with current HTML structure)
+                console.error("GIS script tag not found! This is unexpected.");
                 const newGisScriptTag = document.createElement('script');
                 newGisScriptTag.src = 'https://accounts.google.com/gsi/client';
                 newGisScriptTag.async = true;
                 newGisScriptTag.defer = true;
-                newGisScriptTag.onload = gisLoadCallback;
+                newGisScriptTag.onload = gisLibraryLoadCallback; // Corrected function name
                 document.head.appendChild(newGisScriptTag);
-                console.log("Dynamically added GIS script as it wasn't found by querySelector initially.");
             }
 
 
@@ -448,15 +438,15 @@
                 }
                 nextWednesday.setDate(today.getDate() + daysUntilWednesday);
                 
-                console.log("Before<y_bin_46> calculation. nextWednesday is:", nextWednesday.toString()); 
-                const<y_bin_46> = nextWednesday.getFullYear(); 
-                console.log("After<y_bin_46> calculation.<y_bin_46> is:",<y_bin_46>); 
+                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
+                const yyyy = nextWednesday.getFullYear(); // Corrected variable name
+                console.log("After yyyy calculation. yyyy is:", yyyy); // Corrected variable name
 
                 const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextWednesday.getDate()).padStart(2, '0');
                 const dateInput = document.getElementById('eventDate');
                 if (dateInput) {
-                    dateInput.value = `${yyyy}-${mm}-${dd}`; 
+                    dateInput.value = `${yyyy}-${mm}-${dd}`; // Corrected variable name
                 } else {
                     console.error("Element with ID 'eventDate' not found.");
                 }
@@ -502,186 +492,24 @@
                       .replace(/`/g, '&#96;');
         }
 
+        // generatePromotions is kept extremely simple for debugging 
         async function generatePromotions() {
-            console.log("generatePromotions function called - START"); 
-            try {
-                const details = {
-                    eventName: document.getElementById('eventName').value || "Galway Jam Circle",
-                    venue: document.getElementById('venue').value || "A Friendly Pub",
-                    date_str_input: document.getElementById('eventDate').value,
-                    time_str: document.getElementById('eventTime').value || "8 PM",
-                    tagline: document.getElementById('tagline').value || "Join us for a night of music!",
-                    features_raw: document.getElementById('features').value, 
-                    ticket_info: document.getElementById('ticketInfo').value || "Free Entry",
-                    contact_info: document.getElementById('contactInfo').value
-                };
-                
-                const escapedDetails = {
-                    eventName: escapeForHTML(details.eventName),
-                    venue: escapeForHTML(details.venue),
-                    time_str: escapeForHTML(details.time_str),
-                    tagline: escapeForHTML(details.tagline),
-                    ticket_info: escapeForHTML(details.ticket_info),
-                    contact_info: escapeForHTML(details.contact_info),
-                    date_str: formatDate(details.date_str_input) 
-                };
-
-                const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
-                escapedDetails.features = featuresArray.length > 0 ? featuresArray.map(f => escapeForHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
-                
-                console.log("Details collected and escaped:", escapedDetails); 
-
-                const localImageFiles = document.getElementById('imageFiles').files;
-                const localImagePromises = [];
-                const maxCollageImages = 6; 
-                for (let i = 0; i < localImageFiles.length; i++) {
-                    const file = localImageFiles[i];
-                    localImagePromises.push(new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => resolve(event.target.result);
-                        reader.onerror = (error) => reject(error);
-                        reader.readAsDataURL(file);
-                    }));
-                }
-                let localImageDataUrls = [];
-                try { localImageDataUrls = await Promise.all(localImagePromises); } 
-                catch (error) { console.error("Error reading local image files:", error); }
-
-                const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])]; 
-                const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
-                console.log("Final collage URLs:", finalCollageUrls); 
-
-
-                let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
-                const defaultEventNamePlaceholder = encodeURIComponent(escapedDetails.eventName.substring(0,25).replace(/\s+/g, '+'));
-                if (!posterPrimaryImageUrlForSocial) { 
-                     posterPrimaryImageUrlForSocial = `https://placehold.co/800x600/4B0082/FFFFFF?text=${defaultEventNamePlaceholder}&font=montserrat`;
-                }
-                const fallbackImageUrl = `https://placehold.co/800x600/6A0DAD/FFFFFF?text=Image+Not+Found&font=montserrat`;
-
-                let collageHtml = '';
-                if (finalCollageUrls.length > 0) {
-                    const imgCountClass = `count-${finalCollageUrls.length > 4 ? 'gt-4' : finalCollageUrls.length}`;
-                    finalCollageUrls.forEach(dataUrl => {
-                        collageHtml += `<img src="${escapeForHTML(dataUrl)}" alt="Collage image for ${escapedDetails.eventName}" class="poster-collage-image ${imgCountClass}" onerror="this.src='${fallbackImageUrl}';">`;
-                    });
-                } else {
-                    collageHtml = `<img src="${escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl}" alt="Placeholder for ${escapedDetails.eventName}" class="poster-collage-image count-1">`;
-                }
-                console.log("Collage HTML generated"); 
-
-
-                const posterHtml = `
-                    <header style="margin-bottom: 1rem;">
-                        <h1 class="poster-header-title">Open Music Session</h1>
-                        <h2 class="poster-event-name-title">${escapedDetails.eventName}</h2>
-                        <p class="poster-tagline-text">"${escapedDetails.tagline}"</p>
-                    </header>
-                    <section class="poster-image-section" id="posterCollageContainer">
-                        ${collageHtml}
-                    </section>
-                    <section class="poster-details-text" style="margin-bottom: 1.5rem;">
-                        <p><strong style="font-weight: 700;">WHERE:</strong> ${escapedDetails.venue}, Galway</p>
-                        <p><strong style="font-weight: 700;">WHEN:</strong> ${escapedDetails.date_str}</p>
-                        <p><strong style="font-weight: 700;">TIME:</strong> ${escapedDetails.time_str}</p>
-                    </section>
-                    <section class="poster-ticket-info" style="margin-bottom: 1.5rem;">
-                        <p>${escapedDetails.ticket_info}</p>
-                        ${escapedDetails.ticket_info.toLowerCase().includes("free") ? '' : '<a href="#" class="poster-cta-button">More Info</a>'}
-                    </section>
-                    <footer class="poster-footer" style="padding-top: 1rem;">
-                        <p>Bring your instruments, voice, or just come to listen!</p>
-                        ${escapedDetails.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${escapedDetails.contact_info}</p>` : ''}
-                    </footer>`;
-                document.getElementById('posterContainerContent').innerHTML = posterHtml;
-                console.log("Poster HTML injected"); 
-
-                const socialMediaContentEl = document.getElementById('socialMediaContent');
-                socialMediaContentEl.innerHTML = ''; 
-                const imageCopyInstructions = "<strong>To use images:</strong> For the poster, take a screenshot. For social media, upload your chosen image(s) directly. You can right-click/long-press on individual images in the collage preview to save them.";
-                const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(escapedDetails.venue || "GalwayVenue").replace(/\s+/g, "")}`;
-                const socialPreviewImageUrl = escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl;
-
-                // --- Restored Social Media Text Generation ---
-                console.log("Generating Instagram text...");
-                const featuresListInsta = escapedDetails.features.slice(0, 3).map(f => `- ${f}`).join("\n");
-                const instagramText = 
-`**${escapedDetails.eventName} is ON!**
-
-"${escapedDetails.tagline}"
-
-Join us for a fantastic session of live music & community vibes.
-${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
-**Where:** ${escapedDetails.venue}, Galway
-**When:** ${escapedDetails.date_str}
-**Time:** ${escapedDetails.time_str}
-**Entry:** ${escapedDetails.ticket_info}
-
-Bring your friends, instruments, and good energy!
-${commonHashtags}`;
-                console.log("Instagram text created:", instagramText.substring(0,100) + "..."); 
-
-                const instagramDiv = document.createElement('div');
-                instagramDiv.className = 'social-media-item';
-                instagramDiv.innerHTML = `<h4 class="social-platform-title">Instagram Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
-                instagramDiv.querySelector('.social-output-text').textContent = instagramText.trim();
-                socialMediaContentEl.appendChild(instagramDiv);
-                console.log("Instagram post HTML injected."); 
-
-                console.log("Generating Facebook text...");
-                const featuresBulletsFb = escapedDetails.features.map(f => `- ${f}`).join("\n");
-                const facebookText = 
-`**${escapedDetails.eventName} - Join the Jam!**
-
-"${escapedDetails.tagline}"
-
-Get ready for a great night of music and fun at ${escapedDetails.venue}! Whether you play, sing, or just love live music, come on down.
-
-${featuresBulletsFb ? `**What to expect:**\n${featuresBulletsFb}\n` : ''}
-**Date:** ${escapedDetails.date_str}
-**Time:** ${escapedDetails.time_str}
-**Venue:** ${escapedDetails.venue}, Galway
-**Entry:** ${escapedDetails.ticket_info}
-
-${escapedDetails.contact_info ? `For more info, contact: ${escapedDetails.contact_info}\n` : ''}
-Share with your music-loving friends! Let's make some noise!
-${commonHashtags}`;
-                console.log("Facebook text created:", facebookText.substring(0,100) + "...");
-
-                const facebookDiv = document.createElement('div');
-                facebookDiv.className = 'social-media-item';
-                facebookDiv.innerHTML = `<h4 class="social-platform-title">Facebook Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
-                facebookDiv.querySelector('.social-output-text').textContent = facebookText.trim();
-                socialMediaContentEl.appendChild(facebookDiv);
-                console.log("Facebook post HTML injected.");
+            console.log("generatePromotions (ULTRA SIMPLE - DEBUGGING SYNTAX ERROR) function called.");
+            alert("Generate Promotions button clicked! If you see this, the script is loading without syntax errors, and generatePromotions is defined.");
             
-                console.log("Generating Twitter text...");
-                const shortTaglineTwitter = escapedDetails.tagline.length > 60 ? escapedDetails.tagline.substring(0, 57) + "..." : escapedDetails.tagline;
-                const twitterText = 
-`Jammin' in Galway!
-**${escapedDetails.eventName}**
-"${shortTaglineTwitter}"
-At: ${escapedDetails.venue}
-On: ${escapedDetails.date_str}, ${escapedDetails.time_str}
-Entry: ${escapedDetails.ticket_info}
-${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
-                console.log("Twitter text created:", twitterText.substring(0,100) + "...");
-                
-                const twitterDiv = document.createElement('div');
-                twitterDiv.className = 'social-media-item';
-                twitterDiv.innerHTML = `<h4 class="social-platform-title">Twitter (X) Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
-                twitterDiv.querySelector('.social-output-text').textContent = twitterText.trim();
-                socialMediaContentEl.appendChild(twitterDiv);
-                console.log("Twitter post HTML injected.");
+            try {
+                 const eventNameValue = document.getElementById('eventName').value || "Default Event";
+                 const escapedEventName = escapeForHTML(eventNameValue); 
 
-                selectedImageUrls = []; 
-                console.log("generatePromotions function finished successfully."); 
-            } catch (error) {
-                console.error("Error in generatePromotions:", error);
-                alert("An error occurred while generating promotions. Please check the console for details.");
+                 document.getElementById('posterContainerContent').innerHTML = `<p style="color:white; font-size:1.5rem;">Poster for: ${escapedEventName} (Debug Mode)</p>`;
+                 document.getElementById('socialMediaContent').innerHTML = `<p>Social media for: ${escapedEventName} (Debug Mode)</p>`;
+                 console.log("Simplified generatePromotions executed.");
+            } catch (e) {
+                console.error("Error in simplified generatePromotions:", e);
+                alert("Error in simplified generatePromotions. Check console.");
             }
         }
-        console.log("Script end"); 
+        console.log("Script end - DOMContentLoaded Typo Fixed"); 
     </script>
 
 </body>
