@@ -162,11 +162,9 @@
 
     <script>
         // --- IMPORTANT NOTE FOR GOOGLE PICKER API ---
-        // For the Google Drive/Photos buttons to work, this HTML file MUST be served via a web server
-        // (e.g., using Python's http.server, VS Code Live Server, or hosted on GitHub Pages).
-        // It WILL NOT WORK if you open the file directly using a file:/// URL due to browser security (CORS).
-        // Also, ensure your API_KEY, CLIENT_ID are correct and "Authorized JavaScript origins"
-        // in your Google Cloud Console OAuth Client ID settings match the origin you are using.
+        // This file MUST be served via a web server (e.g., GitHub Pages, local server).
+        // It WILL NOT WORK if opened directly as a file:/// URL.
+        // Ensure API_KEY, CLIENT_ID are correct & "Authorized JavaScript origins" in Google Cloud Console match.
         // --- END IMPORTANT NOTE ---
 
         // --- USER CONFIGURATION REQUIRED ---
@@ -175,76 +173,57 @@
         // --- END USER CONFIGURATION ---
 
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
-        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; // Scope for Photos Library API
+        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; 
         
-        let gapiInited = false; // For gapi.client.init
-        let gisInited = false; // For google.accounts.id.initialize
+        let gapiInited = false; // For gapi client library (used by Picker)
+        let gisInited = false;  // For Google Identity Services (GIS)
         let pickerApiLoaded = false;
-        let tokenClient; // For GIS token requests
-        let currentAccessToken = null; // Store the GIS access token
+        let tokenClient; 
+        let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Update"); 
+        console.log("Script start - GIS Auth Update v2"); 
 
-        function gapiLoad() {
-            console.log("gapiLoad called");
-            gapi.load('client:picker', initializeGapiClient); // Load client for API calls and picker
+        // Called after GAPI script is loaded
+        function gapiLoadCallback() {
+            console.log("gapiLoadCallback called (GAPI script loaded)");
+            gapi.load('picker', onPickerApiLoad); // Load only the Picker API module
         }
 
-        function initializeGapiClient() {
-            console.log("initializeGapiClient called");
-            if (API_KEY === 'YOUR_GOOGLE_API_KEY') {
-                alert("API_KEY is not set in the script."); return;
-            }
-            gapi.client.init({ // This is for API calls, not auth. Auth is handled by GIS.
-                apiKey: API_KEY,
-                // discoveryDocs are not strictly needed for Picker if views are used, but can be for other GAPI calls
-                // discoveryDocs: [ 
-                //     'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
-                //     'https://photoslibrary.googleapis.com/$discovery/rest?version=v1'
-                // ] 
-            }).then(() => {
-                console.log("gapi.client.init successful (for API calls, not auth)");
-                gapiInited = true;
-                pickerApiLoaded = true; // Picker is loaded with 'client:picker'
-                // Enable buttons if GIS is also ready (or will be soon)
-                checkEnablePickerButtons(); 
-            }).catch(error => {
-                console.error("Error initializing gapi.client (for API calls):", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
-                alert("Error initializing Google API client structure. Check console.");
-            });
+        // Called after Picker API module is loaded
+        function onPickerApiLoad() {
+            console.log("onPickerApiLoad called (Picker API module loaded)");
+            pickerApiLoaded = true;
+            checkEnablePickerButtons(); 
         }
-
-        function gisLoad() {
-            console.log("gisLoad (Google Identity Services) called");
+        
+        // Called after GIS script is loaded
+        function gisLoadCallback() {
+            console.log("gisLoadCallback (Google Identity Services SCRIPT loaded)");
             if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
                  alert("CLIENT_ID is not set in the script."); return;
             }
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleCredentialResponse, // Optional: for One Tap or Sign In With Google button
-                    // auto_select: true, // Optional: for smoother auto sign-in
-                    // ux_mode: "popup", // Optional
+                    callback: handleCredentialResponse, 
                 });
-                console.log("Google Identity Services initialized");
+                console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
 
-                // Create token client for Picker
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
-                    scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, // Scopes needed for Picker
-                    callback: (tokenResponse) => { // Callback for when token is received or error
+                    scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
+                    callback: (tokenResponse) => { 
                         if (tokenResponse && tokenResponse.access_token) {
                             currentAccessToken = tokenResponse.access_token;
-                            console.log("GIS Access Token obtained:", currentAccessToken ? "Yes" : "No");
-                            // Now that we have a token, we can enable picker buttons
+                            console.log("GIS Access Token obtained via tokenClient:", currentAccessToken ? "Yes" : "No");
                             enablePickerButtons(true);
                         } else {
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
-                            alert("Could not get Google authorization. Please try signing in again.");
+                            // alert("Could not get Google authorization. Please try signing in again."); // Can be noisy
                         }
                     },
                     error_callback: (error) => {
@@ -254,45 +233,48 @@
                         enablePickerButtons(false);
                     }
                 });
-                checkEnablePickerButtons(); // Check if we can enable buttons (user might be already signed in)
-                // Attempt to get a token silently if user is already signed in with Google
-                // This might not always work depending on user's session status with Google
-                // google.accounts.id.prompt(); // This would show One Tap if configured
+                // Attempt to get a token silently if the user is already signed in and has granted consent.
+                // This helps enable buttons faster if possible.
+                tokenClient.requestAccessToken({prompt: 'none'}); 
+                checkEnablePickerButtons(); 
             } catch (error) {
                  console.error("Error initializing Google Identity Services (GIS):", error);
                  alert("Critical error initializing Google Sign-In services. Check console.");
             }
         }
         
-        // This callback is for Google One Tap or Sign In With Google button, not directly used by Picker token flow
         function handleCredentialResponse(response) {
-            console.log("GIS handleCredentialResponse (e.g., from One Tap):", response);
-            // If using One Tap or Sign In With Google button, you'd handle the ID token here.
-            // For Picker, we primarily use the access token from initTokenClient.
-            // However, a successful sign-in here means user is authenticated.
-            // We might need to re-request an access token for Picker if it's not already available.
+            console.log("GIS handleCredentialResponse (e.g., from One Tap or Sign In With Google button):", response);
             if (response.credential) {
-                 // User is signed in, we can now try to get an access token for Picker
-                requestAccessTokenForPicker();
+                console.log("ID Token received (not directly used for Picker, but indicates sign-in)");
+                // User is signed in, now ensure we have an access token for Picker
+                if (!currentAccessToken && tokenClient) {
+                    requestAccessTokenForPicker();
+                } else if (currentAccessToken) {
+                    enablePickerButtons(true);
+                }
+            } else {
+                console.log("Credential response does not contain credential.");
             }
         }
 
         function requestAccessTokenForPicker() {
             if (tokenClient) {
-                console.log("Requesting access token for Picker...");
-                tokenClient.requestAccessToken({prompt: ''}); // prompt: '' for silent, or 'consent' if needed
+                console.log("Requesting access token for Picker (user interaction might be required)...");
+                // Request an access token. Might show a consent popup if not granted or expired.
+                tokenClient.requestAccessToken({prompt: 'consent'}); 
             } else {
                 console.error("Token client not initialized for Picker token request.");
+                alert("Google authentication not ready. Please wait or refresh.");
             }
         }
-
 
         function enablePickerButtons(enable) {
             document.getElementById('googleDriveButton').disabled = !enable;
             document.getElementById('googlePhotosButton').disabled = !enable;
             const filesDisplay = document.getElementById('selectedFilesDisplay');
             if (enable) {
-                 if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected')) {
+                 if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected') || filesDisplay.textContent.includes('Initializing')) {
                     filesDisplay.textContent = 'No images selected. Google services ready.';
                 }
             } else {
@@ -303,18 +285,27 @@
         }
 
         function checkEnablePickerButtons() {
-            // Buttons should be enabled if both GAPI (for picker) and GIS (for token) are ready,
-            // and we have an access token (or can get one).
-            // For simplicity, we enable them if GIS is init and user can be prompted for token.
-            if (gisInited) { // Primarily depends on GIS being ready to request a token
-                enablePickerButtons(true); // User will be prompted if no token yet
+            // Enable if Picker API is loaded AND GIS is initialized (so tokenClient exists)
+            // Actual token availability is checked before opening picker.
+            if (pickerApiLoaded && gisInited && tokenClient) {
+                console.log("Picker API and GIS ready. Attempting to enable buttons or prompt for token.");
+                // If we don't have a token yet, the buttons will be enabled, 
+                // and clicking them will trigger requestAccessTokenForPicker.
+                // If we do have a token, they are simply enabled.
+                enablePickerButtons(true); 
+            } else {
+                console.log(`Picker buttons not enabled yet. pickerApiLoaded: ${pickerApiLoaded}, gisInited: ${gisInited}`);
             }
         }
         
         function createPicker(type) {
             console.log("createPicker called for type:", type); 
-            if (!pickerApiLoaded) { // Check if picker API specifically is ready
+            if (!pickerApiLoaded) {
                 alert("Google Picker API not loaded yet. Please wait and try again.");
+                return;
+            }
+            if (!gisInited || !tokenClient) {
+                alert("Google Authentication not ready. Please wait or refresh the page.");
                 return;
             }
 
@@ -322,7 +313,6 @@
                 console.log("No current access token for Picker. Requesting...");
                 requestAccessTokenForPicker(); 
                 // User will need to click again after token is obtained if it wasn't silent.
-                // Or, we could chain this to open picker after token.
                 alert("Authorizing with Google... Please click the button again after authorization completes.");
                 return;
             }
@@ -347,9 +337,9 @@
             const picker = new google.picker.PickerBuilder()
                 .enableFeature(google.picker.Feature.NAV_HIDDEN) 
                 .setAppId(CLIENT_ID.split('.')[0]) 
-                .setOAuthToken(currentAccessToken) // Use GIS obtained token
+                .setOAuthToken(currentAccessToken) 
                 .addView(view)
-                .setDeveloperKey(API_KEY) // API Key is still needed for Picker
+                .setDeveloperKey(API_KEY) 
                 .setCallback(pickerCallback)
                 .setTitle(title)
                 .setMaxItems(6 - document.getElementById('imageFiles').files.length) 
@@ -410,8 +400,7 @@
             if (fileNames.length > 0) {
                 display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join('; ')}`;
             } else {
-                 // Check GIS readiness for the message
-                 if (gisInited && tokenClient) { // A more accurate check for GIS readiness
+                 if (gisInited && tokenClient) { 
                     display.textContent = 'No images selected. Google services ready.';
                 } else {
                     display.textContent = 'No images selected. (Initializing Google services...)';
@@ -421,21 +410,32 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // ... (DOMContentLoaded logic remains the same) ...
             console.log("DOMContentLoaded event"); 
-            // handleClientLoad(); // gapi.load will be called by gisLoad's onload
-            // Instead of handleClientLoad, we set up a window.onload for gisLoad
-            // and gapiLoad will be called after GIS script is loaded.
+            
+            // Set up callbacks for when Google API scripts load
+            window.gapiLoadCallback = gapiLoadCallback; // Make it global for GAPI script's onload
+            window.gisLoadCallback = gisLoadCallback;   // Make it global for GIS script's onload
 
+            // Dynamically create GAPI script tag with onload callback
+            const gapiScriptTag = document.createElement('script');
+            gapiScriptTag.src = 'https://apis.google.com/js/api.js?onload=gapiLoadCallback';
+            gapiScriptTag.async = true;
+            gapiScriptTag.defer = true;
+            document.head.appendChild(gapiScriptTag);
+
+            // GIS script is already in HTML with async defer, its onload will call gisLoadCallback
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
             if (gisScript) {
-                gisScript.onload = () => {
-                    console.log("Google Identity Services SCRIPT loaded.");
-                    gisLoad(); // Initialize GIS
-                    gapiLoad(); // Initialize GAPI for Picker (after GIS script is confirmed loaded)
-                };
+                gisScript.onload = gisLoadCallback; // Ensure this is set if script is already in DOM
             } else {
-                 console.error("GIS script tag not found!");
+                // If for some reason it wasn't in head, create it too (though it is)
+                const newGisScriptTag = document.createElement('script');
+                newGisScriptTag.src = 'https://accounts.google.com/gsi/client';
+                newGisScriptTag.async = true;
+                newGisScriptTag.defer = true;
+                newGisScriptTag.onload = gisLoadCallback;
+                document.head.appendChild(newGisScriptTag);
+                console.log("Dynamically added GIS script as it wasn't found by querySelector initially.");
             }
 
 
@@ -449,9 +449,9 @@
                 }
                 nextWednesday.setDate(today.getDate() + daysUntilWednesday);
                 
-                console.log("Before<y_bin_46> calculation. nextWednesday is:", nextWednesday.toString()); 
-                const<y_bin_46> = nextWednesday.getFullYear(); 
-                console.log("After<y_bin_46> calculation.<y_bin_46> is:",<y_bin_46>); 
+                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
+                const yyyy = nextWednesday.getFullYear(); 
+                console.log("After yyyy calculation. yyyy is:", yyyy); 
 
                 const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextWednesday.getDate()).padStart(2, '0');
@@ -486,7 +486,6 @@
         });
 
         function formatDate(dateStr) { 
-            // ... (same as before) ...
             if (!dateStr) return "TBC";
             try {
                 const dateObj = new Date(dateStr + 'T00:00:00');
@@ -495,7 +494,6 @@
         }
 
         function escapeForHTML(str) {
-            // ... (same as before) ...
             if (typeof str !== 'string') return str;
             return str.replace(/&/g, '&amp;')
                       .replace(/</g, '&lt;')
