@@ -175,29 +175,26 @@
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
         const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; 
         
-        let gapiInited = false; // For gapi client library (used by Picker)
-        let gisInited = false;  // For Google Identity Services (GIS)
+        let gapiInited = false; 
+        let gisInited = false;  
         let pickerApiLoaded = false;
         let tokenClient; 
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Update v2"); 
+        console.log("Script start - Syntax Debug Step 3"); 
 
-        // Called after GAPI script is loaded
         function gapiLoadCallback() {
             console.log("gapiLoadCallback called (GAPI script loaded)");
-            gapi.load('picker', onPickerApiLoad); // Load only the Picker API module
+            gapi.load('picker', onPickerApiLoad); 
         }
 
-        // Called after Picker API module is loaded
         function onPickerApiLoad() {
             console.log("onPickerApiLoad called (Picker API module loaded)");
             pickerApiLoaded = true;
             checkEnablePickerButtons(); 
         }
         
-        // Called after GIS script is loaded
         function gisLoadCallback() {
             console.log("gisLoadCallback (Google Identity Services SCRIPT loaded)");
             if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
@@ -223,7 +220,6 @@
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
-                            // alert("Could not get Google authorization. Please try signing in again."); // Can be noisy
                         }
                     },
                     error_callback: (error) => {
@@ -233,8 +229,6 @@
                         enablePickerButtons(false);
                     }
                 });
-                // Attempt to get a token silently if the user is already signed in and has granted consent.
-                // This helps enable buttons faster if possible.
                 tokenClient.requestAccessToken({prompt: 'none'}); 
                 checkEnablePickerButtons(); 
             } catch (error) {
@@ -244,10 +238,9 @@
         }
         
         function handleCredentialResponse(response) {
-            console.log("GIS handleCredentialResponse (e.g., from One Tap or Sign In With Google button):", response);
+            console.log("GIS handleCredentialResponse :", response);
             if (response.credential) {
-                console.log("ID Token received (not directly used for Picker, but indicates sign-in)");
-                // User is signed in, now ensure we have an access token for Picker
+                console.log("ID Token received (indicates sign-in)");
                 if (!currentAccessToken && tokenClient) {
                     requestAccessTokenForPicker();
                 } else if (currentAccessToken) {
@@ -261,7 +254,6 @@
         function requestAccessTokenForPicker() {
             if (tokenClient) {
                 console.log("Requesting access token for Picker (user interaction might be required)...");
-                // Request an access token. Might show a consent popup if not granted or expired.
                 tokenClient.requestAccessToken({prompt: 'consent'}); 
             } else {
                 console.error("Token client not initialized for Picker token request.");
@@ -285,13 +277,8 @@
         }
 
         function checkEnablePickerButtons() {
-            // Enable if Picker API is loaded AND GIS is initialized (so tokenClient exists)
-            // Actual token availability is checked before opening picker.
             if (pickerApiLoaded && gisInited && tokenClient) {
                 console.log("Picker API and GIS ready. Attempting to enable buttons or prompt for token.");
-                // If we don't have a token yet, the buttons will be enabled, 
-                // and clicking them will trigger requestAccessTokenForPicker.
-                // If we do have a token, they are simply enabled.
                 enablePickerButtons(true); 
             } else {
                 console.log(`Picker buttons not enabled yet. pickerApiLoaded: ${pickerApiLoaded}, gisInited: ${gisInited}`);
@@ -312,7 +299,6 @@
             if (!currentAccessToken) {
                 console.log("No current access token for Picker. Requesting...");
                 requestAccessTokenForPicker(); 
-                // User will need to click again after token is obtained if it wasn't silent.
                 alert("Authorizing with Google... Please click the button again after authorization completes.");
                 return;
             }
@@ -322,7 +308,6 @@
         }
 
         function createPickerView(type) {
-            // ... (Picker view creation logic remains largely the same) ...
             console.log("createPickerView called for type:", type); 
             let view;
             let title = 'Select Images';
@@ -349,7 +334,6 @@
         }
 
         function pickerCallback(data) {
-            // ... (pickerCallback logic remains the same) ...
             console.log("pickerCallback data:", data); 
             try {
                 if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
@@ -381,7 +365,6 @@
         }
         
         function updateSelectedFilesDisplay() {
-            // ... (updateSelectedFilesDisplay logic remains the same) ...
             const localFiles = Array.from(document.getElementById('imageFiles').files);
             const display = document.getElementById('selectedFilesDisplay');
             let fileNames = [];
@@ -412,23 +395,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOMContentLoaded event"); 
             
-            // Set up callbacks for when Google API scripts load
-            window.gapiLoadCallback = gapiLoadCallback; // Make it global for GAPI script's onload
-            window.gisLoadCallback = gisLoadCallback;   // Make it global for GIS script's onload
+            window.gapiLoadCallback = gapiLoadCallback; 
+            window.gisLoadCallback = gisLoadCallback;   
 
-            // Dynamically create GAPI script tag with onload callback
             const gapiScriptTag = document.createElement('script');
             gapiScriptTag.src = 'https://apis.google.com/js/api.js?onload=gapiLoadCallback';
             gapiScriptTag.async = true;
             gapiScriptTag.defer = true;
             document.head.appendChild(gapiScriptTag);
 
-            // GIS script is already in HTML with async defer, its onload will call gisLoadCallback
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
             if (gisScript) {
-                gisScript.onload = gisLoadCallback; // Ensure this is set if script is already in DOM
+                gisScript.onload = gisLoadCallback; 
             } else {
-                // If for some reason it wasn't in head, create it too (though it is)
                 const newGisScriptTag = document.createElement('script');
                 newGisScriptTag.src = 'https://accounts.google.com/gsi/client';
                 newGisScriptTag.async = true;
@@ -437,7 +416,6 @@
                 document.head.appendChild(newGisScriptTag);
                 console.log("Dynamically added GIS script as it wasn't found by querySelector initially.");
             }
-
 
             try {
                 const today = new Date();
@@ -505,7 +483,7 @@
 
         // generatePromotions is kept extremely simple for debugging 
         async function generatePromotions() {
-            console.log("generatePromotions (ULTRA SIMPLE - DEBUGGING) function called.");
+            console.log("generatePromotions (ULTRA SIMPLE - DEBUGGING SYNTAX ERROR) function called.");
             alert("Generate Promotions button clicked! If you see this, the script is loading without syntax errors, and generatePromotions is defined.");
             
             try {
@@ -520,7 +498,7 @@
                 alert("Error in simplified generatePromotions. Check console.");
             }
         }
-        console.log("Script end"); 
+        console.log("Script end - Syntax Debug Step 3"); 
     </script>
 
 </body>
