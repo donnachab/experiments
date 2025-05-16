@@ -181,7 +181,7 @@
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Refined"); 
+        console.log("Script start - GIS Auth Refined v2"); 
 
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
@@ -202,7 +202,7 @@
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, 
+                    callback: handleGisCredentialResponse, // This is for Sign In With Google button or One Tap
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
@@ -219,6 +219,7 @@
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
+                            // Avoid alerting here as this can be a silent failure from prompt: 'none'
                         }
                     },
                     error_callback: (error) => {
@@ -226,12 +227,12 @@
                         currentAccessToken = null;
                         enablePickerButtons(false);
                         if (error.type !== 'popup_failed_to_open' && error.type !== 'popup_closed_by_user' && error.type !== 'session_timed_out_or_revoked') {
-                           // alert("Error during Google authorization process. Check console."); // Avoid for silent failures
+                           // Only alert for unexpected errors, not for user closing popup or silent failures.
+                           // alert("Error during Google authorization process. Check console."); 
                         }
                     }
                 });
-                // Do not call tokenClient.requestAccessToken({prompt: 'none'}); here.
-                // Let user interaction (button click) or handleGisCredentialResponse trigger it.
+                // Do not automatically request token here. Let user interaction trigger it.
                 checkEnablePickerButtons(); 
             } catch (error) {
                  console.error("Error initializing Google Identity Services (GIS):", error);
@@ -243,10 +244,12 @@
             console.log("GIS handleCredentialResponse :", response);
             if (response.credential) { 
                 console.log("ID Token received (indicates sign-in). Requesting access token for Picker.");
-                requestAccessTokenForPicker('consent'); // Request access token with consent prompt
+                // User has signed in (e.g., via One Tap if it was configured, or a Sign In With Google button).
+                // Now, we need an *access token* for the Picker.
+                requestAccessTokenForPicker('consent'); // Request with consent prompt as user just actively signed in.
             } else {
                 console.log("GIS Credential response does not contain credential.");
-                 enablePickerButtons(false); // Ensure buttons are disabled if sign-in fails here
+                 enablePickerButtons(false); 
             }
         }
 
@@ -264,7 +267,7 @@
             document.getElementById('googleDriveButton').disabled = !enable;
             document.getElementById('googlePhotosButton').disabled = !enable;
             const filesDisplay = document.getElementById('selectedFilesDisplay');
-            if (enable && currentAccessToken) { // Only enable if we actually have a token
+            if (enable && currentAccessToken) { 
                  if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected') || filesDisplay.textContent.includes('Initializing')) {
                     filesDisplay.textContent = 'No images selected. Google services ready.';
                 }
@@ -277,8 +280,7 @@
 
         function checkEnablePickerButtons() {
             if (gapiPickerLoaded && gisInited && tokenClient) {
-                console.log("Picker API and GIS ready. Buttons enabled if token is available or will be requested on click.");
-                // Enable buttons; createPicker will handle token request if needed.
+                console.log("Picker API and GIS ready. Buttons enabled. Token will be requested on click if needed.");
                 enablePickerButtons(true); 
             } else {
                 console.log(`Picker buttons not enabled yet. gapiPickerLoaded: ${gapiPickerLoaded}, gisInited: ${gisInited}`);
@@ -300,8 +302,6 @@
             if (!currentAccessToken) {
                 console.log("No current access token for Picker. Requesting with consent...");
                 requestAccessTokenForPicker('consent'); 
-                // The tokenClient's callback will set currentAccessToken and enable buttons.
-                // The user might need to click the button again.
                 alert("Please complete the Google sign-in/consent process. If a pop-up doesn't appear, check your browser's pop-up blocker. Then, try clicking the Google Drive/Photos button again after authorization.");
                 return;
             }
