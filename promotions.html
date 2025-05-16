@@ -181,7 +181,7 @@
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Refined & Full Promo Text v3"); 
+        console.log("Script start - Critical Typo Fixed in DOMContentLoaded"); 
 
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
@@ -202,7 +202,7 @@
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, // This callback handles ID tokens from Sign In With Google or One Tap
+                    callback: handleGisCredentialResponse, 
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
@@ -210,7 +210,7 @@
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
-                    callback: (tokenResponse) => { // This callback handles the Access Token response
+                    callback: (tokenResponse) => { 
                         if (tokenResponse && tokenResponse.access_token) {
                             currentAccessToken = tokenResponse.access_token;
                             console.log("GIS Access Token obtained via tokenClient:", currentAccessToken ? "Yes" : "No");
@@ -219,21 +219,18 @@
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
-                            // Don't alert here, as this can be a silent failure from prompt: 'none' or user closing pop-up
                         }
                     },
                     error_callback: (error) => {
                         console.error("GIS initTokenClient error_callback:", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
                         currentAccessToken = null;
                         enablePickerButtons(false);
-                        // Avoid alerting for common pop-up issues during silent attempts or user cancellation
                         if (error.type !== 'popup_failed_to_open' && error.type !== 'popup_closed_by_user' && error.type !== 'session_timed_out_or_revoked') {
-                           // Consider a less intrusive way to inform the user if needed
+                           // alert("Error during Google authorization process. Check console."); 
                         }
                     }
                 });
-                // Do NOT call tokenClient.requestAccessToken({prompt: 'none'}); here.
-                // Let user interaction (button click) or handleGisCredentialResponse trigger it.
+                // Removed automatic tokenClient.requestAccessToken({prompt: 'none'});
                 checkEnablePickerButtons(); 
             } catch (error) {
                  console.error("Error initializing Google Identity Services (GIS):", error);
@@ -241,17 +238,14 @@
             }
         }
         
-        // This callback is for "Sign In With Google" button or One Tap flow.
-        // If successful, it means the user is signed in, and we should then request an access token for the Picker.
         function handleGisCredentialResponse(response) {
             console.log("GIS handleCredentialResponse :", response);
-            if (response.credential) { // This is an ID Token
+            if (response.credential) { 
                 console.log("ID Token received (indicates sign-in). Requesting access token for Picker.");
-                // User has signed in. Now, explicitly request an access token for the Picker scopes.
-                requestAccessTokenForPicker('consent'); // 'consent' will ensure user sees consent screen if needed for the scopes
+                requestAccessTokenForPicker('consent'); 
             } else {
-                console.log("GIS Credential response does not contain credential. User may have closed One Tap or Sign In prompt.");
-                 enablePickerButtons(false); // Ensure buttons are disabled if sign-in fails here
+                console.log("GIS Credential response does not contain credential.");
+                 enablePickerButtons(false); 
             }
         }
 
@@ -284,8 +278,6 @@
         }
 
         function checkEnablePickerButtons() {
-            // Enable buttons if Picker API is loaded AND GIS is initialized (so tokenClient exists).
-            // The actual token availability will be checked when createPicker is called.
             if (gapiPickerLoaded && gisInited && tokenClient) {
                 console.log("Picker API and GIS ready. Buttons enabled. Token will be requested on click if needed.");
                 enablePickerButtons(true); 
@@ -309,7 +301,6 @@
             if (!currentAccessToken) {
                 console.log("No current access token for Picker. Requesting with consent...");
                 requestAccessTokenForPicker('consent'); 
-                // Advise user they might need to click again after consent.
                 alert("Please complete the Google sign-in/consent process. If a pop-up doesn't appear, check your browser's pop-up blocker. Then, try clicking the Google Drive/Photos button again after authorization.");
                 return;
             }
@@ -403,7 +394,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded event"); 
+            console.log("DOMContentLoaded event - Critical Typo Fixed Version"); 
             
             window.gapiLoadCallback = gapiLibraryLoadCallback; 
             window.gisLoadCallback = gisLibraryLoadCallback;   
@@ -413,6 +404,8 @@
             gapiScriptTag.async = true;
             gapiScriptTag.defer = true;
             document.head.appendChild(gapiScriptTag);
+            console.log("GAPI script tag added to head.");
+
 
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
             if (gisScript) {
@@ -421,33 +414,38 @@
                     gisLibraryLoadCallback(); 
                 } else {
                     gisScript.onload = gisLibraryLoadCallback; 
+                    console.log("GIS script onload event attached to existing tag.");
                 }
             } else {
-                console.error("GIS script tag not found! This is unexpected.");
+                console.error("GIS script tag not found by querySelector! Adding dynamically as fallback.");
+                 const newGisScriptTag = document.createElement('script');
+                newGisScriptTag.src = 'https://accounts.google.com/gsi/client';
+                newGisScriptTag.async = true;
+                newGisScriptTag.defer = true;
+                newGisScriptTag.onload = gisLibraryLoadCallback; 
+                document.head.appendChild(newGisScriptTag);
             }
 
 
             try {
-                const today = new Date();
-                let nextWednesday = new Date(today);
-                const dayOfWeek = today.getDay();
-                let daysUntilWednesday = (3 - dayOfWeek + 7) % 7;
-                if (daysUntilWednesday === 0 && today.getHours() >= 12) { 
-                    daysUntilWednesday = 7; 
-                }
-                nextWednesday.setDate(today.getDate() + daysUntilWednesday);
-                
-                console.log("Before<y_bin_46> calculation. nextWednesday is:", nextWednesday.toString()); 
-                const<y_bin_46> = nextWednesday.getFullYear(); 
-                console.log("After<y_bin_46> calculation.<y_bin_46> is:",<y_bin_46>); 
-
-                const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
-                const dd = String(nextWednesday.getDate()).padStart(2, '0');
-                const dateInput = document.getElementById('eventDate');
-                if (dateInput) {
-                    dateInput.value = `${yyyy}-${mm}-${dd}`; 
+                console.log("DOMContentLoaded: Setting up local file input listener and default date.");
+                const imageFilesInput = document.getElementById('imageFiles');
+                if (imageFilesInput) {
+                    imageFilesInput.addEventListener('change', updateSelectedFilesDisplay); 
                 } else {
-                    console.error("Element with ID 'eventDate' not found.");
+                    console.error("Element with ID 'imageFiles' not found for listener attachment.");
+                }
+
+                const dateInput = document.getElementById('eventDate');
+                if(dateInput) {
+                    const today = new Date();
+                    const yyyy = today.getFullYear(); // Corrected variable name
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    dateInput.value = `${yyyy}-${mm}-${dd}`; // Corrected variable name usage
+                    console.log("Default date set to today:", dateInput.value);
+                } else {
+                     console.error("Element with ID 'eventDate' not found for date setting.");
                 }
                 
                 const featuresInput = document.getElementById('features');
@@ -457,22 +455,12 @@
                      console.error("Element with ID 'features' not found.");
                 }
 
-                const imageFilesInput = document.getElementById('imageFiles');
-                if (imageFilesInput) {
-                    imageFilesInput.addEventListener('change', updateSelectedFilesDisplay);
-                } else {
-                    console.error("Element with ID 'imageFiles' not found.");
-                }
             } catch (e) {
-                console.error("Error specifically within DOMContentLoaded's date logic or element access:", e);
-                const selectedFilesDisplay = document.getElementById('selectedFilesDisplay');
-                if (selectedFilesDisplay) {
-                    selectedFilesDisplay.textContent = 'Error in page setup. Check console.';
-                }
+                console.error("Error in DOMContentLoaded (local setup):", e);
             }
-            console.log("DOMContentLoaded event - END"); 
+            console.log("DOMContentLoaded event - END (Critical Typo Fixed Version)"); 
         });
-
+        
         function formatDate(dateStr) { 
             if (!dateStr) return "TBC";
             try {
@@ -481,7 +469,7 @@
             } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
 
-        function escapeForHTML(str) {
+        function escapeForHTML(str) { 
             if (typeof str !== 'string') return str;
             return str.replace(/&/g, '&amp;')
                       .replace(/</g, '&lt;')
