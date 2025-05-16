@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script> 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
             --color-purple-primary: rgb(75, 0, 130);
@@ -19,47 +18,31 @@
             --color-dark-text: rgb(33, 37, 41);
             --color-grey-text: rgb(108, 117, 125);
             --color-input-border: rgb(206, 212, 218);
-            --color-google-blue: #4285F4; 
-            --color-google-red: #DB4437; 
+            --color-google-blue: #4285F4;
+            --color-google-red: #DB4437;
         }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 400;
-            background-color: var(--color-purple-primary);
-            color: var(--color-white);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            line-height: 1.6;
-        }
-
+        body { font-family: 'Montserrat', sans-serif; font-weight: 400; background-color: var(--color-purple-primary); color: var(--color-white); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; line-height: 1.6; }
         .container { max-width: 1200px; margin: 1rem auto; padding: 1rem; }
         .form-section, .output-section { background-color: var(--color-off-white); color: var(--color-dark-text); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 2rem; }
-        
         h1, h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--color-purple-primary); margin-bottom: 1.5rem; }
         h1 { font-size: 2.2rem; text-align: center; color: var(--color-white); margin-bottom: 2rem; }
-        h2 { font-size: 1.6rem; } 
+        h2 { font-size: 1.6rem; }
         h3.section-subtitle { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--color-dark-text); margin-top: 1.5rem; margin-bottom: 1rem; }
         h4.social-platform-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--color-purple-light); margin-top: 1rem; margin-bottom: 0.5rem; }
-
         label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--color-dark-text); }
         input[type="text"], input[type="date"], input[type="file"], textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--color-input-border); border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 1rem; background-color: var(--color-white); color: var(--color-dark-text); }
         input[type="file"] { padding: 0.5rem; }
         #selectedFilesDisplay { font-size: 0.85rem; color: var(--color-grey-text); margin-top: -0.5rem; margin-bottom: 1rem; min-height: 20px;}
         textarea { min-height: 80px; }
-
         .button-base { padding: 0.85rem 1.5rem; border: none; border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1rem; text-transform: uppercase; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; display: block; width: 100%; margin-top: 0.75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: center; }
+        .button-base:disabled { background-color: #ccc; cursor: not-allowed; }
         .generate-button { background-color: var(--color-purple-primary); color: var(--color-white); margin-top: 1.5rem; }
-        .generate-button:hover { background-color: var(--color-purple-light); transform: translateY(-2px); }
-        
+        .generate-button:hover:not(:disabled) { background-color: var(--color-purple-light); transform: translateY(-2px); }
         .google-button { margin-top: 0.5rem; font-size: 0.9rem; padding: 0.7rem 1.2rem;}
         .google-drive-button { background-color: var(--color-google-blue); color: var(--color-white); }
-        .google-drive-button:hover { background-color: #3a78d8; }
+        .google-drive-button:hover:not(:disabled) { background-color: #3a78d8; }
         .google-photos-button { background-color: var(--color-google-red); color: var(--color-white); }
-        .google-photos-button:hover { background-color: #c73a2f; }
-
-
-        /* Poster Styles */
+        .google-photos-button:hover:not(:disabled) { background-color: #c73a2f; }
         .poster-preview-container { margin-top: 2rem; }
         .poster-container { max-width: 600px; margin: 0 auto; border: none; background-color: var(--color-purple-primary); color: var(--color-white); box-shadow: 0 5px 25px rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden; padding: 2rem; text-align: center; }
         .poster-header-title { font-family: 'Montserrat', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; color: var(--color-off-white); font-size: 1.5rem; margin-bottom: 0.5rem; }
@@ -77,13 +60,10 @@
         .poster-cta-button { font-family: 'Montserrat', sans-serif; background-color: var(--color-white); color: var(--color-purple-primary); padding: 0.75rem 1.8rem; border: none; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1.5rem; font-size: 1rem; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
         .poster-cta-button:hover { background-color: var(--color-off-white); color: var(--color-purple-light); transform: scale(1.05); }
         .poster-footer p { font-family: 'Montserrat', sans-serif; color: var(--color-off-white); font-weight: 400; font-size: 0.9rem; margin-top: 1rem; }
-        
-        /* Social Media Output */
         .social-media-item { margin-bottom: 2rem; background-color: var(--color-white); padding: 1rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
         .social-image-preview { max-width: 180px; max-height: 135px; border: 1px solid var(--color-input-border); margin-bottom: 0.75rem; object-fit: cover; border-radius: 4px; display: block; }
         .social-output-text { margin-top: 0.5rem; padding: 1rem; background-color: var(--color-off-white); border: 1px solid var(--color-input-border); border-radius: 4px; white-space: pre-wrap; font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 0.85rem; max-height: 250px; overflow-y: auto; color: var(--color-dark-text); }
         .social-note { font-size: 0.8rem; color: var(--color-grey-text); margin-top: 0.75rem; font-style: italic; line-height: 1.4; }
-        
         @media (min-width: 768px) { .form-output-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; } .form-section { margin-bottom: 0; } }
         @media (min-width: 1024px) { .form-output-grid { grid-template-columns: 450px 1fr; } }
     </style>
@@ -117,13 +97,13 @@
                         <label for="tagline">Short Description/Theme:</label>
                         <input type="text" id="tagline" name="tagline" value="All welcome! Bring your instruments & good vibes.">
                     </div>
-                    
+
                     <div>
                         <label>Upload Images:</label>
                         <input type="file" id="imageFiles" name="imageFiles" multiple accept="image/*" style="margin-bottom: 0.5rem;">
                         <button type="button" id="googleDriveButton" class="button-base google-drive-button" disabled>Select from Google Drive</button>
                         <button type="button" id="googlePhotosButton" class="button-base google-photos-button" disabled>Select from Google Photos</button>
-                        <div id="selectedFilesDisplay">No images selected. (Google buttons will enable after API loads & you sign in)</div>
+                        <div id="selectedFilesDisplay">Initializing Google services...</div>
                     </div>
 
                     <div>
@@ -168,131 +148,172 @@
         // --- END IMPORTANT NOTE ---
 
         // --- USER CONFIGURATION REQUIRED ---
-        const API_KEY = 'AIzaSyA2_4BP7Qv6JYIONCg2KJ6upr2VbaNojkw'; 
-        const CLIENT_ID = '786809892671-cpohg98fo9vuf75756qgp0lc4laq43ka.apps.googleusercontent.com'; 
+        const API_KEY = 'AIzaSyA2_4BP7Qv6JYIONCg2KJ6upr2VbaNojkw'; // YOUR ACTUAL API KEY
+        const CLIENT_ID = '786809892671-cpohg98fo9vuf75756qgp0lc4laq43ka.apps.googleusercontent.com'; // YOUR ACTUAL CLIENT ID
         // --- END USER CONFIGURATION ---
 
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
-        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly'; 
-        
-        let gapiPickerLoaded = false; 
-        let gisInited = false;  
-        let tokenClient; 
-        let currentAccessToken = null; 
-        let selectedImageUrls = []; 
+        const PHOTOS_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
 
-        console.log("Script start - GIS Auth Refined & Full Promo Text v3"); 
+        let gapiPickerLoaded = false;
+        let gisInited = false;
+        let tokenClient;
+        let currentAccessToken = null;
+        let selectedImageUrls = []; // Stores URLs from Picker
+        let pendingPickerType = null;
+
+        console.log("Script start - GIS Auth Refined & Full Promo Text v3 - Single Click with Enhanced Picker Callback");
 
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
-            gapi.load('picker', onPickerApiLoad); 
+            gapi.load('picker', onPickerApiLoad);
         }
 
         function onPickerApiLoad() {
             console.log("onPickerApiLoad called (Picker API module loaded)");
             gapiPickerLoaded = true;
-            checkEnablePickerButtons(); 
+            checkEnablePickerButtons();
         }
-        
+
         function gisLibraryLoadCallback() {
             console.log("gisLibraryLoadCallback (Google Identity Services SCRIPT loaded)");
-            if (CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com' || API_KEY === 'YOUR_GOOGLE_API_KEY') {
-                 alert("CLIENT_ID or API_KEY is not set in the script. Please replace placeholders."); return;
-            }
+            // Initial check removed as IDs are now hardcoded
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, 
+                    callback: handleGisCredentialResponse, // Handles One Tap or Sign In With Google button
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
 
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
-                    scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
-                    callback: (tokenResponse) => { 
+                    scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`,
+                    callback: (tokenResponse) => { // Token client callback
                         if (tokenResponse && tokenResponse.access_token) {
                             currentAccessToken = tokenResponse.access_token;
                             console.log("GIS Access Token obtained via tokenClient:", currentAccessToken ? "Yes" : "No");
                             enablePickerButtons(true);
+
+                            if (pendingPickerType) {
+                                console.log(`Token obtained, proceeding with pending picker: ${pendingPickerType}`);
+                                createPickerView(pendingPickerType);
+                                pendingPickerType = null;
+                            } else {
+                                document.getElementById('selectedFilesDisplay').textContent = 'Google Sign-In successful. Ready for Drive/Photos.';
+                            }
                         } else {
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
+                            let errorMsg = "Google Authorization failed. ";
+                            if (tokenResponse && tokenResponse.error) {
+                                errorMsg += `Error: ${tokenResponse.error}.`;
+                            }
+                             if (pendingPickerType) {
+                                 alert(errorMsg + "Please try clicking the button again.");
+                             } else {
+                                 document.getElementById('selectedFilesDisplay').textContent = errorMsg;
+                             }
+                            pendingPickerType = null;
                         }
                     },
                     error_callback: (error) => {
                         console.error("GIS initTokenClient error_callback:", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
                         currentAccessToken = null;
                         enablePickerButtons(false);
-                        if (error.type !== 'popup_failed_to_open' && error.type !== 'popup_closed_by_user' && error.type !== 'session_timed_out_or_revoked') {
-                           // alert("Error during Google authorization process. Check console."); 
+                        let errorMsg = "Error during Google authorization. ";
+                         if (error && error.type) {
+                             errorMsg += `Type: ${error.type}. `;
+                         }
+                        if (pendingPickerType) {
+                             alert(errorMsg + "Please try clicking the button again. Check console for details.");
+                        } else {
+                             document.getElementById('selectedFilesDisplay').textContent = errorMsg + "Check console.";
                         }
+                        pendingPickerType = null;
                     }
                 });
-                // Do NOT call tokenClient.requestAccessToken({prompt: 'none'}); here.
-                // Let user interaction (button click) or handleGisCredentialResponse trigger it.
-                checkEnablePickerButtons(); 
+                checkEnablePickerButtons(); // Initial check
             } catch (error) {
-                 console.error("Error initializing Google Identity Services (GIS):", error);
-                 alert("Critical error initializing Google Sign-In services. Check console.");
+                console.error("Error initializing Google Identity Services (GIS):", error);
+                document.getElementById('selectedFilesDisplay').textContent = 'Error initializing Google Sign-In.';
+                alert("Critical error initializing Google Sign-In services. Check console.");
             }
         }
-        
-        function handleGisCredentialResponse(response) {
-            console.log("GIS handleCredentialResponse :", response);
-            if (response.credential) { 
-                console.log("ID Token received (indicates sign-in). Requesting access token for Picker.");
+
+        function handleGisCredentialResponse(response) { // From google.accounts.id.initialize callback
+            console.log("GIS handleCredentialResponse (ID Token or similar):", response);
+            if (response.credential) {
+                console.log("ID Token received. Requesting access token for Picker scopes.");
+                if (!pendingPickerType && !currentAccessToken) { 
+                    document.getElementById('selectedFilesDisplay').textContent = 'Sign-in successful. Finalizing authorization...';
+                }
                 requestAccessTokenForPicker('consent'); 
             } else {
-                console.log("GIS Credential response does not contain credential.");
-                 enablePickerButtons(false); 
+                console.log("GIS Credential response does not contain credential. Auth may have failed or been cancelled by user.");
+                enablePickerButtons(true); 
+                 let userMsg = "Google Sign-In attempt did not return a credential. ";
+                if (pendingPickerType) {
+                    alert(userMsg + "Please try the Google button again.");
+                } else if (!currentAccessToken) { 
+                    document.getElementById('selectedFilesDisplay').textContent = userMsg;
+                }
+                pendingPickerType = null;
             }
         }
 
         function requestAccessTokenForPicker(promptType = 'consent') {
             if (tokenClient) {
-                console.log(`Requesting access token for Picker (prompt: ${promptType})...`);
-                tokenClient.requestAccessToken({prompt: promptType}); 
+                console.log(`Requesting access token for Picker (prompt: ${promptType}). Current token: ${currentAccessToken ? 'Exists' : 'Null'}`);
+                tokenClient.requestAccessToken({prompt: promptType});
             } else {
                 console.error("Token client not initialized for Picker token request.");
                 alert("Google authentication not ready. Please wait or refresh the page.");
+                if (pendingPickerType) pendingPickerType = null;
+                document.getElementById('selectedFilesDisplay').textContent = 'Google Auth not ready.';
             }
         }
 
         function enablePickerButtons(enable) {
-            document.getElementById('googleDriveButton').disabled = !enable;
-            document.getElementById('googlePhotosButton').disabled = !enable;
+            const driveButton = document.getElementById('googleDriveButton');
+            const photosButton = document.getElementById('googlePhotosButton');
+            if (driveButton) driveButton.disabled = !enable;
+            if (photosButton) photosButton.disabled = !enable;
+
             const filesDisplay = document.getElementById('selectedFilesDisplay');
-            if (enable && currentAccessToken) { 
-                 if(filesDisplay.textContent.includes('Sign in to Google') || filesDisplay.textContent.includes('No images selected') || filesDisplay.textContent.includes('Initializing')) {
-                    filesDisplay.textContent = 'No images selected. Google services ready.';
+            if (!filesDisplay) return;
+
+            if (enable && currentAccessToken) {
+                 if(filesDisplay.textContent.includes('Initializing') || filesDisplay.textContent.includes('Authenticating') || filesDisplay.textContent.includes('Finalizing') || filesDisplay.textContent.includes('Sign-in successful')) {
+                    filesDisplay.textContent = selectedImageUrls.length > 0 ? `${selectedImageUrls.length} cloud image(s) selected. Google services ready.` : 'No images selected. Google services ready.';
+                 }
+            } else if (enable && !currentAccessToken) {
+                if(filesDisplay.textContent.includes('Initializing') || filesDisplay.textContent.includes('Authenticating') || filesDisplay.textContent.includes('Sign-in attempt') || filesDisplay.textContent.includes('No images selected')) {
+                   filesDisplay.textContent = 'No images selected. Click Google button to sign in/authorize.';
                 }
-            } else if (enable && !currentAccessToken) { 
-                 filesDisplay.textContent = 'No images selected. Click Google button to sign in/authorize.';
-            }
-            else { 
-                if(filesDisplay.textContent.includes('Google services ready') || filesDisplay.textContent.includes('No images selected')) {
-                     filesDisplay.textContent = 'No images selected. (Sign in to Google or allow pop-ups if prompted)';
+            } else if (!enable && filesDisplay.textContent.includes('Initializing')) {
+                // Keep "Initializing..."
+            } else { 
+                if (!filesDisplay.textContent.includes('Error') && !filesDisplay.textContent.includes('failed')) {
+                    filesDisplay.textContent = 'Google services temporarily unavailable or initializing.';
                 }
             }
         }
 
         function checkEnablePickerButtons() {
             if (gapiPickerLoaded && gisInited && tokenClient) {
-                console.log("Picker API and GIS ready. Buttons enabled. Token will be requested on click if needed.");
-                // Enable buttons; createPicker will handle token request if needed.
-                // If currentAccessToken is already available (e.g. from a previous silent flow that might work in some cases),
-                // the buttons will just work. Otherwise, createPicker will trigger the consent flow.
+                console.log("Picker API and GIS ready. Buttons may be enabled.");
                 enablePickerButtons(true); 
             } else {
-                console.log(`Picker buttons not enabled yet. gapiPickerLoaded: ${gapiPickerLoaded}, gisInited: ${gisInited}`);
+                console.log(`Picker buttons not enabled yet. gapiPickerLoaded: ${gapiPickerLoaded}, gisInited: ${gisInited}, tokenClient: ${!!tokenClient}`);
                 enablePickerButtons(false);
             }
         }
-        
+
         function createPicker(type) {
-            console.log("Google " + type + " Button clicked"); // DEBUG
+            console.log("Google " + type + " Button clicked");
+            // API_KEY check removed as it's hardcoded now
             if (!gapiPickerLoaded) {
                 alert("Google Picker API not loaded yet. Please wait and try again.");
                 return;
@@ -303,186 +324,257 @@
             }
 
             if (!currentAccessToken) {
-                console.log("No current access token for Picker. Requesting with consent...");
-                requestAccessTokenForPicker('consent'); 
-                // Advise user they might need to click again after consent.
-                alert("Please complete the Google sign-in/consent process. If a pop-up doesn't appear, check your browser's pop-up blocker. Then, try clicking the Google Drive/Photos button again after authorization.");
+                console.log("No current access token for Picker. Setting pending type and requesting with consent...");
+                pendingPickerType = type;
+                document.getElementById('selectedFilesDisplay').textContent = 'Authenticating with Google... please complete the pop-up.';
+                requestAccessTokenForPicker('consent');
                 return;
             }
-            
-            console.log("Proceeding to createPickerView with token:", currentAccessToken ? "Yes" : "No");
+            console.log("Access token already available. Proceeding to createPickerView.");
             createPickerView(type);
         }
 
         function createPickerView(type) {
-            console.log("createPickerView called for type:", type); 
+            console.log("createPickerView called for type:", type);
+            if (!currentAccessToken) {
+                console.error("Cannot create picker view without an access token. Auth might have failed.");
+                alert("Authentication token is missing. Please try signing in with Google again.");
+                document.getElementById('selectedFilesDisplay').textContent = 'Authentication failed. Please try again.';
+                pendingPickerType = null;
+                return;
+            }
+
             let view;
             let title = 'Select Images';
             if (type === 'drive') {
                 title = 'Select an image from Google Drive';
-                view = new google.picker.View(google.picker.ViewId.DOCS_IMAGES);
+                // For Drive, showing folders and then images might be better.
+                // view = new google.picker.DocsView(google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS); // or specific image view
+                view = new google.picker.View(google.picker.ViewId.DOCS_IMAGES); // Sticking to images for now
             } else if (type === 'photos') {
                 title = 'Select from Google Photos';
-                view = new google.picker.View(google.picker.ViewId.PHOTOS);
+                view = new google.picker.View(google.picker.ViewId.PHOTOS)
+                    .setMimeTypes("image/png,image/jpeg,image/jpg,image/gif,image/webp");
             } else { console.error("Unknown picker type:", type); return; }
+
+            const maxImagesToSelect = Math.max(1, 6 - (document.getElementById('imageFiles').files.length + selectedImageUrls.length));
+            if (maxImagesToSelect === 0) {
+                alert("You have already selected the maximum of 6 images (local + cloud).");
+                return;
+            }
 
             const picker = new google.picker.PickerBuilder()
                 .setAppId(CLIENT_ID.split('.')[0]) 
-                .setOAuthToken(currentAccessToken) 
+                .setOAuthToken(currentAccessToken)
                 .addView(view)
-                .setDeveloperKey(API_KEY) 
+                .setDeveloperKey(API_KEY)
                 .setCallback(pickerCallback)
                 .setTitle(title)
-                .setMaxItems(6 - document.getElementById('imageFiles').files.length) 
+                .setMaxItems(maxImagesToSelect)
                 .build();
             picker.setVisible(true);
-            console.log("Picker should be visible now."); 
+            console.log("Picker should be visible now.");
+            document.getElementById('selectedFilesDisplay').textContent = 'Picker open. Select your images.';
         }
 
         function pickerCallback(data) {
-            console.log("pickerCallback data:", data); 
+            console.log("pickerCallback data:", JSON.parse(JSON.stringify(data)));
             try {
                 if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                     const docs = data[google.picker.Response.DOCUMENTS];
-                    console.log("Picked documents:", docs); 
+                    console.log("Picked documents raw:", JSON.parse(JSON.stringify(docs)));
+                    let newUrlsCount = 0;
                     docs.forEach(doc => {
-                        let imageUrl = doc.url; 
-                        if (!imageUrl && doc.thumbnails && doc.thumbnails.length > 0) {
-                            imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
-                            if (imageUrl) imageUrl = imageUrl.replace(/=s\d+(-c)?$/, '=s0'); 
+                        let imageUrl = null;
+                        console.log(`Processing doc: ID=${doc.id}, Name=${doc.name}, Type=${doc.type}, ServiceId=${doc.serviceId}, URL=${doc.url}, MimeType=${doc.mimeType}, Thumbnails: ${doc.thumbnails ? doc.thumbnails.length : 0}`);
+
+                        if (doc.type === 'photo' || (doc.serviceId === 'photos' && doc.mimeType && doc.mimeType.startsWith('image/'))) {
+                            if (doc.thumbnails && doc.thumbnails.length > 0) {
+                                imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url; 
+                                imageUrl = imageUrl.replace(/=s\d+(-[a-z])?$/, '=s1600'); 
+                                console.log(`Using Photos thumbnail, modified to: ${imageUrl}`);
+                            } else if (doc.url && doc.url.startsWith('https://lh3.googleusercontent.com/')) {
+                                // If it's a direct user content URL from Photos without explicit thumbnail array
+                                imageUrl = doc.url;
+                                if (!imageUrl.includes('=')) { // if no sizing params, append one
+                                    imageUrl += '=s1600';
+                                } else { // ensure it's a large enough size
+                                     imageUrl = imageUrl.replace(/=s\d+(-[a-z])?$/, '=s1600');
+                                }
+                                console.log(`Using Photos doc.url, ensuring size: ${imageUrl}`);
+                            } else if (doc.url) {
+                                 console.warn(`Photos item URL is not a recognized thumbnail or direct content link: ${doc.url}. Trying to use it directly.`);
+                                 imageUrl = doc.url; // Fallback, might not work in <img>
+                            }
+                        } else if (doc.serviceId === 'drive' && doc.mimeType && doc.mimeType.startsWith('image/')) {
+                             // For Drive, the 'url' field from picker might be a download or viewer link.
+                             // 'thumbnails' are usually more reliable for direct display.
+                             if (doc.thumbnails && doc.thumbnails.length > 0) {
+                                imageUrl = doc.thumbnails[doc.thumbnails.length - 1].url;
+                                // Drive thumbnails might end in =s220. Change to =s0 for potentially better quality if original is not too large,
+                                // or a larger specific size like =s800 or =s1600. Let's try a large size.
+                                imageUrl = imageUrl.replace(/=s\d+$/, '=s800'); // or s0, but s800 is safer for large images
+                                console.log(`Using Drive thumbnail, modified to: ${imageUrl}`);
+                             } else if (doc.url) { // Fallback if no thumbnails
+                                 console.warn(`Drive image ${doc.name} has no thumbnails, using doc.url: ${doc.url}. This might not be a direct image source.`);
+                                 // This URL needs to be tested. It might be a page URL, not an image.
+                                 // A common pattern for direct image from Drive via API is different. Picker might simplify.
+                                 // If it's a "https://drive.google.com/file/d/ID/view" link, it's not an image src.
+                                 // A "webContentLink" or by constructing one with files.get and alt=media would be needed.
+                                 // Picker is *supposed* to give something more direct.
+                                 imageUrl = doc.url; // Highly experimental if no thumbnail
+                             }
+                        } else if (doc.url && doc.type === 'url' && doc.mimeType && doc.mimeType.startsWith('image/')) {
+                            imageUrl = doc.url;
+                             console.log(`Picked generic image URL: ${imageUrl}`);
                         }
-                        if (doc.serviceId === 'photos' && imageUrl && !imageUrl.endsWith('-d')) {
-                             console.log("Google Photos URL picked:", imageUrl);
-                        }
+
 
                         if (imageUrl && !selectedImageUrls.includes(imageUrl)) {
                             selectedImageUrls.push(imageUrl);
+                            newUrlsCount++;
                         } else if (!imageUrl) {
-                            console.warn("Could not get a usable image URL from picker for doc:", doc);
+                            console.warn("Could not get a usable image URL for doc:", doc.name, doc);
+                        } else if (selectedImageUrls.includes(imageUrl)) {
+                            console.log("Image already selected:", imageUrl.substring(0,100)+"...");
                         }
                     });
-                    updateSelectedFilesDisplay();
+
+                    if (newUrlsCount > 0) { console.log(`${newUrlsCount} new images added.`); }
+                    else { console.log("No new unique images were added from this batch."); }
+                    updateSelectedFilesDisplay(); 
                 } else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
                     console.log('Google Picker Canceled');
+                } else {
+                    console.log("Picker action unknown:", data[google.picker.Response.ACTION], data);
                 }
+                const totalImages = selectedImageUrls.length + document.getElementById('imageFiles').files.length;
+                document.getElementById('selectedFilesDisplay').textContent = totalImages > 0 ?
+                    `${totalImages} image(s) selected. Google services ready.` :
+                    'No images selected. Google services ready.';
             } catch (error) {
-                 console.error("Error in pickerCallback:", error);
+                console.error("Error in pickerCallback:", error, "Raw data:", data);
+                alert("An error occurred while processing selected images. Please check the console.");
+                document.getElementById('selectedFilesDisplay').textContent = 'Error processing selected images.';
             }
         }
-        
+
         function updateSelectedFilesDisplay() {
             const localFiles = Array.from(document.getElementById('imageFiles').files);
             const display = document.getElementById('selectedFilesDisplay');
             let fileNames = [];
+
             localFiles.forEach(file => fileNames.push(`Local: ${file.name.substring(0,20)}...`));
-            const validSelectedImageUrls = selectedImageUrls.filter(url => url);
-            validSelectedImageUrls.forEach((url, index) => {
+
+            const validCloudImageUrls = selectedImageUrls.filter(url => url);
+            validCloudImageUrls.forEach((url, index) => {
                 let name = `Cloud Image ${index + 1}`;
-                try {
+                try { 
                     const urlObj = new URL(url);
                     const pathParts = urlObj.pathname.split('/');
-                    const potentialName = pathParts[pathParts.length -1];
-                    if (potentialName && potentialName.length > 3) { name = potentialName; }
-                } catch (e) { /* ignore */ }
+                    const potentialName = pathParts[pathParts.length -1] || urlObj.searchParams.get('id') || urlObj.hostname;
+                    if (potentialName && potentialName.length > 3) { name = decodeURIComponent(potentialName); }
+                } catch (e) { /* ignore URL parsing error */ }
                 fileNames.push(`Cloud: ${name.substring(0,30)}...`);
             });
-            if (fileNames.length > 0) {
-                display.textContent = `${fileNames.length} image(s) selected: ${fileNames.join('; ')}`;
+
+            const totalImages = fileNames.length;
+            if (totalImages > 0) {
+                display.textContent = `${totalImages} image(s) selected: ${fileNames.join('; ')}`;
             } else {
-                 if (gisInited && tokenClient) { 
+                if (gisInited && tokenClient && currentAccessToken) {
                     display.textContent = 'No images selected. Google services ready.';
+                } else if (gisInited && tokenClient && !currentAccessToken && !pendingPickerType) {
+                    display.textContent = 'No images selected. Click Google button to sign in/authorize.';
+                } else if (pendingPickerType) {
+                     display.textContent = 'Authenticating with Google...';
                 } else {
                     display.textContent = 'No images selected. (Initializing Google services...)';
                 }
             }
-             console.log("Updated selected files display:", display.textContent); 
+            console.log("Updated selected files display:", display.textContent);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded event"); 
-            
-            window.gapiLoadCallback = gapiLibraryLoadCallback; 
-            window.gisLoadCallback = gisLibraryLoadCallback;   
+            console.log("DOMContentLoaded event");
+
+            window.gapiLoadCallback = gapiLibraryLoadCallback; // For GAPI script
+            // For GSI script, it initializes itself. We need to ensure our gisLibraryLoadCallback runs.
+            // Since GSI's 'google.accounts.id.initialize' is what we need,
+            // we can call our gisLibraryLoadCallback when GSI client is ready.
+            // The GSI script tag has `async defer`.
+            const gsiScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+            if (gsiScript) {
+                // If the script has an onload handler already or if we want to ensure ours runs
+                const originalOnload = gsiScript.onload;
+                gsiScript.onload = function() {
+                    if (originalOnload) {
+                        originalOnload();
+                    }
+                    gisLibraryLoadCallback();
+                };
+                // If script already loaded and executed 'onload' before this point:
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id && !gisInited) {
+                     console.log("GSI appears loaded but our callback missed. Calling gisLibraryLoadCallback.");
+                     gisLibraryLoadCallback();
+                }
+            } else {
+                 console.error("GSI SCRIPT TAG NOT FOUND. This is unexpected.");
+            }
 
             const gapiScriptTag = document.createElement('script');
             gapiScriptTag.src = 'https://apis.google.com/js/api.js?onload=gapiLoadCallback';
             gapiScriptTag.async = true;
-            gapiScriptTag.defer = true;
+            // gapiScriptTag.defer = true; // Let GAPI load when it can
             document.head.appendChild(gapiScriptTag);
-
-            const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
-            if (gisScript) {
-                if (typeof google !== 'undefined' && google.accounts) {
-                    console.log("GIS script likely already loaded, calling gisLoadCallback directly.");
-                    gisLibraryLoadCallback(); 
-                } else {
-                    gisScript.onload = gisLibraryLoadCallback; 
-                }
-            } else {
-                console.error("GIS script tag not found! This is unexpected.");
-            }
-
 
             try {
                 const today = new Date();
                 let nextWednesday = new Date(today);
-                const dayOfWeek = today.getDay();
+                const dayOfWeek = today.getDay(); 
                 let daysUntilWednesday = (3 - dayOfWeek + 7) % 7;
-                if (daysUntilWednesday === 0 && today.getHours() >= 12) { 
-                    daysUntilWednesday = 7; 
+                if (daysUntilWednesday === 0 && today.getHours() >= 12) {
+                    daysUntilWednesday = 7;
                 }
                 nextWednesday.setDate(today.getDate() + daysUntilWednesday);
-                
-                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
-                const yyyy = nextWednesday.getFullYear(); 
-                console.log("After yyyy calculation. yyyy is:", yyyy); 
 
+                const yyyy = nextWednesday.getFullYear();
                 const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextWednesday.getDate()).padStart(2, '0');
                 const dateInput = document.getElementById('eventDate');
-                if (dateInput) {
-                    dateInput.value = `${yyyy}-${mm}-${dd}`; 
-                } else {
-                    console.error("Element with ID 'eventDate' not found.");
-                }
-                
+                if (dateInput) { dateInput.value = `${yyyy}-${mm}-${dd}`; }
+                else { console.error("Element with ID 'eventDate' not found."); }
+
                 const featuresInput = document.getElementById('features');
-                if (featuresInput) {
-                    featuresInput.value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns";
-                } else {
-                     console.error("Element with ID 'features' not found.");
-                }
+                if (featuresInput) { featuresInput.value = "Acoustic, Folk, Trad, Blues, Guitars, Fiddles, Bodhráns"; }
+                else { console.error("Element with ID 'features' not found."); }
 
                 const imageFilesInput = document.getElementById('imageFiles');
-                if (imageFilesInput) {
-                    imageFilesInput.addEventListener('change', updateSelectedFilesDisplay);
-                } else {
-                    console.error("Element with ID 'imageFiles' not found.");
-                }
-                 // Attach event listeners to Google buttons
+                if (imageFilesInput) { imageFilesInput.addEventListener('change', updateSelectedFilesDisplay); }
+                else { console.error("Element with ID 'imageFiles' not found."); }
+
                 const googleDriveBtn = document.getElementById('googleDriveButton');
-                if (googleDriveBtn) {
-                    googleDriveBtn.onclick = () => { console.log("Google Drive Button clicked via JS"); createPicker('drive'); };
-                }
+                if (googleDriveBtn) { googleDriveBtn.onclick = () => createPicker('drive'); }
+                else { console.error("Element 'googleDriveButton' not found.");}
+
                 const googlePhotosBtn = document.getElementById('googlePhotosButton');
-                if (googlePhotosBtn) {
-                    googlePhotosBtn.onclick = () => { console.log("Google Photos Button clicked via JS"); createPicker('photos'); };
-                }
+                if (googlePhotosBtn) { googlePhotosBtn.onclick = () => createPicker('photos'); }
+                else { console.error("Element 'googlePhotosButton' not found.");}
+
+                updateSelectedFilesDisplay(); 
 
             } catch (e) {
                 console.error("Error specifically within DOMContentLoaded's date logic or element access:", e);
                 const selectedFilesDisplay = document.getElementById('selectedFilesDisplay');
-                if (selectedFilesDisplay) {
-                    selectedFilesDisplay.textContent = 'Error in page setup. Check console.';
-                }
+                if (selectedFilesDisplay) { selectedFilesDisplay.textContent = 'Error in page setup. Check console.'; }
             }
-            console.log("DOMContentLoaded event - END"); 
+            console.log("DOMContentLoaded event - END");
         });
 
-        function formatDate(dateStr) { 
+        function formatDate(dateStr) {
             if (!dateStr) return "TBC";
             try {
-                const dateObj = new Date(dateStr + 'T00:00:00');
+                const dateObj = new Date(dateStr + 'T00:00:00'); 
                 return dateObj.toLocaleDateString('en-IE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             } catch (e) { console.error("Error formatting date:", e); return dateStr; }
         }
@@ -498,7 +590,7 @@
         }
 
         async function generatePromotions() {
-            console.log("generatePromotions function called - START (Full Functionality)"); 
+            console.log("generatePromotions function called - START (Full Functionality)");
             try {
                 const details = {
                     eventName: document.getElementById('eventName').value || "Galway Jam Circle",
@@ -506,11 +598,11 @@
                     date_str_input: document.getElementById('eventDate').value,
                     time_str: document.getElementById('eventTime').value || "8 PM",
                     tagline: document.getElementById('tagline').value || "Join us for a night of music!",
-                    features_raw: document.getElementById('features').value, 
+                    features_raw: document.getElementById('features').value,
                     ticket_info: document.getElementById('ticketInfo').value || "Free Entry",
                     contact_info: document.getElementById('contactInfo').value
                 };
-                
+
                 const escapedDetails = {
                     eventName: escapeForHTML(details.eventName),
                     venue: escapeForHTML(details.venue),
@@ -518,17 +610,16 @@
                     tagline: escapeForHTML(details.tagline),
                     ticket_info: escapeForHTML(details.ticket_info),
                     contact_info: escapeForHTML(details.contact_info),
-                    date_str: formatDate(details.date_str_input) 
+                    date_str: formatDate(details.date_str_input)
                 };
 
                 const featuresArray = details.features_raw ? details.features_raw.split(',').map(f => f.trim()).filter(f => f) : [];
                 escapedDetails.features = featuresArray.length > 0 ? featuresArray.map(f => escapeForHTML(f)) : ["All genres welcome", "Friendly atmosphere", "BYO Instrument"];
-                
-                console.log("Details collected and escaped:", escapedDetails); 
+                console.log("Details collected and escaped:", escapedDetails);
 
                 const localImageFiles = document.getElementById('imageFiles').files;
                 const localImagePromises = [];
-                const maxCollageImages = 6; 
+                const maxCollageImages = 6;
                 for (let i = 0; i < localImageFiles.length; i++) {
                     const file = localImageFiles[i];
                     localImagePromises.push(new Promise((resolve, reject) => {
@@ -539,17 +630,17 @@
                     }));
                 }
                 let localImageDataUrls = [];
-                try { localImageDataUrls = await Promise.all(localImagePromises); } 
+                try { localImageDataUrls = await Promise.all(localImagePromises); }
                 catch (error) { console.error("Error reading local image files:", error); }
 
-                const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])]; 
+                const allImageUrls = [...new Set([...localImageDataUrls, ...selectedImageUrls.filter(url=>url)])];
                 const finalCollageUrls = allImageUrls.slice(0, maxCollageImages);
-                console.log("Final collage URLs:", finalCollageUrls); 
+                console.log("Final collage URLs for poster:", finalCollageUrls.map(u => u.substring(0,100)+"..."));
 
 
                 let posterPrimaryImageUrlForSocial = finalCollageUrls.length > 0 ? finalCollageUrls[0] : '';
                 const defaultEventNamePlaceholder = encodeURIComponent(escapedDetails.eventName.substring(0,25).replace(/\s+/g, '+'));
-                if (!posterPrimaryImageUrlForSocial) { 
+                if (!posterPrimaryImageUrlForSocial) {
                      posterPrimaryImageUrlForSocial = `https://placehold.co/800x600/4B0082/FFFFFF?text=${defaultEventNamePlaceholder}&font=montserrat`;
                 }
                 const fallbackImageUrl = `https://placehold.co/800x600/6A0DAD/FFFFFF?text=Image+Not+Found&font=montserrat`;
@@ -558,12 +649,12 @@
                 if (finalCollageUrls.length > 0) {
                     const imgCountClass = `count-${finalCollageUrls.length > 4 ? 'gt-4' : finalCollageUrls.length}`;
                     finalCollageUrls.forEach(dataUrl => {
-                        collageHtml += `<img src="${escapeForHTML(dataUrl)}" alt="Collage image for ${escapedDetails.eventName}" class="poster-collage-image ${imgCountClass}" onerror="this.src='${fallbackImageUrl}';">`;
+                        collageHtml += `<img src="${escapeForHTML(dataUrl)}" alt="Collage image for ${escapedDetails.eventName}" class="poster-collage-image ${imgCountClass}" onerror="this.src='${fallbackImageUrl}'; this.alt='Error loading image';">`;
                     });
                 } else {
                     collageHtml = `<img src="${escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl}" alt="Placeholder for ${escapedDetails.eventName}" class="poster-collage-image count-1">`;
                 }
-                console.log("Collage HTML generated"); 
+                console.log("Collage HTML generated");
 
 
                 const posterHtml = `
@@ -589,18 +680,17 @@
                         ${escapedDetails.contact_info ? `<p style="margin-top: 0.25rem;">Contact: ${escapedDetails.contact_info}</p>` : ''}
                     </footer>`;
                 document.getElementById('posterContainerContent').innerHTML = posterHtml;
-                console.log("Poster HTML injected"); 
+                console.log("Poster HTML injected");
 
                 const socialMediaContentEl = document.getElementById('socialMediaContent');
-                socialMediaContentEl.innerHTML = ''; 
-                const imageCopyInstructions = "<strong>To use images:</strong> For the poster, take a screenshot. For social media, upload your chosen image(s) directly. You can right-click/long-press on individual images in the collage preview to save them.";
+                socialMediaContentEl.innerHTML = '';
+                const imageCopyInstructions = "<strong>To use images:</strong> For the poster, take a screenshot. For social media, upload your chosen image(s) directly. You can right-click/long-press on individual images in the collage preview to save them if they are from local uploads; cloud images may need to be downloaded from their source.";
                 const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(escapedDetails.venue || "GalwayVenue").replace(/\s+/g, "")}`;
                 const socialPreviewImageUrl = escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl;
 
-                // --- Restored Social Media Text Generation ---
                 console.log("Generating Instagram text...");
                 const featuresListInsta = escapedDetails.features.slice(0, 3).map(f => `- ${f}`).join("\n");
-                const instagramText = 
+                const instagramText =
 `**${escapedDetails.eventName} is ON!**
 
 "${escapedDetails.tagline}"
@@ -614,18 +704,18 @@ ${featuresListInsta ? `\nFeaturing:\n${featuresListInsta}\n` : ''}
 
 Bring your friends, instruments, and good energy!
 ${commonHashtags}`;
-                console.log("Instagram text created:", instagramText.substring(0,100) + "..."); 
+                console.log("Instagram text created:", instagramText.substring(0,100) + "...");
 
                 const instagramDiv = document.createElement('div');
                 instagramDiv.className = 'social-media-item';
                 instagramDiv.innerHTML = `<h4 class="social-platform-title">Instagram Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 instagramDiv.querySelector('.social-output-text').textContent = instagramText.trim();
                 socialMediaContentEl.appendChild(instagramDiv);
-                console.log("Instagram post HTML injected."); 
+                console.log("Instagram post HTML injected.");
 
                 console.log("Generating Facebook text...");
                 const featuresBulletsFb = escapedDetails.features.map(f => `- ${f}`).join("\n");
-                const facebookText = 
+                const facebookText =
 `**${escapedDetails.eventName} - Join the Jam!**
 
 "${escapedDetails.tagline}"
@@ -644,15 +734,15 @@ ${commonHashtags}`;
                 console.log("Facebook text created:", facebookText.substring(0,100) + "...");
 
                 const facebookDiv = document.createElement('div');
-                facebookDiv.className = 'social-media-item';
+                facebookDiv.className = 'social-media-item'; // Corrected class name
                 facebookDiv.innerHTML = `<h4 class="social-platform-title">Facebook Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 facebookDiv.querySelector('.social-output-text').textContent = facebookText.trim();
                 socialMediaContentEl.appendChild(facebookDiv);
                 console.log("Facebook post HTML injected.");
-            
+
                 console.log("Generating Twitter text...");
                 const shortTaglineTwitter = escapedDetails.tagline.length > 60 ? escapedDetails.tagline.substring(0, 57) + "..." : escapedDetails.tagline;
-                const twitterText = 
+                const twitterText =
 `Jammin' in Galway!
 **${escapedDetails.eventName}**
 "${shortTaglineTwitter}"
@@ -661,22 +751,20 @@ On: ${escapedDetails.date_str}, ${escapedDetails.time_str}
 Entry: ${escapedDetails.ticket_info}
 ${commonHashtags.split(' ').slice(0,4).join(' ')} #Galway`;
                 console.log("Twitter text created:", twitterText.substring(0,100) + "...");
-                
+
                 const twitterDiv = document.createElement('div');
                 twitterDiv.className = 'social-media-item';
                 twitterDiv.innerHTML = `<h4 class="social-platform-title">Twitter (X) Post:</h4><img src="${socialPreviewImageUrl}" alt="Preview" class="social-image-preview" onerror="this.style.display='none';"><div class="social-output-text"></div><p class="social-note">${imageCopyInstructions}</p>`;
                 twitterDiv.querySelector('.social-output-text').textContent = twitterText.trim();
                 socialMediaContentEl.appendChild(twitterDiv);
                 console.log("Twitter post HTML injected.");
-
-                selectedImageUrls = []; 
-                console.log("generatePromotions function finished successfully."); 
+                console.log("generatePromotions function finished successfully.");
             } catch (error) {
                 console.error("Error in generatePromotions:", error);
                 alert("An error occurred while generating promotions. Please check the console for details.");
             }
         }
-        console.log("Script end"); 
+        console.log("Script end");
     </script>
 
 </body>
