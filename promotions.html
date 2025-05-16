@@ -281,6 +281,9 @@
         function checkEnablePickerButtons() {
             if (gapiPickerLoaded && gisInited && tokenClient) {
                 console.log("Picker API and GIS ready. Buttons enabled. Token will be requested on click if needed.");
+                // Enable buttons; createPicker will handle token request if needed.
+                // If currentAccessToken is already available (e.g. from a previous silent flow that might work in some cases),
+                // the buttons will just work. Otherwise, createPicker will trigger the consent flow.
                 enablePickerButtons(true); 
             } else {
                 console.log(`Picker buttons not enabled yet. gapiPickerLoaded: ${gapiPickerLoaded}, gisInited: ${gisInited}`);
@@ -289,7 +292,7 @@
         }
         
         function createPicker(type) {
-            console.log("createPicker called for type:", type); 
+            console.log("Google " + type + " Button clicked"); // DEBUG
             if (!gapiPickerLoaded) {
                 alert("Google Picker API not loaded yet. Please wait and try again.");
                 return;
@@ -302,6 +305,7 @@
             if (!currentAccessToken) {
                 console.log("No current access token for Picker. Requesting with consent...");
                 requestAccessTokenForPicker('consent'); 
+                // Advise user they might need to click again after consent.
                 alert("Please complete the Google sign-in/consent process. If a pop-up doesn't appear, check your browser's pop-up blocker. Then, try clicking the Google Drive/Photos button again after authorization.");
                 return;
             }
@@ -430,14 +434,14 @@
                 nextWednesday.setDate(today.getDate() + daysUntilWednesday);
                 
                 console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
-                const yyyy = nextWednesday.getFullYear(); // Corrected variable name
-                console.log("After yyyy calculation. yyyy is:", yyyy); // Corrected variable name
+                const yyyy = nextWednesday.getFullYear(); 
+                console.log("After yyyy calculation. yyyy is:", yyyy); 
 
                 const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextWednesday.getDate()).padStart(2, '0');
                 const dateInput = document.getElementById('eventDate');
                 if (dateInput) {
-                    dateInput.value = `${yyyy}-${mm}-${dd}`; // Corrected variable name usage
+                    dateInput.value = `${yyyy}-${mm}-${dd}`; 
                 } else {
                     console.error("Element with ID 'eventDate' not found.");
                 }
@@ -455,6 +459,16 @@
                 } else {
                     console.error("Element with ID 'imageFiles' not found.");
                 }
+                 // Attach event listeners to Google buttons
+                const googleDriveBtn = document.getElementById('googleDriveButton');
+                if (googleDriveBtn) {
+                    googleDriveBtn.onclick = () => { console.log("Google Drive Button clicked via JS"); createPicker('drive'); };
+                }
+                const googlePhotosBtn = document.getElementById('googlePhotosButton');
+                if (googlePhotosBtn) {
+                    googlePhotosBtn.onclick = () => { console.log("Google Photos Button clicked via JS"); createPicker('photos'); };
+                }
+
             } catch (e) {
                 console.error("Error specifically within DOMContentLoaded's date logic or element access:", e);
                 const selectedFilesDisplay = document.getElementById('selectedFilesDisplay');
