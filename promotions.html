@@ -202,7 +202,7 @@
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, 
+                    callback: handleGisCredentialResponse, // This callback handles ID tokens from Sign In With Google or One Tap
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
@@ -210,7 +210,7 @@
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: `${DRIVE_SCOPE} ${PHOTOS_SCOPE}`, 
-                    callback: (tokenResponse) => { 
+                    callback: (tokenResponse) => { // This callback handles the Access Token response
                         if (tokenResponse && tokenResponse.access_token) {
                             currentAccessToken = tokenResponse.access_token;
                             console.log("GIS Access Token obtained via tokenClient:", currentAccessToken ? "Yes" : "No");
@@ -219,18 +219,21 @@
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
+                            // Don't alert here, as this can be a silent failure from prompt: 'none' or user closing pop-up
                         }
                     },
                     error_callback: (error) => {
                         console.error("GIS initTokenClient error_callback:", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
                         currentAccessToken = null;
                         enablePickerButtons(false);
+                        // Avoid alerting for common pop-up issues during silent attempts or user cancellation
                         if (error.type !== 'popup_failed_to_open' && error.type !== 'popup_closed_by_user' && error.type !== 'session_timed_out_or_revoked') {
-                           // alert("Error during Google authorization process. Check console."); 
+                           // Consider a less intrusive way to inform the user if needed
                         }
                     }
                 });
-                // Removed automatic tokenClient.requestAccessToken({prompt: 'none'});
+                // Do NOT call tokenClient.requestAccessToken({prompt: 'none'}); here.
+                // Let user interaction (button click) or handleGisCredentialResponse trigger it.
                 checkEnablePickerButtons(); 
             } catch (error) {
                  console.error("Error initializing Google Identity Services (GIS):", error);
@@ -238,14 +241,17 @@
             }
         }
         
+        // This callback is for "Sign In With Google" button or One Tap flow.
+        // If successful, it means the user is signed in, and we should then request an access token for the Picker.
         function handleGisCredentialResponse(response) {
             console.log("GIS handleCredentialResponse :", response);
-            if (response.credential) { 
+            if (response.credential) { // This is an ID Token
                 console.log("ID Token received (indicates sign-in). Requesting access token for Picker.");
-                requestAccessTokenForPicker('consent'); 
+                // User has signed in. Now, explicitly request an access token for the Picker scopes.
+                requestAccessTokenForPicker('consent'); // 'consent' will ensure user sees consent screen if needed for the scopes
             } else {
-                console.log("GIS Credential response does not contain credential.");
-                 enablePickerButtons(false); 
+                console.log("GIS Credential response does not contain credential. User may have closed One Tap or Sign In prompt.");
+                 enablePickerButtons(false); // Ensure buttons are disabled if sign-in fails here
             }
         }
 
@@ -278,6 +284,8 @@
         }
 
         function checkEnablePickerButtons() {
+            // Enable buttons if Picker API is loaded AND GIS is initialized (so tokenClient exists).
+            // The actual token availability will be checked when createPicker is called.
             if (gapiPickerLoaded && gisInited && tokenClient) {
                 console.log("Picker API and GIS ready. Buttons enabled. Token will be requested on click if needed.");
                 enablePickerButtons(true); 
@@ -301,6 +309,7 @@
             if (!currentAccessToken) {
                 console.log("No current access token for Picker. Requesting with consent...");
                 requestAccessTokenForPicker('consent'); 
+                // Advise user they might need to click again after consent.
                 alert("Please complete the Google sign-in/consent process. If a pop-up doesn't appear, check your browser's pop-up blocker. Then, try clicking the Google Drive/Photos button again after authorization.");
                 return;
             }
@@ -428,9 +437,9 @@
                 }
                 nextWednesday.setDate(today.getDate() + daysUntilWednesday);
                 
-                console.log("Before yyyy calculation. nextWednesday is:", nextWednesday.toString()); 
-                const yyyy = nextWednesday.getFullYear(); 
-                console.log("After yyyy calculation. yyyy is:", yyyy); 
+                console.log("Before<y_bin_46> calculation. nextWednesday is:", nextWednesday.toString()); 
+                const<y_bin_46> = nextWednesday.getFullYear(); 
+                console.log("After<y_bin_46> calculation.<y_bin_46> is:",<y_bin_46>); 
 
                 const mm = String(nextWednesday.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextWednesday.getDate()).padStart(2, '0');
