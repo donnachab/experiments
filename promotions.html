@@ -181,7 +181,7 @@
         let currentAccessToken = null; 
         let selectedImageUrls = []; 
 
-        console.log("Script start - GIS Auth Refined v2"); 
+        console.log("Script start - GIS Auth Refined & Full Promo Text"); 
 
         function gapiLibraryLoadCallback() {
             console.log("gapiLibraryLoadCallback called (GAPI script loaded)");
@@ -202,7 +202,7 @@
             try {
                 google.accounts.id.initialize({
                     client_id: CLIENT_ID,
-                    callback: handleGisCredentialResponse, // This is for Sign In With Google button or One Tap
+                    callback: handleGisCredentialResponse, 
                 });
                 console.log("Google Identity Services initialized (google.accounts.id.initialize)");
                 gisInited = true;
@@ -219,20 +219,20 @@
                             currentAccessToken = null;
                             enablePickerButtons(false);
                             console.error("GIS Token Response error or no access_token:", tokenResponse);
-                            // Avoid alerting here as this can be a silent failure from prompt: 'none'
                         }
                     },
                     error_callback: (error) => {
                         console.error("GIS initTokenClient error_callback:", JSON.stringify(error, Object.getOwnPropertyNames(error)), error);
                         currentAccessToken = null;
                         enablePickerButtons(false);
+                        // Avoid alerting for common pop-up issues during silent attempts
                         if (error.type !== 'popup_failed_to_open' && error.type !== 'popup_closed_by_user' && error.type !== 'session_timed_out_or_revoked') {
-                           // Only alert for unexpected errors, not for user closing popup or silent failures.
                            // alert("Error during Google authorization process. Check console."); 
                         }
                     }
                 });
-                // Do not automatically request token here. Let user interaction trigger it.
+                // Do not call tokenClient.requestAccessToken({prompt: 'none'}); here.
+                // Let user interaction (button click) or handleGisCredentialResponse trigger it.
                 checkEnablePickerButtons(); 
             } catch (error) {
                  console.error("Error initializing Google Identity Services (GIS):", error);
@@ -244,9 +244,7 @@
             console.log("GIS handleCredentialResponse :", response);
             if (response.credential) { 
                 console.log("ID Token received (indicates sign-in). Requesting access token for Picker.");
-                // User has signed in (e.g., via One Tap if it was configured, or a Sign In With Google button).
-                // Now, we need an *access token* for the Picker.
-                requestAccessTokenForPicker('consent'); // Request with consent prompt as user just actively signed in.
+                requestAccessTokenForPicker('consent'); 
             } else {
                 console.log("GIS Credential response does not contain credential.");
                  enablePickerButtons(false); 
@@ -583,6 +581,7 @@
                 const commonHashtags = `#GalwayJamCircle #GalwayMusic #LiveMusicGalway #OpenMicGalway #GalwayEvents #CommunityMusic #${(escapedDetails.venue || "GalwayVenue").replace(/\s+/g, "")}`;
                 const socialPreviewImageUrl = escapeForHTML(posterPrimaryImageUrlForSocial) || fallbackImageUrl;
 
+                // --- Restored Social Media Text Generation ---
                 console.log("Generating Instagram text...");
                 const featuresListInsta = escapedDetails.features.slice(0, 3).map(f => `- ${f}`).join("\n");
                 const instagramText = 
