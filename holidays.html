@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip Schedules</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         /* Define the color palette from the CV */
         :root {
-            --cv-bg-base: #f0fdf4;      /* Very Light Mint/Green Base */
-            --cv-bg-main: #ffffff;      /* White Main Area */
+            --cv-bg-base: #f0fdf4;       /* Very Light Mint/Green Base */
+            --cv-bg-main: #ffffff;       /* White Main Area */
             --cv-bg-sidebar: #dcfce7;    /* Light Green Sidebar */
-            --cv-text-dark: #14532d;    /* Dark Green Text */
-            --cv-text-med: #166534;     /* Medium Green Text */
-            --cv-text-dim: #15803d;     /* Dimmer Green Text */
-            --cv-accent: #22c55e;       /* Bright Green Accent */
-            --cv-accent-hover: #16a34a; /* Darker Green Accent */
+            --cv-text-dark: #14532d;     /* Dark Green Text */
+            --cv-text-med: #166534;      /* Medium Green Text */
+            --cv-text-dim: #15803d;      /* Dimmer Green Text */
+            --cv-accent: #22c55e;        /* Bright Green Accent */
+            --cv-accent-hover: #16a34a;  /* Darker Green Accent */
             --cv-border: #86efac;       /* Light Green Border */
             --cv-shadow: rgba(34, 197, 94, 0.15); /* Shadow color based on accent */
         }
@@ -29,8 +31,6 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         h1 {
             text-align: center;
@@ -64,9 +64,14 @@
             font-weight: bold;
             margin-bottom: -1px;
         }
+        /* Usability: Focus state for accessibility */
+        .tab-button:focus {
+            outline: 2px solid var(--cv-accent);
+            outline-offset: 2px;
+        }
 
         .tab-button:last-child {
-             margin-right: 0;
+            margin-right: 0;
         }
 
         .tab-button.active {
@@ -75,19 +80,44 @@
             border-top: 2px solid var(--cv-accent);
             border-left: 1px solid var(--cv-border);
             border-right: 1px solid var(--cv-border);
-            border-bottom: 1px solid var(--cv-bg-main);
+            border-bottom: 1px solid var(--cv-main);
         }
 
-         .tab-button:hover:not(.active) {
-             background-color: var(--cv-border);
-             color: var(--cv-text-dark);
-         }
+        .tab-button:hover:not(.active) {
+            background-color: var(--cv-border);
+            color: var(--cv-text-dark);
+        }
 
-        .route-card {
-            background-color: var(--cv-bg-main);
+        .day-header {
+            background-color: var(--cv-bg-sidebar);
+            color: var(--cv-text-dark);
+            font-weight: bold;
+            text-align: center;
+            padding: 12px 15px;
+            margin: 20px 0 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--cv-shadow);
+            border: 1px solid var(--cv-border);
+            /* Usability: More prominent day headers */
+            font-size: 1.3em; /* Slightly larger */
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.05); /* Subtle shadow */
+        }
+
+        .day-content-group {
+            background-color: var(--cv-bg-base);
+            border: 1px solid var(--cv-border);
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .route-card {
+            background-color: var(--cv-main);
+            border-radius: 8px;
+            padding: 15px;
+            /* Usability: More spacing between sections */
+            margin-bottom: 25px; /* Increased from 15px */
             box-shadow: 0 4px 8px rgba(0,0,0,0.08);
             border: 1px solid var(--cv-border);
         }
@@ -108,36 +138,42 @@
             width: 100%;
             padding: 12px 10px;
             background-color: var(--cv-accent);
-            color: var(--cv-bg-main); /* White text on bright green - Low Contrast */
+            color: var(--cv-main);
             text-align: center;
             text-decoration: none;
             border-radius: 6px;
             font-size: 15px;
             box-sizing: border-box;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 4px var(--cv-shadow);
             border: none;
             font-weight: bold;
             line-height: 1.4;
             margin-top: 10px;
         }
+        /* Usability: Focus state for accessibility */
+        .route-button:focus {
+            outline: 2px solid var(--cv-text-dark);
+            outline-offset: 2px;
+        }
 
         .route-button:hover {
             background-color: var(--cv-accent-hover);
-            color: var(--cv-bg-main); /* White text on darker bright green - Low Contrast */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+            color: var(--cv-main);
+            box-shadow: 0 3px 6px var(--cv-shadow);
         }
 
         .route-button:active {
             background-color: var(--cv-text-dark);
-            color: var(--cv-bg-main);
+            color: var(--cv-main);
             box-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
 
         .details-section {
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 15px;
+            /* Usability: More spacing between sections */
+            margin-bottom: 25px; /* Increased from 15px */
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border: 1px solid var(--cv-border);
             text-align: left;
@@ -153,48 +189,53 @@
         }
 
         .accommodation-details {
-             background-color: var(--cv-bg-main);
-             color: var(--cv-text-dark);
+            background-color: var(--cv-main);
+            color: var(--cv-text-dark);
         }
 
-         .details-section .icon {
-             margin-right: 10px;
-             flex-shrink: 0;
-             width: 24px;
-             height: 24px;
-             fill: var(--cv-text-dark);
-         }
+        .event-details {
+            background-color: var(--cv-bg-sidebar);
+            color: var(--cv-text-dark);
+        }
 
-         .details-section .details-content {
-             flex-grow: 1;
-         }
+        .details-section .icon {
+            margin-right: 10px;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            color: var(--cv-text-dark); /* Font Awesome icons use color property */
+        }
 
-         .details-section p {
-             margin: 3px 0;
-         }
+        .details-section .details-content {
+            flex-grow: 1;
+        }
 
-         .details-section p strong {
-             color: var(--cv-text-dark);
-             margin-right: 5px;
-         }
+        .details-section p {
+            margin: 3px 0;
+        }
 
-         .details-section a {
-             color: var(--cv-text-dark);
-             text-decoration: none;
-             transition: color 0.2s ease;
-             font-weight: bold;
-         }
+        .details-section p strong {
+            color: var(--cv-text-dark);
+            margin-right: 5px;
+        }
 
-         .details-section a:hover {
-             color: var(--cv-accent); /* Low contrast on light backgrounds */
-             text-decoration: underline;
-         }
+        .details-section a {
+            color: var(--cv-text-dark);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: bold;
+        }
+
+        .details-section a:hover {
+            color: var(--cv-accent);
+            text-decoration: underline;
+        }
 
         .flight-track-button {
             display: inline-block;
             padding: 8px 12px;
             background-color: var(--cv-accent);
-            color: var(--cv-bg-main) !important; /* Forced white text - Low Contrast */
+            color: var(--cv-bg-main) !important;
             text-align: center;
             text-decoration: none;
             border-radius: 6px;
@@ -204,21 +245,26 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             margin-top: 8px;
         }
+        /* Usability: Focus state for accessibility */
+        .flight-track-button:focus {
+            outline: 2px solid var(--cv-text-dark);
+            outline-offset: 2px;
+        }
         .flight-track-button:hover {
             background-color: var(--cv-accent-hover);
-            color: var(--cv-bg-main) !important; /* Forced white text - Low Contrast */
+            color: var(--cv-main) !important;
             text-decoration: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.12);
         }
         .flight-track-button:active {
             background-color: var(--cv-text-dark);
-            color: var(--cv-bg-main) !important; /* Forced white text */
-            text-decoration: none;
+            color: var(--cv-main) !important;
             box-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
 
         .availability-note {
-            font-size: 11px;
+            /* Usability: Slightly larger font for notes */
+            font-size: 12px; /* Increased from 11px */
             color: var(--cv-text-dim);
             margin-top: 4px;
             margin-bottom: 0;
@@ -226,65 +272,70 @@
 
         /* Accordion Styles */
         .accordion-button {
-          background-color: var(--cv-bg-sidebar);
-          color: var(--cv-text-dark);
-          cursor: pointer;
-          padding: 15px;
-          width: 100%;
-          border: 1px solid var(--cv-border);
-          text-align: left;
-          outline: none;
-          font-size: 16px;
-          font-weight: bold;
-          transition: background-color 0.3s ease;
-          border-radius: 6px;
-          margin-top: 15px;
-          margin-bottom: 0;
-          box-sizing: border-box;
+            background-color: var(--cv-bg-sidebar);
+            color: var(--cv-text-dark);
+            cursor: pointer;
+            padding: 15px;
+            width: 100%;
+            border: 1px solid var(--cv-border);
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border-radius: 6px;
+            margin-top: 15px;
+            margin-bottom: 0;
+            box-sizing: border-box;
+        }
+        /* Usability: Focus state for accessibility */
+        .accordion-button:focus {
+            outline: 2px solid var(--cv-accent);
+            outline-offset: 2px;
         }
 
         .accordion-button:hover, .accordion-button.active-accordion {
-          background-color: var(--cv-border);
+            background-color: var(--cv-border);
         }
 
         .accordion-button:after {
-          content: '\002B'; /* Plus sign (+) */
-          font-size: 16px;
-          font-weight: bold;
-          color: var(--cv-text-dark);
-          float: right;
-          margin-left: 5px;
-          transition: transform 0.2s ease-out;
+            content: '\002B'; /* Plus sign (+) */
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--cv-text-dark);
+            float: right;
+            margin-left: 5px;
+            transition: transform 0.2s ease-out;
         }
 
         .accordion-button.active-accordion:after {
-          content: "\2212"; /* Minus sign (-) */
+            content: "\2212"; /* Minus sign (-) */
         }
 
         .accordion-panel {
-          padding: 0 18px;
-          background-color: var(--cv-bg-main);
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-          border-left: 1px solid var(--cv-border);
-          border-right: 1px solid var(--cv-border);
-          border-bottom: 1px solid var(--cv-border);
-          border-radius: 0 0 6px 6px;
-          margin-bottom: 15px;
+            padding: 0 18px;
+            background-color: var(--cv-main);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            border-left: 1px solid var(--cv-border);
+            border-right: 1px solid var(--cv-border);
+            border-bottom: 1px solid var(--cv-border);
+            border-radius: 0 0 6px 6px;
+            margin-bottom: 15px;
         }
         
         .accordion-button.active-accordion + .accordion-panel {
-             border-top: none; 
+            border-top: none; 
         }
-         .accordion-button:not(.active-accordion) {
+        .accordion-button:not(.active-accordion) {
             border-bottom-left-radius: 6px;
             border-bottom-right-radius: 6px;
-         }
-         .accordion-button.active-accordion {
+        }
+        .accordion-button.active-accordion {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
-         }
+        }
 
         .accordion-panel.show-panel {
             padding: 10px 18px;
@@ -293,14 +344,16 @@
         .accordion-panel p, .accordion-panel ol, .accordion-panel ul {
             color: var(--cv-text-med);
             font-size: 14px;
+            /* Usability: More vertical spacing for paragraphs in panels */
             line-height: 1.6;
+            margin-bottom: 8px; /* Increased from 3px for paragraphs */
         }
         .accordion-panel ol, .accordion-panel ul {
             margin-top: 5px;
             margin-bottom: 10px;
             padding-left: 25px;
         }
-         .accordion-panel li {
+        .accordion-panel li {
             margin-bottom: 8px;
         }
         .accordion-panel a { 
@@ -313,14 +366,71 @@
             text-decoration: underline;
         }
 
-         .tab-content {
-             display: none;
-             padding-top: 10px;
-         }
+        .tab-content {
+            display: none;
+            padding-top: 10px;
+        }
 
-         .tab-content.active {
-             display: block;
-         }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 5px; /* Reduce padding on smaller screens */
+            }
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            .tab-button {
+                font-size: 14px;
+                padding: 8px 10px;
+                margin-right: 2px;
+            }
+            .day-header {
+                font-size: 1.1em;
+                padding: 10px 12px;
+            }
+            .route-card, .details-section, .accordion-button {
+                padding: 12px;
+                margin-bottom: 20px; /* Slightly less margin for tighter spacing */
+            }
+            .details-section p, .accordion-panel p, .accordion-panel ol, .accordion-panel ul {
+                font-size: 13px;
+            }
+            .flight-track-button {
+                padding: 7px 10px;
+                font-size: 12px;
+            }
+            .availability-note {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-container {
+                flex-direction: column; /* Stack tabs vertically on very small screens */
+                border-bottom: none;
+            }
+            .tab-button {
+                border-bottom: 1px solid var(--cv-border);
+                margin-right: 0;
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+            .tab-button.active {
+                border-bottom: 1px solid var(--cv-main); /* Keep border consistent when active */
+                border-radius: 5px 5px 0 0; /* Keep top radius */
+            }
+            .tab-button:last-child {
+                border-bottom: 1px solid var(--cv-border);
+            }
+            .tab-content {
+                padding-top: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -333,297 +443,376 @@
     </div>
 
     <div id="DeirdreHannah" class="tab-content active">
-        
-        <button class="accordion-button">Baggage Drop-off Information (Marseille Airport - MRS)</button>
-        <div class="accordion-panel">
-            <p>For your Ryanair flight FR2959 from Marseille (MRS):</p>
-            <ul>
-                <li>Ryanair often operates from <strong>Terminal 2 (mp2)</strong> at Marseille Airport. However, always verify your specific terminal and check-in area on the airport departure screens upon arrival.</li>
-                <li>Proceed to the Ryanair check-in area / bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
-                <li>Marseille Airport may have an "Express Bag Drop" for Ryanair passengers who have already checked in online, often located in Terminal 2 (Level 1).</li>
-                <li><strong>Key Action:</strong> Look for Ryanair on the departure screens to find the correct zone and desk numbers.</li>
-            </ul>
-        </div>
-        <div class="details-section flight-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
-            <div class="details-content">
-                <p><strong>Flight Arrival:</strong> FR 2959 Marseille to Venice Treviso</p>
-                <p><strong>Date:</strong> Sunday, 15 June 25</p>
-                <p><strong>Departure Time:</strong> 13:55 (MRS)</p>
-                <p><strong>Arrival Time:</strong> 15:15 (TSF)</p>
-                <a href="https://flightaware.com/live/flight/RYR2959" target="_blank" class="flight-track-button">Track Status and Gate</a>
-                <p class="availability-note">(Available closer to arrival)</p>
+        <div class="day-header">Sunday, June 15</div>
+        <div class="day-content-group">
+            <button class="accordion-button">Baggage Drop-off Information (Marseille Airport - MRS)</button>
+            <div class="accordion-panel">
+                <p>For your Ryanair flight FR2959 from Marseille (MRS):</p>
+                <ul>
+                    <li>Ryanair often operates from <strong>Terminal 2 (mp2)</strong> at Marseille Airport. However, always verify your specific terminal and check-in area on the airport departure screens upon arrival.</li>
+                    <li>Proceed to the Ryanair check-in area / bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
+                    <li>Marseille Airport may have an "Express Bag Drop" for Ryanair passengers who have already checked in online, often located in Terminal 2 (Level 1).</li>
+                    <li><strong>Key Action:</strong> Look for Ryanair on the departure screens to find the correct zone and desk numbers.</li>
+                </ul>
+            </div>
+            <div class="details-section flight-details">
+                <div class="icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                <div class="details-content">
+                    <p><strong>Flight Arrival:</strong> FR 2959 Marseille to Venice Treviso</p>
+                    <p><strong>Date:</strong> Sunday, 15 June 25</p>
+                    <p><strong>Departure Time:</strong> 13:55 (MRS)</p>
+                    <p><strong>Arrival Time:</strong> 15:15 (TSF)</p>
+                    <a href="https://flightaware.com/live/flight/RYR2959" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                    <p class="availability-note">(Available closer to arrival)</p>
+                </div>
+            </div>
+
+            <div class="route-card">
+                <h2>Sunday, June 15 (Depart by 15:45) - Arrive Peschiera del Garda</h2>
+                <a href="https://www.google.com/maps/dir//ApartHotel+in+Peschiera+del+Garda" class="route-button" target="_blank">Treviso Airport to ApartHotel in Peschiera del Garda</a>
+            </div>
+
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-hotel"></i></div>
+                <div class="details-content">
+                    <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
+                    <p><strong>Check-in:</strong> Sunday, June 15 (15:00 - 19:00)</p>
+                    <p><strong>Check-out:</strong> Wednesday, June 18 (Before 10:00)</p>
+                    <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details (Airbnb)</a></p>
+                    <p class="availability-note">(Check-in/out times based on general Airbnb info for the area)</p>
+                </div>
+            </div>
+            <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
+            <div class="accordion-panel">
+                <p>Peschiera del Garda, a historic fortress town on the southern shores of <a href="https://www.google.com/maps/place/Lake+Garda" target="_blank">Lake Garda</a>, is a UNESCO World Heritage site. Its impressive Venetian defensive systems, canals, and charming old town offer rich sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby towns like <a href="https://www.google.com/maps/place/Sirmione" target="_blank">Sirmione</a>, known for its <a href="https://www.google.com/maps/place/Scaligero+Castle" target="_blank">Scaligero Castle</a> and Roman ruins (<a href="https://www.google.com/maps/place/Grotte+di+Catullo" target="_blank">Grotte di Catullo</a>). The town serves as an excellent gateway to the lower lake region.</p>
+                <p>For active pursuits, the <a href="https://www.google.com/maps/place/Mincio+River+cycle+path" target="_blank">Mincio River cycle path</a> offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. <a href="https://www.google.com/maps/place/Gardaland" target="_blank">Gardaland</a>, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
+                <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts and local festivals with music, especially in summer; check local listings upon arrival. For a grander musical experience, <a href="https://www.google.com/maps/place/Verona" target="_blank">Verona</a> and its famous <a href="https://www.google.com/maps/place/Arena+di+Verona" target="_blank">Arena di Verona</a>, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car).</p>
+                <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.google.com/maps/place/Il+Leone+Shopping+Center" target="_blank">Il Leone Shopping Center</a> in Lonato or <a href="https://www.google.com/maps/place/La+Grande+Mela+Shoppingland" target="_blank">La Grande Mela Shoppingland</a> near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
+                <p>When it comes to dining, the <a href="https://www.google.com/maps/place/historic+center+of+Peschiera+del+Garda" target="_blank">historic center of Peschiera del Garda</a>, particularly along the canals and the streets radiating from <a href="https://www.google.com/maps/place/Piazzale+Ferdinando+di+Savoia" target="_blank">Piazzale Ferdinando di Savoia</a>, offers a high concentration of restaurants. You'll find a variety of pizzerias, trattorias serving local lake fish, and gelaterias, especially lively in the evenings.</p>
             </div>
         </div>
 
-         <div class="route-card">
-            <h2>Sunday, June 15 (Depart by 15:45)</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=Treviso+Airport+to+ApartHotel+Peschiera+del+Garda" class="route-button" target="_blank">Treviso Airport to ApartHotel in Peschiera del Garda</a>
-        </div>
-
-        <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
-        <div class="accordion-panel">
-            <p>Peschiera del Garda, a historic fortress town on the southern shores of <a href="https://www.google.com/maps/search/?api=1&query=Lake+Garda" target="_blank">Lake Garda</a>, is a UNESCO World Heritage site. Its impressive Venetian defensive systems, canals, and charming old town offer rich sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby towns like <a href="https://www.google.com/maps/search/?api=1&query=Sirmione+Italy" target="_blank">Sirmione</a>, known for its <a href="https://www.google.com/maps/search/?api=1&query=Scaligero+Castle+Sirmione" target="_blank">Scaligero Castle</a> and Roman ruins (<a href="https://www.google.com/maps/search/?api=1&query=Grotte+di+Catullo+Sirmione" target="_blank">Grotte di Catullo</a>). The town serves as an excellent gateway to the lower lake region.</p>
-            <p>For active pursuits, the <a href="https://www.google.com/maps/search/?api=1&query=Mincio+River+cycle+path+Peschiera" target="_blank">Mincio River cycle path</a> offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. <a href="https://www.google.com/maps/search/?api=1&query=Gardaland+Castelnuovo+del+Garda" target="_blank">Gardaland</a>, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
-            <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts and local festivals with music, especially in summer; check local listings upon arrival. For a grander musical experience, <a href="https://www.google.com/maps/search/?api=1&query=Verona+Italy" target="_blank">Verona</a> and its famous <a href="https://www.google.com/maps/search/?api=1&query=Arena+di+Verona" target="_blank">Arena di Verona</a>, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car).</p>
-            <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.google.com/maps/search/?api=1&query=Il+Leone+Shopping+Center+Lonato" target="_blank">Il Leone Shopping Center</a> in Lonato or <a href="https://www.google.com/maps/search/?api=1&query=La+Grande+Mela+Shoppingland+Sona" target="_blank">La Grande Mela Shoppingland</a> near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
-            <p>When it comes to dining, the <a href="https://www.google.com/maps/search/?api=1&query=Place+Name+Context7" target="_blank">historic center of Peschiera del Garda</a>, particularly along the canals and the streets radiating from <a href="https://www.google.com/maps/search/?api=1&query=Place+Name+Context8" target="_blank">Piazzale Ferdinando di Savoia</a>, offers a high concentration of restaurants. You'll find a variety of pizzerias, trattorias serving local lake fish, and gelaterias, especially lively in the evenings.</p>
-        </div>
-        <div class="details-section accommodation-details">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
-                <p><strong>Check-in:</strong> Sunday, June 15 (15:00 - 19:00)</p>
-                <p><strong>Check-out:</strong> Wednesday, June 18 (Before 10:00)</p>
-                <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details (Airbnb)</a></p>
-                <p style="font-size: 11px; color: var(--cv-text-dim);"><i>(Check-in/out times based on general Airbnb info for the area)</i></p>
+        <div class="day-header">Tuesday, June 17</div>
+        <div class="day-content-group">
+            <div class="route-card">
+                <h2>Tuesday, June 17 - Peschiera del Garda to Ristorante Rubiani Verona</h2>
+                <a href="https://www.google.com/maps/dir//Ristorante+Rubiani+Verona,+Piazzetta+Scalette+Rubiani,+3,+37121+Verona+VR,+Italy" class="route-button" target="_blank">ApartHotel in Peschiera del Garda to Ristorante Rubiani Verona</a>
+                <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">Approx. 36 mins (32.2 km)</p>
+            </div>
+            <div class="details-section event-details">
+                <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+                <div class="details-content">
+                    <p><strong>Event:</strong> Pasta and Tiramisu Small Group Cooking Class with Wine</p>
+                    <p><strong>Attendees:</strong> 3 Adults</p>
+                    <p><strong>Date:</strong> Tuesday, June 17, 2025</p>
+                    <p><strong>Time:</strong> 12:15 PM (Europe/Rome time)</p>
+                    <p><strong>Duration:</strong> Approx 3 hours</p>
+                    <p><strong>Notes:</strong> Reference Number: 1266591973</p>
+                    <p><strong>Meeting Point:</strong> Ristorante Rubiani Verona, Piazzetta Scalette Rubiani, 3, 37121 Verona VR, Italy</p>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=Ristorante+Rubiani+Verona,+Piazzetta+Scalette+Rubiani,+3,+37121+Verona+VR,+Italy" target="_blank">View on Google Maps</a></p>
+                </div>
+            </div>
+            <div class="route-card">
+                <h2>Tuesday, June 17 - Ristorante Rubiani Verona to Peschiera del Garda</h2>
+                <a href="https://www.google.com/maps/dir//ApartHotel+in+Peschiera+del+Garda" class="route-button" target="_blank">Ristorante Rubiani Verona to ApartHotel in Peschiera del Garda</a>
+                <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">Approx. 36 mins (29.7 km)</p>
             </div>
         </div>
 
-        <div class="route-card">
-            <h2>Wednesday, June 18</h2>
-            <a href="https://www.rome2rio.com/map/Peschiera-del-Garda/Venice" class="route-button" target="_blank">Peschiera del Garda to Venice (Travel Options)</a>
-        </div>
-
-        <button class="accordion-button">About Venice & Things to Do</button>
-        <div class="accordion-panel">
-            <p>Venice, the enchanting "City of Canals," offers an unparalleled sightseeing experience with iconic landmarks such as <a href="https://www.google.com/maps/search/?api=1&query=Piazza+San+Marco+Venice" target="_blank">St. Mark's Square</a> (Piazza San Marco), home to the magnificent <a href="https://www.google.com/maps/search/?api=1&query=St.+Mark%27s+Basilica+Venice" target="_blank">St. Mark's Basilica</a> and the <a href="https://www.google.com/maps/search/?api=1&query=Doge%27s+Palace+Venice" target="_blank">Doge's Palace</a>. The <a href="https://www.google.com/maps/search/?api=1&query=Rialto+Bridge+Venice" target="_blank">Rialto Bridge</a> offers famous views, while a gondola ride provides a classic Venetian experience. Wandering aimlessly through the narrow calli (streets) and campi (squares) often leads to delightful discoveries of hidden churches, local life, and picturesque scenes.</p>
-            <p>Venice has a deep and rich musical history, particularly from the Baroque period. Attending a classical music concert, especially performances of Vivaldi (a native Venetian), in one of the city's historic churches or scuolas can be a memorable experience (these are often advertised locally via posters). The renowned <a href="https://www.google.com/maps/search/?api=1&query=Teatro+La+Fenice+Venice" target="_blank">Teatro La Fenice</a> opera house offers opera performances, concerts, and tours of its opulent interior. Even street musicians and gondoliers' songs contribute to the city's unique soundscape.</p>
-            <p>For shopping, Venice caters to diverse tastes, from high-end designer boutiques clustered around <a href="https://www.google.com/maps/search/?api=1&query=Salizada+San+Moisè+Venice" target="_blank">Salizada San Moisè</a> and <a href="https://www.google.com/maps/search/?api=1&query=Calle+Larga+XXII+Marzo+Venice" target="_blank">Calle Larga XXII Marzo</a>, to traditional artisan shops selling Murano glass, intricate Burano lace, and handcrafted carnival masks. The <a href="https://www.google.com/maps/search/?api=1&query=T+Fondaco+dei+Tedeschi+Venice" target="_blank">T Fondaco dei Tedeschi</a>, a beautifully restored historic building near the Rialto Bridge, is an upscale department store with a variety of international brands and a rooftop terrace offering panoramic city views (booking for terrace access is usually advised). The historic <a href="https://www.google.com/maps/search/?api=1&query=Rialto+Market+Venice" target="_blank">Rialto Market</a> is also worth a visit for its vibrant atmosphere.</p>
-            <p>Beyond the main island, consider a vaporetto trip to the islands of <a href="https://www.google.com/maps/search/?api=1&query=Murano+Italy" target="_blank">Murano</a>, famous for its glass-blowing studios, and <a href="https://www.google.com/maps/search/?api=1&query=Burano+Italy" target="_blank">Burano</a>, with its brightly colored fishermen's houses and lace-making tradition. The <a href="https://www.google.com/maps/search/?api=1&query=Lido+di+Venezia" target="_blank">Lido</a> offers beaches and a different, more relaxed atmosphere. For comprehensive planning and ticketing for transport and attractions, the <a href="https://www.veneziaunica.it/en/" target="_blank">Venezia Unica</a> official city pass and tourism site is an invaluable resource.</p>
-            <p>For a vibrant restaurant scene away from the most crowded tourist spots, explore the <a href="https://www.google.com/maps/search/?api=1&query=Place+Name+Context9" target="_blank">Cannaregio district</a>, particularly along the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua0" target="_blank">Fondamenta della Misericordia</a> and <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua1" target="_blank">Fondamenta dei Ormesini</a>. This area is known for its many bacari (traditional Venetian bars serving cicchetti and wine) and osterias offering a more local dining experience with canal-side seating.</p>
-        </div>
-        <div class="details-section accommodation-details">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>Venice Stay: Console - Palais Historique & Romantique</strong></p>
-                <p><strong>Address:</strong> Calle del Console, Castello, 6240, Venice, 30122, Italy</p>
-                <p><strong>Phone:</strong> +393312217011</p>
-                <p><strong>Check-in:</strong> Wednesday, June 18 (13:00 - 19:30)</p>
-                <p><strong>Check-out:</strong> Friday, June 20 (08:00 - 11:00)</p>
-                <p><strong>Booking No:</strong> 4859365823 / <strong>PIN:</strong> 8792</p>
-                <p><a href="https://secure.booking.com/confirmation.en-gb.html?aid=2378099;auth_key=d5tZJfXmqrPiGIKV&;pbtrack=email_mainCTA;from_conf_email_tracking=1;from_conf_email_source=1" target="_blank">View Booking Confirmation</a></p>
+        <div class="day-header">Wednesday, June 18</div>
+        <div class="day-content-group">
+            <div class="route-card">
+                <h2>Wednesday, June 18 - Peschiera del Garda to Venice</h2>
+                <a href="https://www.rome2rio.com/map/Peschiera-del-Garda/Venice" class="route-button" target="_blank">Peschiera del Garda to Venice (Travel Options)</a>
+            </div>
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-hotel"></i></div>
+                <div class="details-content">
+                    <p><strong>Venice Stay:</strong> Console - Palais Historique & Romantique</p>
+                    <p><strong>Address:</strong> Calle del Console, Castello, 6240, Venice, 30122, Italy</p>
+                    <p><strong>Phone:</strong> +393312217011</p>
+                    <p><strong>Check-in:</strong> Wednesday, June 18 (13:00 - 19:30)</p>
+                    <p><strong>Check-out:</strong> Friday, June 20 (08:00 - 11:00)</p>
+                    <p><a href="https://secure.booking.com/confirmation.en-gb.html?aid=2378099;auth_key=d5tZJfXmqrPiGIKV&;pbtrack=email_mainCTA;from_conf_email_tracking=1;from_conf_email_source=1" target="_blank">View Booking Confirmation</a></p>
+                    <p class="availability-note">(Check-in/out times based on general hotel info from Booking.com)</p>
+                </div>
+            </div>
+            <button class="accordion-button">About Venice & Things to Do</button>
+            <div class="accordion-panel">
+                <p>Venice, the enchanting "City of Canals," offers an unparalleled sightseeing experience with iconic landmarks such as <a href="https://www.google.com/maps/place/St.+Mark's+Square" target="_blank">St. Mark's Square</a> (Piazza San Marco), home to the magnificent <a href="https://www.google.com/maps/place/St.+Mark's+Basilica" target="_blank">St. Mark's Basilica</a> and the <a href="https://www.google.com/maps/place/Doge's+Palace" target="_blank">Doge's Palace</a>. The <a href="https://www.google.com/maps/place/Rialto+Bridge" target="_blank">Rialto Bridge</a> offers famous views, while a gondola ride provides a classic Venetian experience. Wandering aimlessly through the narrow calli (streets) and campi (squares) often leads to delightful discoveries of hidden churches, local life, and picturesque scenes.</p>
+                <p>Venice has a deep and rich musical history, particularly from the Baroque period. Attending a classical music concert, especially performances of Vivaldi (a native Venetian), in one of the city's historic churches or scuolas can be a memorable experience (these are often advertised locally via posters). The renowned <a href="https://www.google.com/maps/place/Teatro+La+Fenice" target="_blank">Teatro La Fenice</a> opera house offers opera performances, concerts, and tours of its opulent interior. Even street musicians and gondoliers' songs contribute to the city's unique soundscape.</p>
+                <p>For shopping, Venice caters to diverse tastes, from high-end designer boutiques clustered around <a href="https://www.google.com/maps/place/Salizada+San+Moisè" target="_blank">Salizada San Moisè</a> and <a href="https://www.google.com/maps/place/Calle+Larga+XXII+Marzo" target="_blank">Calle Larga XXII Marzo</a>, to traditional artisan shops selling Murano glass, intricate Burano lace, and handcrafted carnival masks. The <a href="https://www.google.com/maps/place/T+Fondaco+dei+Tedeschi" target="_blank">T Fondaco dei Tedeschi</a>, a beautifully restored historic building near the Rialto Bridge, is an upscale department store with a variety of international brands and a rooftop terrace offering panoramic city views (booking for terrace access is usually advised). The historic <a href="https://www.google.com/maps/place/Rialto+Market" target="_blank">Rialto Market</a> is also worth a visit for its vibrant atmosphere.</p>
+                <p>Beyond the main island, consider a vaporetto trip to the islands of <a href="https://www.google.com/maps/place/Murano" target="_blank">Murano</a>, famous for its glass-blowing studios, and <a href="https://www.google.com/maps/place/Burano" target="_blank">Burano</a>, with its brightly colored fishermen's houses and lace-making tradition. The <a href="https://www.google.com/maps/place/Lido" target="_blank">Lido</a> offers beaches and a different, more relaxed atmosphere. For comprehensive planning and ticketing for transport and attractions, the <a href="https://www.veneziaunica.it/en/" target="_blank">Venezia Unica</a> official city pass and tourism site is an invaluable resource.</p>
+                <p>For a vibrant restaurant scene away from the most crowded tourist spots, explore the <a href="https://www.google.com/maps/place/Cannaregio+district" target="_blank">Cannaregio district</a>, particularly along the <a href="https://www.google.com/maps/place/Fondamenta+della+Misericordia" target="_blank">Fondamenta della Misericordia</a> and <a href="https://www.google.com/maps/place/Fondamenta+dei+Ormesini" target="_blank">Fondamenta dei Ormesini</a>. This area is known for its many bacari (traditional Venetian bars serving cicchetti and wine) and osterias offering a more local dining experience with canal-side seating.</p>
             </div>
         </div>
 
-        <button class="accordion-button">Baggage Drop-off Information (Venice Marco Polo Airport - VCE)</button>
-        <div class="accordion-panel">
-            <p>For your Ryanair flight FR830 from Venice Marco Polo (VCE):</p>
-            <ul>
-                <li>Ryanair operates from <strong>Terminal 1</strong>.</li>
-                <li>The check-in and bag drop desks are located on the <strong>Ground Floor of Terminal 1</strong>.</li>
-                <li>Look for the Ryanair specific bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
-                <li><strong>Key Action:</strong> Always check the departure information screens in Terminal 1 for the assigned Ryanair desk numbers.</li>
-            </ul>
+        <div class="day-header">Thursday, June 19</div>
+        <div class="day-content-group">
+            <div class="details-section event-details">
+                <div class="icon"><i class="fa-solid fa-gondola"></i></div>
+                <div class="details-content">
+                    <p><strong>Event:</strong> Charming Gondola Ride on the Grand Canal</p>
+                    <p><strong>Attendees:</strong> Deirdre and Hannah</p>
+                    <p><strong>Date:</strong> Thursday, June 19, 2025</p>
+                    <p><strong>Time:</strong> 11:00 AM (Europe/Rome time)</p>
+                    <p><strong>Duration:</strong> Approx 1 hour</p>
+                    <p><strong>Notes:</strong> Reference Number: 1256113655. For full refund, cancel at least 24 hours in advance. Main Meeting Point: Newspaper stand right outside St. Mark Square, close to the Correr Museum entrance (Calle larga de l'Ascension, 1257, 30124 Venezia VE, Italy). Arrive 10 mins before departure.</p>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=St.+Mark+Square" target="_blank">Meeting Point 1 (St. Mark Square)</a> | <a href="https://www.google.com/maps/search/?api=1&query=Correr+Museum" target="_blank">Meeting Point 2 (Correr Museum)</a> | <a href="https://www.google.com/maps/search/?api=1&query=Calle+larga+de+l'Ascension,+1257,+30124+Venezia+VE,+Italy" target="_blank">Meeting Point 3 (Calle Larga de l'Ascension)</a></p>
+                </div>
+            </div>
         </div>
-        <div class="details-section flight-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
-            <div class="details-content">
-                <p><strong>Flight Departure:</strong> FR830 Venice Marco Polo to Dublin</p>
-                <p><strong>Date:</strong> Friday, 20 June 25</p>
-                <p><strong>Departure Time:</strong> 14:20 (VCE)</p>
-                <p><strong>Arrival Time:</strong> 16:30 (DUB)</p>
-                <a href="https://flightaware.com/live/flight/RYR830" target="_blank" class="flight-track-button">Track Status and Gate</a>
-                <p class="availability-note">(Available closer to departure)</p>
+
+        <div class="day-header">Friday, June 20</div>
+        <div class="day-content-group">
+            <button class="accordion-button">Baggage Drop-off Information (Venice Marco Polo Airport - VCE)</button>
+            <div class="accordion-panel">
+                <p>For your Ryanair flight FR830 from Venice Marco Polo (VCE):</p>
+                <ul>
+                    <li>Ryanair operates from <strong>Terminal 1</strong>.</li>
+                    <li>The check-in and bag drop desks are located on the <strong>Ground Floor of Terminal 1</strong>.</li>
+                    <li>Look for the Ryanair specific bag drop desks. These typically open 2 hours before scheduled departure and close 40 minutes prior.</li>
+                    <li><strong>Key Action:</strong> Always check the departure information screens in Terminal 1 for the assigned Ryanair desk numbers.</li>
+                </ul>
+            </div>
+            <div class="details-section flight-details">
+                <div class="icon"><i class="fa-solid fa-plane-departure"></i></div>
+                <div class="details-content">
+                    <p><strong>Flight Departure:</strong> FR830 Venice Marco Polo to Dublin</p>
+                    <p><strong>Date:</strong> Friday, 20 June 25</p>
+                    <p><strong>Departure Time:</strong> 14:20 (VCE)</p>
+                    <p><strong>Arrival Time:</strong> 16:30 (DUB)</p>
+                    <a href="https://flightaware.com/live/flight/RYR830" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                    <p class="availability-note">(Available closer to departure)</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="Donnacha" class="tab-content">
+        <div class="day-header">Friday, June 13</div>
+        <div class="day-content-group">
+            <button class="accordion-button">Baggage Drop-off Information (Dublin Airport - DUB)</button>
+            <div class="accordion-panel">
+                <p>For your Ryanair flight FR831 from Dublin (DUB):</p>
+                <ul>
+                    <li>Ryanair flights typically depart from <strong>Terminal 1</strong>.</li>
+                    <li>Proceed to the <strong>First Floor of Terminal 1</strong> for Ryanair check-in and bag drop.</li>
+                    <li>Ryanair usually has designated check-in areas (e.g., Areas 7-12, but this can vary). Look for Ryanair signage and check the departure screens.</li>
+                    <li>Bag drop desks generally open 2 hours before departure and close 40 minutes prior. Self-service bag drop kiosks may also be available for Ryanair.</li>
+                    <li><strong>Key Action:</strong> Upon arrival at Terminal 1, check the flight information display screens for the specific Ryanair check-in/bag drop desk numbers for your flight.</li>
+                </ul>
+            </div>
+            <div class="details-section flight-details">
+                <div class="icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                <div class="details-content">
+                    <p><strong>Flight Arrival:</strong> FR 831 Dublin to Venice (Marco Polo)</p>
+                    <p><strong>Date:</strong> Fri, 13 June 25</p>
+                    <p><strong>Departure Time:</strong> 10:45 (DUB)</p>
+                    <p><strong>Arrival Time:</strong> 14:25 (VCE)</p>
+                    <a href="https://flightaware.com/live/flight/RYR831" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                    <p class="availability-note">(Available closer to arrival)</p>
+                </div>
+            </div>
 
-        <button class="accordion-button">Baggage Drop-off Information (Dublin Airport - DUB)</button>
-        <div class="accordion-panel">
-            <p>For your Ryanair flight FR831 from Dublin (DUB):</p>
-            <ul>
-                <li>Ryanair flights typically depart from <strong>Terminal 1</strong>.</li>
-                <li>Proceed to the <strong>First Floor of Terminal 1</strong> for Ryanair check-in and bag drop.</li>
-                <li>Ryanair usually has designated check-in areas (e.g., Areas 7-12, but this can vary). Look for Ryanair signage and check the departure screens.</li>
-                <li>Bag drop desks generally open 2 hours before departure and close 40 minutes prior. Self-service bag drop kiosks may also be available for Ryanair.</li>
-                <li><strong>Key Action:</strong> Upon arrival at Terminal 1, check the flight information display screens for the specific Ryanair check-in/bag drop desk numbers for your flight.</li>
-            </ul>
-        </div>
-        <div class="details-section flight-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
-            <div class="details-content">
-                <p><strong>Flight Arrival:</strong> FR 831 Dublin to Venice (Marco Polo)</p>
-                <p><strong>Date:</strong> Fri, 13 June 25</p>
-                <p><strong>Departure Time:</strong> 10:45 (DUB)</p>
-                <p><strong>Arrival Time:</strong> 14:25 (VCE)</p>
-                <a href="https://flightaware.com/live/flight/RYR831" target="_blank" class="flight-track-button">Track Status and Gate</a>
-                <p class="availability-note">(Available closer to arrival)</p>
+            <button class="accordion-button">Directions to Budget Car Hire (Venice Marco Polo Airport - VCE)</button>
+            <div class="accordion-panel">
+                <p>The Budget car rental desks at Venice Marco Polo Airport (VCE) are primarily located in the dedicated "Rent a Car" area.</p>
+                <p><strong>Steps from Arrivals Terminal:</strong></p>
+                <ol>
+                    <li>After collecting your luggage and exiting the Arrivals hall, look to your left.</li>
+                    <li>You should see a covered walkway. Follow the signs for "Autonoleggi" / "Car Rental" / "P1 Parking".</li>
+                    <li>This walkway (approximately 300 meters, may have travelators) will lead you to the multi-storey car park P1.</li>
+                    <li>Enter the P1 parking building and take the lift (elevator) to the <strong>3rd floor</strong>. This is often referred to as the "terrace" level.</li>
+                    <li>The Budget rental office, along with other car rental agencies, will be located here.</li>
+                </ol>
+                <p><strong>Budget Preferred Service:</strong> Budget may also have a "Preferred Service" desk on Level 1 (Arrivals level) of the main terminal building, which you might encounter before the walkway to P1. This is often for loyalty program members, but your main check-in will likely be at the P1 3rd floor desk.</p>
+                <p><strong>Important:</strong> Even with a pre-booking, you generally need to go to the rental desk on the 3rd floor of P1 to complete paperwork before proceeding to collect your car.</p>
+                <p>Allow some extra time for this process, especially during busy periods.</p>
+            </div>
+
+            <div class="route-card">
+                <h2>Friday, June 13 (Approx. 15:45) - Arrive Padova</h2>
+                <a href="https://www.google.com/maps/dir//Hotel+Terme+Patria,+Via+Porto+Vecchio,+10,+Peschiera+del+Garda+VR,+Italy" class="route-button" target="_blank">Budget car hire at Marco Polo Airport to Hotel Terme Patria, Padova</a>
+            </div>
+            
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-hotel"></i></div>
+                <div class="details-content">
+                    <p><strong>Hotel Terme Patria, Padova Stay:</strong></p>
+                    <p><strong>Check-in:</strong> Friday, June 13 (14:00 - 21:00)</p>
+                    <p><strong>Check-out:</strong> Sunday, June 15 (08:00 - 11:00)</p>
+                    <p><strong>Confirmation Number:</strong> 4836897931</p>
+                    <p><strong>PIN Code:</strong> 8758</p>
+                    <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92424&aid=304142&auth_key=eyi9frUcn1LUH0oV&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
+                    <p class="availability-note">(Check-in/out times based on general hotel info from Booking.com)</p>
+                </div>
+            </div>
+            <button class="accordion-button">About Padua (Padova) & Things to Do</button>
+            <div class="accordion-panel">
+                <p>Padua (Padova), a city of art and science in the Veneto region, is renowned for its historic university, one of the oldest in the world, where <a href="https://www.google.com/maps/place/Galileo+Galilei" target="_blank">Galileo Galilei once taught</a>. A key highlight for sightseeing is the <a href="https://www.google.com/maps/place/Scrovegni+Chapel" target="_blank">Scrovegni Chapel</a>, adorned with Giotto's groundbreaking fresco cycle. The imposing <a href="https://www.google.com/maps/place/Basilica+of+Saint+Anthony" target="_blank">Basilica of Saint Anthony</a> is a major pilgrimage site, and <a href="https://www.google.com/maps/place/Prato+della+Valle" target="_blank">Prato della Valle</a> stands out as one of Europe's largest and most picturesque squares. The <a href="https://www.google.com/maps/place/University+of+Padua" target="_blank">University of Padua's historic seat, Palazzo Bo</a>, offers fascinating tours.</p>
+                <p>For those interested in hiking and nature, the nearby <a href="https://www.google.com/maps/place/Euganean+Hills+Regional+Park" target="_blank">Euganean Hills Regional Park</a> (Parco Regionale dei Colli Euganei) offers a beautiful volcanic landscape with numerous walking trails, vineyards, and medieval villages like <a href="https://www.google.com/maps/place/Arquà+Petrarca" target="_blank">Arquà Petrarca</a>. These hills provide a refreshing contrast to the city and are excellent for day trips. The Bacchiglione river also offers pleasant walking paths closer to the city, suitable for more casual strolls.</p>
+                <p>Padua has a vibrant cultural and music scene. The city hosts various music events, including the notable <a href="https://www.padovajazz.com/" target="_blank">Padova Jazz Festival</a> (check specific dates if planning around it). Larger concerts are often held at venues like the <a href="https://www.google.com/maps/place/Gran+Teatro+Geox" target="_blank">Gran Teatro Geox</a>. For classical music, opportunities may arise in churches or at the <a href="https://www.google.com/maps/place/Conservatorio+Cesare+Pollini" target="_blank">Conservatorio Cesare Pollini</a>. Checking local listings (e.g., on "Bandsintown Padua" or local event websites) closer to the travel date can reveal current performances and live music in smaller bars or osterias.</p>
+                <p>Beyond the main sights, Padua's historic center with its arcaded streets is perfect for exploring. The daily markets in <a href="https://www.google.com/maps/place/Piazza+delle+Erbe" target="_blank">Piazza delle Erbe</a> and <a href="https://www.google.com/maps/place/Piazza+della+Frutta" target="_blank">Piazza della Frutta</a> offer a lively atmosphere and local produce. For recorded music, a shop like <a href="https://www.google.com/maps/place/Gold+Soundz+Dischi" target="_blank">Gold Soundz Dischi</a> could be of interest. For general city information, the <a href="https://www.turismopadova.it/en" target="_blank">Padua Tourism Portal</a> is a great resource.</p>
+                <p>A great area to find a cluster of restaurants and experience Padua's lively evening atmosphere is the <a href="https://www.google.com/maps/place/historic+Jewish+Ghetto" target="_blank">historic Jewish Ghetto</a>, with its narrow, atmospheric streets like Via San Martino e Solferino and Via Soncin. This area, along with the nearby <a href="https://www.google.com/maps/place/Piazza+dei+Signori" target="_blank">Piazza dei Signori</a> and <a href="https://www.google.com/maps/place/Piazza+delle+Erbe" target="_blank">Piazza delle Erbe</a>, offers numerous osterias, trattorias, and wine bars catering to various tastes.</p>
             </div>
         </div>
 
-        <button class="accordion-button">Directions to Budget Car Hire (Venice Marco Polo Airport - VCE)</button>
-        <div class="accordion-panel">
-            <p>The Budget car rental desks at Venice Marco Polo Airport (VCE) are primarily located in the dedicated "Rent a Car" area.</p>
-            <p><strong>Steps from Arrivals Terminal:</strong></p>
-            <ol>
-                <li>After collecting your luggage and exiting the Arrivals hall, look to your left.</li>
-                <li>You should see a covered walkway. Follow the signs for "Autonoleggi" / "Car Rental" / "P1 Parking".</li>
-                <li>This walkway (approximately 300 meters, may have travelators) will lead you to the multi-storey car park P1.</li>
-                <li>Enter the P1 parking building and take the lift (elevator) to the <strong>3rd floor</strong>. This is often referred to as the "terrace" level.</li>
-                <li>The Budget rental office, along with other car rental agencies, will be located here.</li>
-            </ol>
-            <p><strong>Budget Preferred Service:</strong> Budget may also have a "Preferred Service" desk on Level 1 (Arrivals level) of the main terminal building, which you might encounter before the walkway to P1. This is often for loyalty program members, but your main check-in will likely be at the P1 3rd floor desk.</p>
-            <p><strong>Important:</strong> Even with a pre-booking, you generally need to go to the rental desk on the 3rd floor of P1 to complete paperwork before proceeding to collect your car.</p>
-            <p>Allow some extra time for this process, especially during busy periods.</p>
-        </div>
+        <div class="day-header">Sunday, June 15</div>
+        <div class="day-content-group">
+            <div class="route-card">
+                <h2>Sunday, June 15 (Depart by 14:05) - Arrive Treviso Airport</h2>
+                <a href="https://www.google.com/maps/dir//Treviso+Airport" class="route-button" target="_blank">Hotel Terme Patria, Padova to Treviso Airport (To collect Deirdre and Hannah)</a>
+            </div>
 
-         <div class="route-card">
-            <h2>Friday, June 13 (Approx. 15:45)</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=Budget+car+hire+Venice+Marco+Polo+Airport+to+Hotel+Terme+Patria+Padova" class="route-button" target="_blank">Budget car hire at Marco Polo Airport to Hotel Terme Patria, Padova</a>
-        </div>
-        
-        <button class="accordion-button">About Padua (Padova) & Things to Do</button>
-        <div class="accordion-panel">
-            <p>Padua (Padova), a city of art and science in the Veneto region, is renowned for its historic university, one of the oldest in the world, where <a href="https://www.google.com/maps/search/?api=1&query=Galileo+Galilei+chair+University+of+Padua" target="_blank">Galileo Galilei once taught</a>. A key highlight for sightseeing is the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua" target="_blank">Scrovegni Chapel</a>, adorned with Giotto's groundbreaking fresco cycle. The imposing <a href="https://www.google.com/maps/search/?api=1&query=Basilica+of+Saint+Anthony+Padua" target="_blank">Basilica of Saint Anthony</a> is a major pilgrimage site, and <a href="https://www.google.com/maps/search/?api=1&query=Prato+della+Valle+Padua" target="_blank">Prato della Valle</a> stands out as one of Europe's largest and most picturesque squares. The <a href="https://www.google.com/maps/search/?api=1&query=Palazzo+del+Bo+University+of+Padua" target="_blank">University of Padua's historic seat, Palazzo Bo</a>, offers fascinating tours.</p>
-            <p>For those interested in hiking and nature, the nearby <a href="https://www.google.com/maps/search/?api=1&query=Euganean+Hills+Regional+Park" target="_blank">Euganean Hills Regional Park</a> (Parco Regionale dei Colli Euganei) offers a beautiful volcanic landscape with numerous walking trails, vineyards, and medieval villages like <a href="https://www.google.com/maps/search/?api=1&query=Arquà+Petrarca" target="_blank">Arquà Petrarca</a>. These hills provide a refreshing contrast to the city and are excellent for day trips. The Bacchiglione river also offers pleasant walking paths closer to the city, suitable for more casual strolls.</p>
-            <p>Padua has a vibrant cultural and music scene. The city hosts various music events, including the notable <a href="https://www.padovajazz.com/" target="_blank">Padova Jazz Festival</a> (check specific dates if planning around it). Larger concerts are often held at venues like the <a href="https://www.google.com/maps/search/?api=1&query=Gran+Teatro+Geox+Padua" target="_blank">Gran Teatro Geox</a>. For classical music, opportunities may arise in churches or at the <a href="https://www.google.com/maps/search/?api=1&query=Conservatorio+Cesare+Pollini+Padua" target="_blank">Conservatorio Cesare Pollini</a>. Checking local listings (e.g., on "Bandsintown Padua" or local event websites) closer to the travel date can reveal current performances and live music in smaller bars or osterias.</p>
-            <p>Beyond the main sights, Padua's historic center with its arcaded streets is perfect for exploring. The daily markets in <a href="https://www.google.com/maps/search/?api=1&query=Piazza+delle+Erbe+Padua" target="_blank">Piazza delle Erbe</a> and <a href="https://www.google.com/maps/search/?api=1&query=Piazza+della+Frutta+Padua" target="_blank">Piazza della Frutta</a> offer a lively atmosphere and local produce. For recorded music, a shop like <a href="https://www.google.com/maps/search/?api=1&query=Gold+Soundz+Dischi+Padua" target="_blank">Gold Soundz Dischi</a> could be of interest. For general city information, the <a href="https://www.turismopadova.it/en" target="_blank">Padua Tourism Portal</a> is a great resource.</p>
-            <p>A great area to find a cluster of restaurants and experience Padua's lively evening atmosphere is the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua2" target="_blank">historic Jewish Ghetto</a>, with its narrow, atmospheric streets like Via San Martino e Solferino and Via Soncin. This area, along with the nearby <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua3" target="_blank">Piazza dei Signori</a> and <a href="https://www.google.com/maps/search/?api=1&query=Piazza+delle+Erbe+Padua" target="_blank">Piazza delle Erbe</a>, offers numerous osterias, trattorias, and wine bars catering to various tastes.</p>
-        </div>
-        <div class="details-section accommodation-details">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>Hotel Terme Patria, Padova Stay:</strong></p>
-                <p><strong>Check-in:</strong> Friday, June 13 (14:00 - 21:00)</p>
-                <p><strong>Check-out:</strong> Sunday, June 15 (08:00 - 11:00)</p>
-                <p><strong>Confirmation Number:</strong> 4836897931</p>
-                <p><strong>PIN Code:</strong> 8758</p>
-                <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92423&aid=304142&auth_key=eyi9frUcn1LUH0oV&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
-                <p style="font-size: 11px; color: var(--cv-text-dim);"><i>(Check-in/out times based on general hotel info from Booking.com)</i></p>
+            <div class="route-card">
+                <h2>Sunday, June 15 (Depart by 15:45) - Arrive Peschiera del Garda</h2>
+                <a href="https://www.google.com/maps/dir//ApartHotel+in+Peschiera+del+Garda" class="route-button" target="_blank">Treviso Airport to ApartHotel in Peschiera del Garda</a>
+            </div>
+            
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-hotel"></i></div>
+                <div class="details-content">
+                    <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
+                    <p><strong>Check-in:</strong> Sunday, June 15 (15:00 - 19:00)</p>
+                    <p><strong>Check-out:</strong> Wednesday, June 18 (Before 10:00)</p>
+                    <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details (Airbnb)</a></p>
+                    <p class="availability-note">(Check-in/out times based on general Airbnb info for the area)</p>
+                </div>
+            </div>
+            <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
+            <div class="accordion-panel">
+                <p>Peschiera del Garda, a historic fortress town on the southern shores of <a href="https://www.google.com/maps/place/Lake+Garda" target="_blank">Lake Garda</a>, is a UNESCO World Heritage site. Its impressive Venetian defensive systems, canals, and charming old town offer rich sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby towns like <a href="https://www.google.com/maps/place/Sirmione" target="_blank">Sirmione</a>, known for its <a href="https://www.google.com/maps/place/Scaligero+Castle" target="_blank">Scaligero Castle</a> and Roman ruins (<a href="https://www.google.com/maps/place/Grotte+di+Catullo" target="_blank">Grotte di Catullo</a>). The town serves as an excellent gateway to the lower lake region.</p>
+                <p>For active pursuits, the <a href="https://www.google.com/maps/place/Mincio+River+cycle+path" target="_blank">Mincio River cycle path</a> offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. <a href="https://www.google.com/maps/place/Gardaland" target="_blank">Gardaland</a>, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
+                <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts and local festivals with music, especially in summer; check local listings upon arrival. For a grander musical experience, <a href="https://www.google.com/maps/place/Verona" target="_blank">Verona</a> and its famous <a href="https://www.google.com/maps/place/Arena+di+Verona" target="_blank">Arena di Verona</a>, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car).</p>
+                <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.google.com/maps/place/Il+Leone+Shopping+Center" target="_blank">Il Leone Shopping Center</a> in Lonato or <a href="https://www.google.com/maps/place/La+Grande+Mela+Shoppingland" target="_blank">La Grande Mela Shoppingland</a> near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
+                <p>When it comes to dining, the <a href="https://www.google.com/maps/place/historic+center+of+Peschiera+del+Garda" target="_blank">historic center of Peschiera del Garda</a>, particularly along the canals and the streets radiating from <a href="https://www.google.com/maps/place/Piazzale+Ferdinando+di+Savoia" target="_blank">Piazzale Ferdinando di Savoia</a>, offers a high concentration of restaurants. You'll find a variety of pizzerias, trattorias serving local lake fish, and gelaterias, especially lively in the evenings.</p>
             </div>
         </div>
 
-        <div class="route-card">
-            <h2>Sunday, June 15 (Depart by 14:05)</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Terme+Patria+Padova+to+Treviso+Airport" class="route-button" target="_blank">Hotel Terme Patria, Padova to Treviso Airport (To collect Deirdre and Hannah)</a>
-        </div>
-
-        <div class="route-card">
-            <h2>Sunday, June 15 (Depart by 15:45)</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=Treviso+Airport+to+ApartHotel+Peschiera+del+Garda" class="route-button" target="_blank">Treviso Airport to ApartHotel in Peschiera del Garda</a>
-        </div>
-        
-        <button class="accordion-button">About Peschiera del Garda & Things to Do</button>
-        <div class="accordion-panel">
-            <p>Peschiera del Garda, a historic fortress town on the southern shores of <a href="https://www.google.com/maps/search/?api=1&query=Lake+Garda" target="_blank">Lake Garda</a>, is a UNESCO World Heritage site. Its impressive Venetian defensive systems, canals, and charming old town offer rich sightseeing. Explore the ramparts, enjoy the lakeside ambiance, and perhaps take a boat trip to nearby towns like <a href="https://www.google.com/maps/search/?api=1&query=Sirmione+Italy" target="_blank">Sirmione</a>, known for its <a href="https://www.google.com/maps/search/?api=1&query=Scaligero+Castle+Sirmione" target="_blank">Scaligero Castle</a> and Roman ruins (<a href="https://www.google.com/maps/search/?api=1&query=Grotte+di+Catullo+Sirmione" target="_blank">Grotte di Catullo</a>). The town serves as an excellent gateway to the lower lake region.</p>
-            <p>For active pursuits, the <a href="https://www.google.com/maps/search/?api=1&query=Mincio+River+cycle+path+Peschiera" target="_blank">Mincio River cycle path</a> offers gentle, scenic routes ideal for cycling or walking southwards through a protected park. Lakeside paths are also perfect for leisurely strolls. <a href="https://www.google.com/maps/search/?api=1&query=Gardaland+Castelnuovo+del+Garda" target="_blank">Gardaland</a>, Italy's largest amusement park, is just a few kilometers away and offers a full day of entertainment. While not a primary hiking destination itself, the surrounding Morainic hills offer some walking opportunities.</p>
-            <p>Regarding music, Peschiera and the wider Lake Garda area often host open-air concerts and local festivals with music, especially in summer; check local listings upon arrival. For a grander musical experience, <a href="https://www.google.com/maps/search/?api=1&query=Verona+Italy" target="_blank">Verona</a> and its famous <a href="https://www.google.com/maps/search/?api=1&query=Arena+di+Verona" target="_blank">Arena di Verona</a>, known for opera and large concerts, is a feasible day trip (approx. 30-40 mins by train/car). </p>
-            <p>Peschiera's town center has many charming boutiques, cafes, and gelaterias. For more extensive shopping, <a href="https://www.google.com/maps/search/?api=1&query=Il+Leone+Shopping+Center+Lonato" target="_blank">Il Leone Shopping Center</a> in Lonato or <a href="https://www.google.com/maps/search/?api=1&query=La+Grande+Mela+Shoppingland+Sona" target="_blank">La Grande Mela Shoppingland</a> near Verona offer a wider variety of brands and are accessible by a short car journey. For more information on the town, visit the <a href="https://www.tourismpeschiera.it/en/" target="_blank">official Peschiera tourism site</a>.</p>
-            <p>When it comes to dining, the <a href="https://www.google.com/maps/search/?api=1&query=Place+Name+Context7" target="_blank">historic center of Peschiera del Garda</a>, particularly along the canals and the streets radiating from <a href="https://www.google.com/maps/search/?api=1&query=Place+Name+Context8" target="_blank">Piazzale Ferdinando di Savoia</a>, offers a high concentration of restaurants. You'll find a variety of pizzerias, trattorias serving local lake fish, and gelaterias, especially lively in the evenings.</p>
-        </div>
-        <div class="details-section accommodation-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>ApartHotel in Peschiera del Garda Stay:</strong></p>
-                <p><strong>Check-in:</strong> Sunday, June 15 (15:00 - 19:00)</p>
-                <p><strong>Check-out:</strong> Wednesday, June 18 (Before 10:00)</p>
-                <p><a href="https://www.airbnb.co.uk/rooms/24076985?check_out=2025-06-18&viralityEntryPoint=1&unique_share_id=5D1665FF-FDBB-48E8-BBFF-8E6CA0BB3BCF&slcid=a20774236dbc4ba6b775d9433e06d8e0&s=76&feature=share&adults=3&check_in=2025-06-15&channel=native&slug=kU1cn7j2&source_impression_id=p3_1746735529_P3Vht4qmC0H91KJ8" target="_blank">View Booking Details (Airbnb)</a></p>
-                <p style="font-size: 11px; color: var(--cv-text-dim);"><i>(Check-in/out times based on general Airbnb info for the area)</i></p>
+        <div class="day-header">Tuesday, June 17</div>
+        <div class="day-content-group">
+            <div class="details-section event-details">
+                <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+                <div class="details-content">
+                    <p><strong>Event:</strong> Pasta and Tiramisu Small Group Cooking Class with Wine</p>
+                    <p><strong>Attendees:</strong> 3 Adults</p>
+                    <p><strong>Date:</strong> Tuesday, June 17, 2025</p>
+                    <p><strong>Time:</strong> 12:15 PM (Europe/Rome time)</p>
+                    <p><strong>Duration:</strong> Approx 3 hours</p>
+                    <p><strong>Notes:</strong> Reference Number: 1266591973</p>
+                    <p><strong>Meeting Point:</strong> Ristorante Rubiani Verona, Piazzetta Scalette Rubiani, 3, 37121 Verona VR, Italy</p>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=Ristorante+Rubiani+Verona,+Piazzetta+Scalette+Rubiani,+3,+37121+Verona+VR,+Italy" target="_blank">View on Google Maps</a></p>
+                </div>
             </div>
         </div>
 
+        <div class="day-header">Wednesday, June 18</div>
+        <div class="day-content-group">
+            <div class="route-card">
+                <h2>Wednesday, June 18 (Depart by Approx. 10:00) - Arrive Toscolano Maderno</h2>
+                <a href="https://www.google.com/maps/dir//Albergo+Vittoria,+Toscolano+Maderno" class="route-button" target="_blank">ApartHotel in Peschiera del Garda to Albergo Vittoria, Toscolano Maderno</a>
+            </div>
 
-        <div class="route-card">
-            <h2>Wednesday, June 18</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=ApartHotel+Peschiera+del+Garda+to+Albergo+Vittoria+Toscolano+Maderno" class="route-button" target="_blank">ApartHotel in Peschiera del Garda to Albergo Vittoria, Toscolano Maderno</a>
-        </div>
-
-        <button class="accordion-button">About Toscolano Maderno (Lake Garda) & Things to Do</button>
-        <div class="accordion-panel">
-            <p>Toscolano Maderno, set on the scenic western "Riviera dei Limoni" of <a href="https://www.google.com/maps/search/?api=1&query=Lake+Garda" target="_blank">Lake Garda</a>, merges two town centers offering history and natural beauty. Key sights include the ruins of a <a href="https://www.google.com/maps/search/?api=1&query=Villa+Romana+Toscolano+Maderno" target="_blank">Roman villa in Toscolano</a>, the historic <a href="https://www.google.com/maps/search/?api=1&query=Church+of+Sant%27Andrea+Toscolano+Maderno" target="_blank">Church of Sant'Andrea</a>, and the fascinating <a href="https://www.google.com/maps/search/?api=1&query=Valle+delle+Cartiere+Toscolano+Maderno" target="_blank">Valle delle Cartiere</a> (Paper Mill Valley). This valley, easily accessible, features a <a href="https://www.google.com/maps/search/?api=1&query=Museo+della+Carta+Toscolano+Maderno" target="_blank">Paper Museum</a> and pleasant walking paths showcasing the area's industrial heritage.</p>
-            <p>For hiking enthusiasts, Toscolano Maderno is an excellent base for exploring the <a href="https://www.google.com/maps/search/?api=1&query=Parco+Alto+Garda+Bresciano" target="_blank">Alto Garda Bresciano Park</a>. Trails of varying difficulty wind through the hills, with the ascent of <a href="https://www.google.com/maps/search/?api=1&query=Monte+Pizzocolo" target="_blank">Monte Pizzocolo</a> offering a challenging trek rewarded with stunning panoramic views of the lake. The area is also well-suited for mountain biking and various water sports. The lakeside promenade connects Toscolano and Maderno, perfect for gentler strolls.</p>
-            <p>The musical atmosphere in Toscolano Maderno is generally tied to local summer festivals, open-air concerts, or events in nearby Gardone Riviera, home to the <a href="https://www.google.com/maps/search/?api=1&query=Vittoriale+degli+Italiani+Gardone+Riviera" target="_blank">Vittoriale degli Italiani</a> which sometimes hosts concerts in its amphitheater. It's advisable to check local event listings or the <a href="https://www.visittoscolanomaderno.info/en/" target="_blank">Toscolano Maderno tourism site</a> closer to the travel dates for specific music or cultural happenings in the immediate area or along the western shore.</p>
-            <p>While the town offers charming local shops and weekly markets for essentials and souvenirs, it's more focused on nature and relaxation than large-scale retail. Day trips by ferry to other lake towns like <a href="https://www.google.com/maps/search/?api=1&query=Salò+Italy" target="_blank">Salò</a> or <a href="https://www.google.com/maps/search/?api=1&query=Limone+sul+Garda" target="_blank">Limone sul Garda</a> can provide different atmospheres and more shopping opportunities. Enjoying local cuisine at lakeside trattorias and exploring the small hamlets in the hills offers an authentic Lake Garda experience.</p>
-            <p>For a selection of restaurants and cafes, the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua4" target="_blank">Lungolago Zanardelli in Maderno</a> (the lakeside promenade) and the main streets in the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua5" target="_blank">center of Toscolano</a>, such as Via Roma, offer various dining options, from pizzerias to establishments serving fresh lake fish. These areas are pleasant for an evening stroll and finding a place for dinner.</p>
-        </div>
-        <div class="details-section accommodation-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>Albergo Vittoria, Toscolano Maderno Stay:</strong></p>
-                <p><strong>Check-in:</strong> Wednesday, June 18 (14:30 - 19:30)</p>
-                <p><strong>Check-out:</strong> Saturday, June 21 (07:00 - 10:00)</p>
-                <p><strong>Confirmation Number:</strong> 4656141419</p>
-                <p><strong>PIN Code:</strong> 7373</p>
-                <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92423&aid=304142&auth_key=HbPRZNESFwvMB8Lw&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
-                <p style="font-size: 11px; color: var(--cv-text-dim);"><i>(Check-in/out times based on general hotel info from various sources)</i></p>
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-hotel"></i></div>
+                <div class="details-content">
+                    <p><strong>Albergo Vittoria, Toscolano Maderno Stay:</strong></p>
+                    <p><strong>Check-in:</strong> Wednesday, June 18 (14:30 - 19:30)</p>
+                    <p><strong>Check-out:</strong> Saturday, June 21 (07:00 - 10:00)</p>
+                    <p><strong>Confirmation Number:</strong> 4656141419</p>
+                    <p><strong>PIN Code:</strong> 7373</p>
+                    <p><a href="https://secure.booking.com/confirmation.en-gb.html?label=gen173nr-1FCA4oggI46AdICVgEaGmIAQGYAQm4ARfIAQzYAQHoAQH4AQaIAgGoAgO4Auyg88AGwAIB0gIkODk5MmZmOTUtMTljYS00NjZlLTk4YzktNTM1ZWQ0MTI2MzUw2AIF4AIB&sid=5e5eaa2ede165c5c4bb140ecc5efb92424&aid=304142&auth_key=HbPRZNESFwvMB8Lw&source=mytrips#" target="_blank">View Booking Confirmation</a></p>
+                    <p class="availability-note">(Check-in/out times based on general hotel info from various sources)</p>
+                </div>
+            </div>
+            <button class="accordion-button">About Toscolano Maderno (Lake Garda) & Things to Do</button>
+            <div class="accordion-panel">
+                <p>Toscolano Maderno, set on the scenic western "Riviera dei Limoni" of <a href="https://www.google.com/maps/place/Lake+Garda" target="_blank">Lake Garda</a>, merges two town centers offering history and natural beauty. Key sights include the ruins of a <a href="https://www.google.com/maps/place/Roman+villa+in+Toscolano" target="_blank">Roman villa in Toscolano</a>, the historic <a href="https://www.google.com/maps/place/Church+of+Sant'Andrea" target="_blank">Church of Sant'Andrea</a>, and the fascinating <a href="https://www.google.com/maps/place/Valle+delle+Cartiere" target="_blank">Valle delle Cartiere</a> (Paper Mill Valley). This valley, easily accessible, features a <a href="https://www.google.com/maps/place/Paper+Museum" target="_blank">Paper Museum</a> and pleasant walking paths showcasing the area's industrial heritage.</p>
+                <p>For hiking enthusiasts, Toscolano Maderno is an excellent base for exploring the <a href="https://www.google.com/maps/place/Alto+Garda+Bresciano+Park" target="_blank">Alto Garda Bresciano Park</a>. Trails of varying difficulty wind through the hills, with the ascent of <a href="https://www.google.com/maps/place/Monte+Pizzocolo" target="_blank">Monte Pizzocolo</a> offering a challenging trek rewarded with stunning panoramic views of the lake. The area is also well-suited for mountain biking and various water sports. The lakeside promenade connects Toscolano and Maderno, perfect for gentler strolls.</p>
+                <p>The musical atmosphere in Toscolano Maderno is generally tied to local summer festivals, open-air concerts, or events in nearby Gardone Riviera, home to the <a href="https://www.google.com/maps/place/Vittoriale+degli+Italiani" target="_blank">Vittoriale degli Italiani</a> which sometimes hosts concerts in its amphitheater. It's advisable to check local event listings or the <a href="https://www.visittoscolanomaderno.info/en/" target="_blank">Toscolano Maderno tourism site</a> closer to the travel dates for specific music or cultural happenings in the immediate area or along the western shore.</p>
+                <p>While the town offers charming local shops and weekly markets for essentials and souvenirs, it's more focused on nature and relaxation than large-scale retail. Day trips by ferry to other lake towns like <a href="https://www.google.com/maps/place/Salò" target="_blank">Salò</a> or <a href="https://www.google.com/maps/place/Limone+sul+Garda" target="_blank">Limone sul Garda</a> can provide different atmospheres and more shopping opportunities. Enjoying local cuisine at lakeside trattorias and exploring the small hamlets in the hills offers an authentic Lake Garda experience.</p>
+                <p>For a selection of restaurants and cafes, the <a href="https://www.google.com/maps/place/Lungolago+Zanardelli+in+Maderno" target="_blank">Lungolago Zanardelli in Maderno</a> (the lakeside promenade) and the main streets in the <a href="https://www.google.com/maps/place/center+of+Toscolano" target="_blank">center of Toscolano</a>, such as Via Roma, offer various dining options, from pizzerias to establishments serving fresh lake fish. These areas are pleasant for an evening stroll and finding a place for dinner.</p>
             </div>
         </div>
 
+        <div class="day-header">Saturday, June 21</div>
+        <div class="day-content-group">
+            <div class="route-card">
+                <h2>Saturday, June 21 (Depart by 08:00) - Arrive Bergamo Airport</h2>
+                <a href="https://www.google.com/maps/dir//Budget+car+hire+at+Bergamo+Airport" class="route-button" target="_blank">Albergo Vittoria, Toscolano Maderno to Budget car hire at Bergamo Airport</a>
+            </div>
+            
+            <button class="accordion-button">Baggage Drop-off Information (Milan Bergamo Airport - BGY)</button>
+            <div class="accordion-panel">
+                <p>For your Ryanair flight FR3394 from Milan Bergamo (BGY):</p>
+                <ul>
+                    <li>Proceed to the <strong>Ground Floor</strong> of the terminal building. This is where check-in counters and self-service kiosks are generally located.</li>
+                    <li>Look for the Ryanair check-in area or dedicated bag drop desks. Ryanair often requires online check-in, so these desks are primarily for baggage.</li>
+                    <li>Bag drop desks typically open 2 hours before departure and close 40 minutes prior. For international flights, arriving 2-3 hours early is recommended.</li>
+                    <li><strong>Key Action:</strong> Always check the departure information screens in Terminal 1 for the assigned Ryanair desk numbers.</li>
+                </ul>
+            </div>
+            <div class="details-section flight-details">
+                <div class="icon"><i class="fa-solid fa-plane-departure"></i></div>
+                <div class="details-content">
+                    <p><strong>Flight Departure:</strong> FR3394 Milan (Bergamo) to Santander</p>
+                    <p><strong>Date:</strong> Sat, 21 June 25</p>
+                    <p><strong>Departure Time:</strong> 10:45 (BGY)</p>
+                    <p><strong>Arrival Time:</strong> 12:50 (SDR)</p>
+                    <a href="https://flightaware.com/live/flight/RYR3394" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                    <p class="availability-note">(Available closer to departure)</p>
+                </div>
+            </div>
 
-        <div class="route-card">
-            <h2>Saturday, June 21 (Depart by 08:00)</h2>
-            <a href="https://www.google.com/maps/search/?api=1&query=Albergo+Vittoria+Toscolano+Maderno+to+Budget+car+hire+Bergamo+Airport" class="route-button" target="_blank">Albergo Vittoria, Toscolano Maderno to Budget car hire at Bergamo Airport</a>
-        </div>
-        
-        <button class="accordion-button">Baggage Drop-off Information (Milan Bergamo Airport - BGY)</button>
-        <div class="accordion-panel">
-            <p>For your Ryanair flight FR3394 from Milan Bergamo (BGY):</p>
-            <ul>
-                <li>Proceed to the <strong>Ground Floor</strong> of the terminal building. This is where check-in counters and self-service kiosks are generally located.</li>
-                <li>Look for the Ryanair check-in area or dedicated bag drop desks. Ryanair often requires online check-in, so these desks are primarily for baggage.</li>
-                <li>Bag drop desks typically open 2 hours before departure and close 40 minutes prior. For international flights, arriving 2-3 hours early is recommended.</li>
-                <li><strong>Key Action:</strong> Check the airport departure information screens for the specific Ryanair desk numbers.</li>
-            </ul>
-        </div>
-        <div class="details-section flight-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
-            <div class="details-content">
-                <p><strong>Flight Departure:</strong> FR3394 Milan (Bergamo) to Santander</p>
-                <p><strong>Date:</strong> Sat, 21 June 25</p>
-                <p><strong>Departure Time:</strong> 10:45 (BGY)</p>
-                <p><strong>Arrival Time:</strong> 12:50 (SDR)</p>
-                <a href="https://flightaware.com/live/flight/RYR3394" target="_blank" class="flight-track-button">Track Status and Gate</a>
-                <p class="availability-note">(Available closer to departure)</p>
+            <div class="route-card">
+                <h2>Saturday, June 21 (Approx. 13:30) - Arrive Annie's House, Spain</h2>
+                <a href="https://www.google.com/maps/dir//Annie's+house" class="route-button" target="_blank">Santander Airport to Annie's house</a>
+                <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">*(Transportation mode from airport not finalized)*</p>
+            </div>
+            
+            <div class="details-section accommodation-details">
+                <div class="icon"><i class="fa-solid fa-house-chimney"></i></div>
+                <div class="details-content">
+                    <p><strong>Accommodation in Spain:</strong> Annie's house (Santa Isabel De Quijas)</p>
+                    <p><strong>Check-in:</strong> Saturday, June 21</p>
+                    <p><strong>Check-out:</strong> Friday, June 27</p>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=Annie's+house+Santa+Isabel+De+Quijas" target="_blank">Directions to Annie's house</a></p>
+                    <p class="availability-note">Duration of stay to be decided and accommodation elsewhere booked for some nights (Camino).</p>
+                </div>
+            </div>
+            <button class="accordion-button">Exploring Near Santa Isabel de Quijas & Cantabrian Highlights</button>
+            <div class="accordion-panel">
+                <p>Santa Isabel de Quijas, located in the lush Cantabrian countryside within the municipality of <a href="https://www.google.com/maps/place/Reocín" target="_blank">Reocín</a>, offers a tranquil retreat and a strategic base for exploring the region's rich cultural heritage and stunning natural beauty. The immediate area is ideal for peaceful local walks, allowing an immersion into the rural charm and rolling green hills that characterize Cantabria. Nearby, the historic gardens of <a href="https://www.google.com/maps/place/Puente+San+Miguel" target="_blank">Puente San Miguel</a> (within Reocín) are worth visiting.</p>
+                <p>For significant sightseeing, the beautifully preserved medieval town of <a href="https://www.google.com/maps/place/Santillana+del+Mar" target="_blank">Santillana del Mar</a>, often called one of Spain's prettiest villages, is just a short drive away and is an absolute must-see. Adjacent to Santillana, you can explore the world-renowned <a href="https://www.google.com/maps/place/Altamira+Museum+and+Neocave" target="_blank">Altamira Museum and Neocave</a>, which provides fascinating insights into Palaeolithic cave art. The charming coastal town of <a href="https://www.google.com/maps/place/Comillas" target="_blank">Comillas</a>, with its unique modernist architecture including Gaudi's "El Capricho," is also easily accessible.</p>
+                <p>Hiking enthusiasts will find Santa Isabel de Quijas well-placed for accessing sections of the <a href="https://www.caminodesantiago.me/camino-del-norte-stages/" target="_blank">Camino del Norte</a>. Various stages pass through Cantabria, offering diverse coastal and inland experiences; routes near Santillana del Mar or Comillas are particularly notable. For dedicated nature trails, consider exploring the dramatic coastline and unique geological formations of the <a href="https://www.google.com/maps/place/Costa+Quebrada+Geological+Park" target="_blank">Costa Quebrada Geological Park</a> or the beautiful dunes and beaches of the <a href="https://www.google.com/maps/place/Parque+Natural+de+las+Dunas+de+Liencres" target="_blank">Parque Natural de las Dunas de Liencres</a>. A longer day trip could even take one towards the foothills of the <a href="https://www.google.com/maps/place/Picos+de+Europa+National+Park" target="_blank">Picos de Europa National Park</a> for breathtaking mountain scenery.</p>
+                <p>Regarding music, while Quijas itself is a small village, the broader Cantabrian region has a rich tradition of folk music, often featuring bagpipes (gaita) and drums, especially at local fiestas. Larger towns like <a href="https://www.google.com/maps/place/Torrelavega" target="_blank">Torrelavega</a> or the city of <a href="https://www.google.com/maps/place/Santander" target="_blank">Santander</a> would be the places to check for more formal concerts, live music venues (such as "Rock Beer The New" in Santander), or events at the <a href="https://www.google.com/maps/place/Palacio+de+Festivales+de+Cantabria" target="_blank">Palacio de Festivales de Cantabria</a>. The <a href="https://turismodecantabria.com/en" target="_blank">official Cantabria tourism portal</a> is an invaluable resource for discovering regional culture, events, and planning excursions.</p>
+                <p>For a good selection of restaurants, the <a href="https://www.google.com/maps/place/historic+center+of+Santillana+del+Mar" target="_blank">historic center of Santillana del Mar</a> is your best nearby option. Its charming, pedestrian-friendly cobblestone streets, particularly around the <a href="https://www.google.com/maps/place/Plaza+Mayor" target="_blank">Plaza Mayor</a> and radiating outwards, are lined with numerous traditional restaurants, mesones (inns), and cafes offering Cantabrian specialties. Alternatively, the larger town of <a href="https://www.google.com/maps/place/Torrelavega" target="_blank">Torrelavega</a> (a short drive) has a wider variety of everyday dining options, especially around its central squares.</p>
             </div>
         </div>
 
-        <div class="route-card">
-             <h2>Saturday, June 21 (Approx. 13:30)</h2>
-             <a href="https://www.google.com/maps/search/?api=1&query=Santander+Airport+to+Santa+Isabel+de+Quijas" class="route-button" target="_blank">Santander Airport to Annie's house</a>
-             <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">*(Transportation mode from airport not finalized)*</p>
-        </div>
-
-        <button class="accordion-button">Exploring Near Santa Isabel de Quijas & Cantabrian Highlights</button>
-        <div class="accordion-panel">
-            <p>Santa Isabel de Quijas, located in the lush Cantabrian countryside within the municipality of <a href="https://www.google.com/maps/search/?api=1&query=Reocín+Cantabria" target="_blank">Reocín</a>, offers a tranquil retreat and a strategic base for exploring the region's rich cultural heritage and stunning natural beauty. The immediate area is ideal for peaceful local walks, allowing an immersion into the rural charm and rolling green hills that characterize Cantabria. Nearby, the historic gardens of <a href="https://www.google.com/maps/search/?api=1&query=Jardín+Histórico+de+Puente+San+Miguel+Reocín" target="_blank">Puente San Miguel</a> (within Reocín) are worth visiting.</p>
-            <p>For significant sightseeing, the beautifully preserved medieval town of <a href="https://www.google.com/maps/search/?api=1&query=Santillana+del+Mar+Cantabria" target="_blank">Santillana del Mar</a>, often called one of Spain's prettiest villages, is just a short drive away and is an absolute must-see. Adjacent to Santillana, you can explore the world-renowned <a href="https://www.google.com/maps/search/?api=1&query=Altamira+Museum+and+Neocave+Santillana+del+Mar" target="_blank">Altamira Museum and Neocave</a>, which provides fascinating insights into Palaeolithic cave art. The charming coastal town of <a href="https://www.google.com/maps/search/?api=1&query=Comillas+Cantabria" target="_blank">Comillas</a>, with its unique modernist architecture including Gaudí's "El Capricho," is also easily accessible.</p>
-            <p>Hiking enthusiasts will find Santa Isabel de Quijas well-placed for accessing sections of the <a href="https://www.caminodesantiago.me/camino-del-norte-stages/" target="_blank">Camino del Norte</a>. Various stages pass through Cantabria, offering diverse coastal and inland experiences; routes near Santillana del Mar or Comillas are particularly notable. For dedicated nature trails, consider exploring the dramatic coastline and unique geological formations of the <a href="https://www.google.com/maps/search/?api=1&query=Costa+Quebrada+Geological+Park+Cantabria" target="_blank">Costa Quebrada Geological Park</a> or the beautiful dunes and beaches of the <a href="https://www.google.com/maps/search/?api=1&query=Parque+Natural+de+las+Dunas+de+Liencres+Cantabria" target="_blank">Parque Natural de las Dunas de Liencres</a>. A longer day trip could even take one towards the foothills of the <a href="https://www.google.com/maps/search/?api=1&query=Picos+de+Europa+National+Park" target="_blank">Picos de Europa National Park</a> for breathtaking mountain scenery.</p>
-            <p>Regarding music, while Quijas itself is a small village, the broader Cantabrian region has a rich tradition of folk music, often featuring bagpipes (gaita) and drums, especially at local fiestas. Larger towns like <a href="https://www.google.com/maps/search/?api=1&query=Torrelavega+Cantabria" target="_blank">Torrelavega</a> or the city of <a href="https://www.google.com/maps/search/?api=1&query=Santander+Cantabria" target="_blank">Santander</a> would be the places to check for more formal concerts, live music venues (such as "Rock Beer The New" in Santander), or events at the <a href="https://www.google.com/maps/search/?api=1&query=Palacio+de+Festivales+de+Cantabria+Santander" target="_blank">Palacio de Festivales de Cantabria</a>. The <a href="https://turismodecantabria.com/en" target="_blank">official Cantabria tourism portal</a> is an excellent resource for discovering regional culture, events, and planning excursions.</p>
-            <p>For a good selection of restaurants, the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua6" target="_blank">historic center of Santillana del Mar</a> is your best nearby option. Its charming, pedestrian-friendly cobblestone streets, particularly around the <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua7" target="_blank">Plaza Mayor</a> and radiating outwards, are lined with numerous traditional restaurants, mesones (inns), and cafes offering Cantabrian specialties. Alternatively, the larger town of <a href="https://www.google.com/maps/search/?api=1&query=Scrovegni+Chapel+Padua8" target="_blank">Torrelavega</a> (a short drive) has a wider variety of everyday dining options, especially around its central squares.</p>
-        </div>
-        <div class="details-section accommodation-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7V9H4V20H20V9H21V7L12 2ZM5 8L12 4L19 8V9H5V8ZM6 10H18V12H6V10ZM6 13H18V15H6V13ZM6 16H18V18H6V16Z"/></svg>
-            <div class="details-content">
-                <p><strong>Accommodation in Spain:</strong> Annie's house (Santa Isabel De Quijas)</p>
-                <p><strong>Check-in:</strong> Saturday, June 21</p>
-                <p><strong>Check-out:</strong> Friday, June 27</p>
-                <p><a href="https://www.google.com/maps/place/43%C2%B021'16.8%22N+4%C2%B007'04.3%22W/@43.35466,-4.1204266,790m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d43.35466!4d-4.1178517?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Directions to Annie's house</a></p>
-                <p style="font-size: 12px; color: var(--cv-text-med); margin-top: 5px;">Duration of stay to be decided and accommodation elsewhere booked for some nights (Camino).</p>
+        <div class="day-header">Friday, June 27</div>
+        <div class="day-content-group">
+            <button class="accordion-button">Baggage Drop-off Information (Santander Airport - SDR)</button>
+            <div class="accordion-panel">
+                <p>For your Ryanair flight FR7153 from Santander (SDR):</p>
+                <ul>
+                    <li>Proceed to the main Check-in hall, which is typically on <strong>Floor 0</strong>.</li>
+                    <li>Look for the Ryanair check-in / bag drop desks. Santander is a smaller airport, so they should be relatively easy to find.</li>
+                    <li>Bag drop desks usually open 2 hours before departure and close 40 minutes prior.</li>
+                    <li><strong>Key Action:</strong> Confirm the specific Ryanair desk numbers on the airport departure screens.</li>
+                </ul>
             </div>
-        </div>
-
-        <button class="accordion-button">Baggage Drop-off Information (Santander Airport - SDR)</button>
-        <div class="accordion-panel">
-            <p>For your Ryanair flight FR7153 from Santander (SDR):</p>
-            <ul>
-                <li>Proceed to the main Check-in hall, which is typically on <strong>Floor 0</strong>.</li>
-                <li>Look for the Ryanair check-in / bag drop desks. Santander is a smaller airport, so they should be relatively easy to find.</li>
-                <li>Bag drop desks usually open 2 hours before departure and close 40 minutes prior.</li>
-                <li><strong>Key Action:</strong> Confirm the specific Ryanair desk numbers on the airport departure screens.</li>
-            </ul>
-        </div>
-        <div class="details-section flight-details">
-             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16V18H20V16H22ZM18 16V18H16V16H18ZM14 16V18H12V16H14ZM10 16V18H8V16H10ZM6 16V18H4V16H6ZM22 12V14H20V12H22ZM18 12V14H16V12H18ZM14 12V14H12V12H14ZM10 12V14H8V12H10ZM6 12V14H4V12H6ZM22 8V10H20V8H22ZM18 8V10H16V8H18ZM14 8V10H12V8H14ZM10 8V10H8V8H10ZM6 8V10H4V8H6ZM22 4V6H20V4H22ZM18 4V6H16V4H18ZM14 4V6H12V4H14ZM10 4V6H8V4H10ZM6 4V6H4V4H6Z"/></svg>
-            <div class="details-content">
-                <p><strong>Flight Departure:</strong> FR7153 Santander to Dublin</p>
-                <p><strong>Date:</strong> Friday, 27 June 25</p>
-                <p><strong>Departure Time:</strong> 09:20 (SDR)</p>
-                <p><strong>Arrival Time:</strong> 10:20 (DUB)</p>
-                <a href="https://flightaware.com/live/flight/RYR7153" target="_blank" class="flight-track-button">Track Status and Gate</a>
-                <p class="availability-note">(Available closer to departure)</p>
+            <div class="details-section flight-details">
+                <div class="icon"><i class="fa-solid fa-plane-departure"></i></div>
+                <div class="details-content">
+                    <p><strong>Flight Departure:</strong> FR7153 Santander to Dublin</p>
+                    <p><strong>Date:</strong> Friday, 27 June 25</p>
+                    <p><strong>Departure Time:</strong> 09:20 (SDR)</p>
+                    <p><strong>Arrival Time:</strong> 10:20 (DUB)</p>
+                    <a href="https://flightaware.com/live/flight/RYR7153" target="_blank" class="flight-track-button">Track Status and Gate</a>
+                    <p class="availability-note">(Available closer to departure)</p>
+                </div>
             </div>
         </div>
     </div>
@@ -647,27 +836,27 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Automatically open the first tab on page load
             if (document.getElementsByClassName("tab-button").length > 0) {
-                 document.getElementsByClassName("tab-button")[0].click();
+                document.getElementsByClassName("tab-button")[0].click();
             }
 
             // Accordion functionality
             var acc = document.getElementsByClassName("accordion-button");
             var i;
             for (i = 0; i < acc.length; i++) {
-              acc[i].addEventListener("click", function() {
-                this.classList.toggle("active-accordion");
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight) {
-                  panel.style.maxHeight = null;
-                  panel.classList.remove("show-panel");
-                } else {
-                  panel.classList.add("show-panel");
-                  panel.style.maxHeight = panel.scrollHeight + "px";
-                } 
-              });
+                acc[i].addEventListener("click", function() {
+                    this.classList.toggle("active-accordion");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                        panel.classList.remove("show-panel");
+                    } else {
+                        panel.classList.add("show-panel");
+                        // Set maxHeight to scrollHeight to allow smooth transition for dynamic content
+                        panel.style.maxHeight = panel.scrollHeight + "px"; 
+                    } 
+                });
             }
         });
     </script>
-
 </body>
 </html>
