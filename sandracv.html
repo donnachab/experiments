@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandra Riordan - Sustainable Energy & Science Research Professional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        // Define Spring color palette (Used by screen styles)
+        const springPalette = {
+            'cv-bg-base': '#f0fdf4',      // Very Light Mint/Green Base
+            'cv-bg-main': '#ffffff',      // White Main Area
+            'cv-bg-sidebar': '#dcfce7',    // Light Green Sidebar (Tailwind Green 100)
+            'cv-text-dark': '#14532d',    // Dark Green Text (Tailwind Green 900)
+            'cv-text-med': '#166534',     // Medium Green Text (Tailwind Green 800)
+            'cv-text-dim': '#15803d',     // Dimmer Green Text (Tailwind Green 700)
+            'cv-accent': '#22c55e',       // Bright Green Accent (Tailwind Green 500)
+            'cv-accent-hover': '#16a34a', // Darker Green Accent (Tailwind Green 600)
+            'cv-border': '#86efac',      // Light Green Border (Tailwind Green 300)
+            'cv-shadow': 'rgba(34, 197, 94, 0.15)' // Shadow color based on accent
+        };
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: springPalette // Apply the spring palette directly
+                }
+            }
+        }
+    </script>
+    <style>
+        /* --- START Original Screen Styles (Unchanged) --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Base BG */
+            color: #166534; /* Medium Green default text */
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Poppins', sans-serif;
+        }
+        aside {
+             color: #166534; /* Medium Green */
+        }
+        aside h2, aside h3, aside .text-cv-text-light { /* Use dark text on light sidebar */
+             color: #14532d;
+        }
+        aside a {
+             color: #14532d; /* Dark text for links */
+        }
+         aside a:hover {
+             color: #22c55e; /* Green accent on hover */
+         }
+        .tab-buttons-container {
+             border-bottom: 1px solid #86efac; /* cv-border */
+         }
+         .tab-button {
+             padding: 0.75rem 1rem; cursor: pointer; border: 1px solid transparent; border-bottom: none;
+             margin-bottom: -1px; transition: all 0.2s ease-in-out; color: #15803d; /* Dimmer Green */
+             font-weight: 500; line-height: 1.3; text-align: center; flex-shrink: 0;
+             border-radius: 0.375rem 0.375rem 0 0;
+         }
+         .tab-button:hover { background-color: #dcfce7; color: #14532d; border-color: #86efac #86efac transparent #86efac; }
+         .tab-button.active { border-color: #86efac #86efac #ffffff #86efac; color: #14532d; font-weight: 600; background-color: #ffffff; }
+         .tab-button span { display: block; }
+         .tab-button small { display: block; font-size: 0.75rem; color: #15803d; font-weight: 400; margin-top: 0.1rem; }
+         .tab-button.active small { color: #166534; }
+         .tab-content { display: none; padding: 1.5rem; border: 1px solid #86efac; border-top: none; border-radius: 0 0 0.5rem 0.5rem; background-color: #ffffff; }
+         .tab-content.active { display: block; }
+        *:focus-visible { outline: 2px solid #22c55e; outline-offset: 2px; border-radius: 2px; }
+        .marker\:text-cv-accent ul li::marker, .marker\:text-cv-accent li::marker { color: #22c55e; }
+        .badge { background-color: #bbf7d0; border: 1px solid #86efac; color: #14532d; display: inline-block; margin: 1px; padding: 1px 4px; font-size: 0.75rem; border-radius: 0.25rem; line-height: 1.2;}
+        aside .badge { background-color: #ffffff; border-color: #86efac; color: #14532d; }
+        /* --- END Original Screen Styles --- */
+
+
+        /* --- START REVISED Print Styles --- */
+        /* These styles ONLY apply when printing or saving as PDF */
+        @media print {
+            /* --- Base Print Setup --- */
+            body {
+                font-family: Arial, Helvetica, sans-serif !important;
+                font-size: 10pt !important;
+                line-height: 1.3 !important;
+                color: #000000 !important; /* Black text default */
+                background-color: #ffffff !important;
+                margin: 1.5cm !important; /* Standard margins */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* --- Hide Screen Elements --- */
+            #print-button, video, #work-samples-button, .tab-buttons-container, aside img, header > div:last-child /* Hide WS button container */ {
+                display: none !important;
+            }
+
+            /* --- Links --- */
+            a { text-decoration: none !important; color: #15803d !important; } /* Dimmer Green for links */
+            a[href^="http"]::after { content: "" !important; } /* Remove external link indicators */
+            a[href^="mailto:"]::before, a[href^="tel:"]::before { content: "" !important; /* Remove mail/tel icons if any */ }
+
+
+            /* --- Global Print Layout --- */
+            .max-w-6xl { max-width: none !important; box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; }
+            body > div.max-w-6xl { display: block !important; } /* Ensure main container is block */
+            main { order: 1 !important; display: block !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+            aside { order: 2 !important; display: block !important; width: 100% !important; padding: 1cm 0 0 0 !important; margin: 0 !important; border: none !important; background: none !important; color: #000 !important; }
+
+            /* --- Header Print Styling --- */
+            header {
+                display: block !important;
+                border-bottom: 1px solid #cccccc !important;
+                margin-bottom: 1rem !important; padding-bottom: 0.5rem !important;
+                page-break-after: avoid !important;
+            }
+            header h1 { /* Name */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 22pt !important; font-weight: bold !important;
+                color: #14532d !important; /* Dark Green */
+                margin: 0 0 2pt 0 !important; padding: 0 !important;
+                text-align: left !important;
+            }
+            /* Find the specific P tag for the title - assuming it's the first P after H1 */
+            header h1 + p { /* Title */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 13pt !important; font-weight: normal !important;
+                color: #22c55e !important; /* Accent Green */
+                margin: 0 0 10pt 0 !important; padding: 0 !important;
+                text-align: left !important;
+                /* Reset potential Tailwind screen styles */
+                line-height: normal !important; letter-spacing: normal !important; margin-top: 0 !important;
+            }
+
+             /* --- Main Content Print Styling --- */
+             main > section:first-of-type { margin-bottom: 1.5rem !important; page-break-inside: avoid !important; } /* Space after summary */
+             main > section:first-of-type h2 { display: none !important; } /* Hide screen-reader only summary heading */
+             main > section:first-of-type p { /* Summary Paragraph */
+                 color: #166534 !important; /* Medium Green */
+                 font-size: 10.5pt !important; line-height: 1.4 !important;
+                 border-top: 1px solid #86efac !important; /* Light green border top */
+                 padding-top: 0.5rem !important; margin: 0 !important;
+             }
+
+            /* --- Experience Section Print Styling --- */
+            main section:nth-of-type(2) > h2, main section:nth-of-type(3) > h2, main section:nth-of-type(4) > h2 { /* Project Management, Experience, and Continuous Education Headings */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 14pt !important; font-weight: bold !important;
+                color: #22c55e !important; /* Accent Green */
+                margin: 1.5rem 0 0.8rem 0 !important; padding: 0 0 4pt 0 !important;
+                border-bottom: 1px solid #86efac !important; /* Light Green Border */
+                page-break-after: avoid !important;
+            }
+            .tab-content-container { page-break-before: avoid !important; }
+            .tab-content { /* Show all tab content */
+                 display: block !important; border: none !important; padding: 0 !important;
+                 margin: 0 0 1.5rem 0 !important; background: none !important; border-radius: 0 !important;
+                 page-break-inside: avoid !important; page-break-before: avoid !important;
+            }
+            .print-only-tab-heading { /* Category Heading (e.g., "Mylan 2016-Present") */
+                display: block !important; padding: 0 !important; border: none !important;
+                background: none !important; text-align: left !important;
+                margin: 1rem 0 0.5rem 0 !important; page-break-after: avoid !important;
+            }
+             .print-only-tab-heading span { /* Company Name */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 13pt !important; font-weight: bold !important; /* Adjusted size */
+                color: #22c55e !important; /* Accent Green */
+                display: inline !important;
+            }
+            .print-only-tab-heading small { /* Dates */
+                font-family: Arial, Helvetica, sans-serif !important;
+                font-size: 10pt !important; font-weight: normal !important;
+                color: #15803d !important; /* Dimmer Green */
+                font-style: italic !important; display: inline !important;
+                margin-left: 8px !important; margin-top: 0 !important;
+            }
+            .tab-content h3 { /* Job Title */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 11pt !important; font-weight: bold !important;
+                color: #14532d !important; /* Dark Green */
+                margin: 0.5rem 0 1pt 0 !important; padding: 0 !important;
+                page-break-after: avoid !important;
+            }
+             /* Find Location/Dates P tag (usually first P after H3) */
+             .tab-content h3 + p {
+                font-family: Arial, Helvetica, sans-serif !important;
+                font-size: 9.5pt !important; font-weight: normal !important;
+                color: #15803d !important; /* Dimmer Green */
+                font-style: italic !important; text-transform: none !important;
+                margin: 0 0 5pt 0 !important; padding: 0 !important; letter-spacing: normal !important;
+                line-height: 1.3 !important; /* Ensure consistent line height */
+             }
+            .tab-content h4 { /* Sub-section heading within job (e.g., Client: Ericsson) */
+                 font-family: 'Poppins', Arial Black, sans-serif !important;
+                 font-size: 10.5pt !important; font-weight: bold !important;
+                 color: #166534 !important; /* Medium Green */
+                 margin: 6pt 0 3pt 0 !important; padding: 0 !important;
+                 page-break-after: avoid !important;
+            }
+            .tab-content ul { /* Bullet points */
+                margin: 3pt 0 8pt 18pt !important; padding: 0 !important;
+                list-style-type: disc !important; color: #000000 !important; /* Black text */
+                page-break-inside: avoid !important;
+            }
+            .tab-content li {
+                 margin-bottom: 4pt !important; padding: 0 !important;
+                 font-size: 10pt !important; color: #000000 !important; /* Black text */
+            }
+            /* Style bullet marker color (browser support varies) */
+            .tab-content li::marker { color: #16653d !important; /* Darker Green marker for better contrast in print */ }
+
+
+            /* --- Aside (Sidebar) Print Styling --- */
+            aside section { margin-bottom: 1.5rem !important; page-break-inside: avoid !important;}
+            aside h2 { /* Section Titles (Contact, Skills, etc.) */
+                font-family: 'Poppins', Arial Black, sans-serif !important;
+                font-size: 13pt !important; font-weight: bold !important; /* Adjusted size */
+                color: #22c55e !important; /* Accent Green */
+                text-transform: uppercase !important; letter-spacing: normal !important;
+                margin: 0 0 6pt 0 !important; padding: 0 !important;
+                border: none !important;
+                page-break-after: avoid !important;
+            }
+            aside h3 { /* Sub-headings (e.g., Education degrees) */
+                 font-family: Arial, Helvetica, sans-serif !important;
+                 font-size: 10pt !important; font-weight: bold !important;
+                 color: #000 !important; /* Black */
+                 margin: 0 0 1pt 0 !important; padding: 0 !important;
+            }
+            aside p, aside address, aside li {
+                font-size: 10pt !important;
+                color: #000 !important; /* Black text */
+                margin-bottom: 3pt !important; padding: 0 !important; line-height: 1.3 !important;
+            }
+            aside address { font-style: normal !important; }
+             aside ul { /* Lists in sidebar */
+                margin: 3pt 0 8pt 18pt !important; padding: 0 !important;
+                list-style-type: disc !important;
+                page-break-inside: avoid !important;
+             }
+             aside li::marker { color: #16653d !important; /* Darker Green marker for better contrast in print */ }
+             /* Find Education institution/dates P tag */
+             aside h3 + p {
+                font-size: 9pt !important;
+                color: #333333 !important; /* Dark Grey */
+                margin-bottom: 8pt !important; /* Space after edu item */
+             }
+            aside .badge { /* Toolbox items */
+                 display: inline-block !important; font-size: 8pt !important;
+                 color: #000 !important; background-color: #eee !important;
+                 border: 1px solid #ccc !important; border-radius: 3px !important;
+                 padding: 1px 4px !important; margin: 1px !important; line-height: 1.2 !important;
+                 white-space: nowrap !important;
+            }
+             aside div.flex { display: block !important; } /* Ensure badge container is block */
+
+            /* --- General Print Cleanup --- */
+             *, *::before, *::after {
+                border-color: #ccc !important; /* Ensure borders are visible */
+                box-shadow: none !important; background-image: none !important;
+             }
+             /* Reset potentially inherited screen styles not explicitly overridden */
+             div, span, p, li, h1, h2, h3, h4, address {
+                 letter-spacing: normal !important; text-transform: none !important;
+                 /* Add other resets if needed */
+             }
+
+
+        } /* --- END REVISED Print Styles --- */
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 lg:p-8">
+
+    <div class="max-w-6xl mx-auto bg-cv-bg-main shadow-xl rounded-lg overflow-hidden md:flex print:block">
+
+        <main class="w-full md:w-2/3 lg:w-3/4 bg-cv-bg-main p-6 md:p-8 md:order-2">
+             <header class="mb-6 flex flex-wrap justify-between items-start">
+                 <div>
+                     <h1 class="text-4xl md:text-5xl font-bold font-heading text-cv-text-dark tracking-tight">SANDRA RIORDAN</h1>
+                     <p class="text-xl font-heading text-cv-accent mt-1">Sustainable Energy & Science Research Professional</p>
+                 </div>
+                 <div class="mt-2 md:mt-0 md:ml-4 print:hidden">
+                     </div>
+             </header>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold font-heading text-cv-accent mb-3 sr-only">Profile Summary</h2>
+                <p class="text-cv-text-med leading-relaxed text-base border-t border-cv-border pt-4">
+                    A dedicated and experienced professional with a strong background in Science Research & Development and Engineering, complemented by a Certification in Sustainable Energy. A dedicated advocate for sustainability and an active steward of environmental conservation. Accomplished project manager with a proven track record in data management and team coordination, overseeing compliance and training initiatives across multiple sectors. I strive to make science accessible and engaging for all, leveraging my broad life experiences, strong interpersonal and communication skills, and adaptability to excel as an enthusiastic team player and effective leader.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold font-heading text-cv-accent mb-4">Project Management Experience</h2>
+
+                <div class="tab-content-container">
+                    <div id="tab-projectmanagement" class="tab-content active" role="tabpanel" aria-labelledby="btn-projectmanagement">
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Project Management Experience</span>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Project Manager</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Galway Energy Coop (EU Project)</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Results-driven professional with extensive experience in data management and team leadership, successfully leading collaborative working groups for an EU project with Galway Energy Coop, with a focus on data management and marketing, including meticulous collation of project metrics.</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Cleaning Validation Programme Manager</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Managed the Cleaning Validation Programme, overseeing an annual schedule to ensure compliance in sterile injectable medicine production, and validating four production lines for audits by regulatory bodies such as HPRA and FDA.</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Training Coordinator</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Trained approximately 30 personnel on cleaning protocols for 52 products, ensuring all documentation was maintained in an audit-ready state.</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Volunteer Coordinator</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Coordinated activities for a voluntary group of 80 members, efficiently organizing weekend trips and ensuring seamless logistics for participants of all ages.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold font-heading text-cv-accent mb-4">Work Experience</h2>
+
+                <div class="tab-buttons-container mb-0 border-b border-cv-border flex flex-wrap -mb-px" role="tablist" aria-label="Job Experience Tabs">
+                    <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-galwayenergywork" id="btn-galwayenergywork">
+                        <span>Galway Energy Cooperative</span>
+                        <small>2023-Present</small>
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-viatris-validation-work" id="btn-viatris-validation-work" tabindex="-1">
+                        <span>Viatris (Validation Engineer)</span>
+                        <small>2018-2023</small>
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-viatris-rnd-work" id="btn-viatris-rnd-work" tabindex="-1">
+                        <span>Viatris (R&D Formulation)</span>
+                        <small>2016-2018</small>
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-chemistryacademy-work" id="btn-chemistryacademy-work" tabindex="-1">
+                        <span>Chemistry Academy</span>
+                        <small>2012-2016</small>
+                    </button>
+                     <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-roche-mst" id="btn-roche-mst" tabindex="-1">
+                        <span>Roche Ireland (MST Chemist)</span>
+                        <small>2007-2011</small>
+                    </button>
+                     <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-roche-multiproducts" id="btn-roche-multiproducts" tabindex="-1">
+                        <span>Roche Ireland (Multiproducts)</span>
+                        <small>2008-2010</small>
+                    </button>
+                     <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-brystolmyers" id="btn-brystolmyers" tabindex="-1">
+                        <span>Bristol Myers Squibb</span>
+                        <small>2006</small>
+                    </button>
+                </div>
+
+                <div class="tab-content-container">
+                    <div id="tab-galwayenergywork" class="tab-content active" role="tabpanel" aria-labelledby="btn-galwayenergywork">
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Galway Energy Cooperative</span> <small>2023-Present</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Community Energy Officer</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Westside Resource Centre, Galway | 2023 – Present</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Oversaw the One Stop Shop Service, providing homeowners with guidance on SEAI grants, eligibility criteria, and personalized retrofitting options.</li>
+                            <li>Organized and facilitated community events aimed at raising awareness of retrofitting options, available grants, and sustainable energy initiatives, tailoring information to individual circumstances.</li>
+                            <li>Led two of three collaborative working groups focused on data management and marketing, responsible for collating project metrics and ensuring accuracy in client data management in compliance with GDPR regulations.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-viatris-validation-work" class="tab-content" role="tabpanel" aria-labelledby="btn-viatris-validation-work" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Viatris</span> <small>2018-2023</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Validation Engineer</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Inverin, Galway | 2018 – 2023</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Project Coordinator: Collaborated and provided technical expertise in cleaning-related activities and process performance qualification for cross-functional studies involving Production, Safety, Engineering, Quality, Regulatory Affairs, Quality Control, Chemistry, and Microbiology.</li>
+                            <li>Quality Auditor: Qualified and experienced in providing knowledge and support during FDA, HPRA, and corporate audits.</li>
+                            <li>Cleaning Validation Subject Matter Expert: Ensured high-quality and effective cleaning processes, including the training and qualification of 25 technicians in a highly regulated environment.</li>
+                            <li>Process Performance Qualification: Provided technical support and validation for the entire product process of sterile liquid injectables, from raw materials to finished products.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-viatris-rnd-work" class="tab-content" role="tabpanel" aria-labelledby="btn-viatris-rnd-work" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Viatris</span> <small>2016-2018</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Research & Development Formulation Scientist</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Inverin, Galway | 2016 – 2018</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Product Development Specialist: Executed development activities and provided technical advice for the progression of injectable products from concept and laboratory scale to production, registration, and successful launch.</li>
+                            <li>Medical Device Developer: Developed combinatorial medical devices, including vials, pre-filled syringes, and cartridges, in alignment with ISO standards and regulatory guidelines.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-chemistryacademy-work" class="tab-content" role="tabpanel" aria-labelledby="btn-chemistryacademy-work" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                             <span>Chemistry Academy</span> <small>2012-2016</small>
+                        </div>
+                         <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Chemistry Educator and Business Founder</h3>
+                         <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Galway, Ireland | 2012 – 2016</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Founder, Online Educational Platform: Established a digital platform utilizing video and educational technologies to mentor Leaving Certificate and third-level chemistry students.</li>
+                            <li>Executive Board Member, Women in Technology and Science (WITS): Selected to the executive board and organized various training events at PorterShed, Blackstone LaunchPad and SuperPixel Labs.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-roche-mst" class="tab-content" role="tabpanel" aria-labelledby="btn-roche-mst" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Roche Ireland Ltd. UG</span> <small>2007-2011</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Manufacturing Science & Technology Chemist</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Clarecastle, Co. Clare | 2007 – 2011</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Pharmaceutical Development Scientist: Developed synthetic and analytical routes for active pharmaceutical ingredients intended for phase 3 clinical trials and world export.</li>
+                            <li>Process Optimization Specialist: Optimized processes, achieving a 10% reduction in costs for a key step in the development of a billion-dollar drug.</li>
+                            <li>Production Chemist: Analyzed production issues and formulated remedial and preventative action plans, facilitating continued production without significant financial or quality losses.</li>
+                        </ul>
+                    </div>
+
+                     <div id="tab-roche-multiproducts" class="tab-content" role="tabpanel" aria-labelledby="btn-roche-multiproducts" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Roche Ireland Ltd. (Multiproducts)</span> <small>2008-2010</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Multiproducts Team Chemist</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">2008-2010</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Production Chemist: Developed and documented detailed batch sheet instructions, resulting in the production of high-quality bulk API that met all customer and regulatory requirements, including FDA, IMB, and EPA standards.</li>
+                            <li>Training Coordinator: Trained 28 mechanical technicians and operation team leaders on safety, quality, and technical aspects of the chemical process prior to the start-up of each monthly campaign.</li>
+                            <li>Quality Improvement Lead: Drove quality enhancement by developing and implementing a comprehensive quality plan for production, ensuring adherence to established milestones through regular monitoring.</li>
+                            <li>Regulatory Compliance Manager: Prepared the plant and personnel for regulatory inspections and engaged with inspectors during a successful FDA audit.</li>
+                            <li>Lean Six Sigma and Kaizen Tools: Utilized Lean Six Sigma methodologies and actively participated in Kaizen events, facilitating cause mapping activities to address issues and drive process improvements. Conducted value stream mapping to identify opportunities for improvement in well-established processes.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-brystolmyers" class="tab-content" role="tabpanel" aria-labelledby="btn-brystolmyers" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Bristol Myers Squibb</span> <small>2006</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Manufacturing Technology Chemist PhD Placement / Research Chemist</h3>
+                        <p class="text-xs text-cv-text-dim mb-3 uppercase tracking-wider">Swords, Co Dublin | 2006</p>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Conducted a research project focused on retrosynthetic analysis to develop alternative syntheses for a depleting naturally sourced raw material, successfully implementing process improvements and scale-up in a pilot plant.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold font-heading text-cv-accent mb-4">Education History</h2>
+
+                <div class="tab-buttons-container mb-0 border-b border-cv-border flex flex-wrap -mb-px" role="tablist" aria-label="Education History Tabs">
+                    <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-phd" id="btn-phd">
+                        <span>PhD Organic Chemistry</span>
+                        <small>2000-2005</small>
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-bsc" id="btn-bsc" tabindex="-1">
+                        <span>BSc. (Hons) Chemistry</span>
+                        <small>1995-1999</small>
+                    </button>
+                </div>
+
+                <div class="tab-content-container">
+                    <div id="tab-phd" class="tab-content active" role="tabpanel" aria-labelledby="btn-phd">
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>University College Dublin</span> <small>Oct 2000 – Oct 2005</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Awarded PhD in Organic Chemistry</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Expertise in Synthetic Organic Chemistry: Possess advanced experience and in-depth knowledge of Synthetic Organic Chemistry and Asymmetric Catalysis.</li>
+                            <li>Spectroscopic Techniques Specialist: Specialized in various spectroscopic techniques, including NMR, MS, IR, and UV spectroscopy.</li>
+                            <li>Analytical Skills: Mastered a range of analytical skills, including HPLC, GC, and techniques for separation, purification, crystallization, and resolution.</li>
+                            <li>Communication and Networking: Developed strong networking, presentation, and interpersonal skills through participation in group meetings, seminars, and international conferences.</li>
+                            <li>Award Recognition: Received finalist prize for delivering public presentations at Access Science Seminars.</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-bsc" class="tab-content" role="tabpanel" aria-labelledby="btn-bsc" hidden>
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>University College Dublin</span> <small>Sept 1995– May 1999</small>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">BSc. (Hons) Chemistry, Upper Second Class</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Awarded the UCD Chemistry Department and Bristol-Myers Squibb sponsored prize for the final year project report and presentation on Computational Chemistry.</li>
+                            <li>Conducted a final year synthesis project focused on the preparation of novel Nitrogen-Nitrogen ligands.</li>
+                            <li>Completed minor degree topics in Process Engineering and Atomic and Nuclear Physics.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+
+            <section>
+                <h2 class="text-2xl font-semibold font-heading text-cv-accent mb-4">Continuous Education and Training</h2>
+
+                <div class="tab-content-container">
+                    <div id="tab-cet-all" class="tab-content active" role="tabpanel" aria-labelledby="btn-cet-all">
+                        <div class="print-only-tab-heading" style="display: none;">
+                            <span>Continuous Education and Training</span>
+                        </div>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Full Time Courses</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>PhD in Organic Chemistry, University College Dublin, 2000-2005</li>
+                            <li>BSc in Chemistry (Hons), University College Dublin, 1995-1999</li>
+                            <li>Leaving Certificate, St Ailbes, Tipperary Town, 1989-1995</li>
+                            <li>Cert in Sustainable Energy, Cork Institute of Technology, 2012-2013</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Production and Process Skills</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Chemical Development and Scale-Up, Scientific Update, 2007</li>
+                            <li>Crystallisation Course, Solid State Pharmaceutical Cluster, 2008</li>
+                            <li>Protecting Against Runaway Reactions, Chillworth Technology, 2009</li>
+                            <li>Failure Mode and Effect Analysis, Roche Ireland, 2010</li>
+                            <li>Chemical Engineering for Chemists, Institution of Chemical Engineering, 2010</li>
+                            <li>GMP Trainings, Roche Ireland / Viatris</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Optimisation/Data Analysis Tools</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Kaizen and Six Sigma Model, Roche Ireland, 2009</li>
+                            <li>Mini Tab Statistics Training, Prism Training, 2017</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Training and Presentation Skills</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Train the Trainer, Talent Fusion, Roche Ireland, 2008</li>
+                            <li>Presentation Skills Workshop, Roche Ireland, 2010</li>
+                            <li>Web Design and Optimisation, Gréasán na Meán, 2014</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Wisdom Teachings</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Medicine Wheel Teachings, Family Teachings, GM Nanatasis, Abenaki Grandmother / Elder, 2012-2017</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Formulation Studies</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Device Functionality Testing, Terminal Sterilisation, Reverse Engineering, Compatibility and Stability Studies, Viatris, 2017</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Dip in Professional Competence</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Critical professional skills for Management and leadership, Conflict resolution, Listening and Communication skills, DIT and IBEC, 2018</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Certificate in Quality Engineering</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>QQI level 8 Management and Leadership, Risk Management, Quality Improvement, Statistics, University of Limerick, 2018</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Audit Training</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Internal Quality Auditing for Manufacturers of Medical Devices, Viatris, SQT, 2019</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Sterilisation</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Microbiology, Autoclave and Sterilisation Concepts, Viatris, SQT, 2020</li>
+                        </ul>
+                        <h3 class="text-lg font-semibold font-heading text-cv-text-dark">Ecology and Eight Shields</h3>
+                        <ul class="list-disc list-outside space-y-2 pl-5 text-cv-text-med text-sm marker:text-cv-accent mb-4">
+                            <li>Deep ecology training supporting forest schools and native teachings, Bringing it Home and Ecological Homecoming, 2022/23</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <aside class="w-full md:w-1/3 lg:w-1/4 bg-cv-bg-sidebar p-6 text-cv-text-med border-r border-cv-border md:order-1">
+            <div class="mb-6 text-center print:hidden">
+                </div>
+
+            <section class="mb-6">
+                <h2 class="font-poppins text-lg font-semibold text-cv-accent uppercase tracking-wider mb-3">Contact</h2>
+                <address class="text-sm text-cv-text-dark not-italic space-y-1">
+                    <p>Galway, Ireland</p>
+                    <p><a href="mailto:sandra.riordan@gmail.com" class="hover:text-cv-accent-hover transition-colors duration-200 block">sandra.riordan@gmail.com</a></p>
+                    <p><a href="https://www.linkedin.com/in/sandra-riordan-a536862a" class="hover:text-cv-accent-hover transition-colors duration-200 block">www.linkedin.com/in/sandra-riordan-a536862a</a></p>
+                    <p><a href="https://chemistrygrinds.com/" class="hover:text-cv-accent-hover transition-colors duration-200 block">chemistrygrinds.com/</a></p>
+                </address>
+                 <button id="print-button" class="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-cv-accent text-sm font-medium rounded-md text-cv-accent bg-white hover:bg-cv-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cv-accent transition-colors duration-200 print:hidden">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                       <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+                     </svg>
+                     Save as PDF
+                 </button>
+            </section>
+
+            <section class="mb-6">
+                <h2 class="font-poppins text-lg font-semibold text-cv-accent uppercase tracking-wider mb-3">Skills</h2>
+                 <div class="flex flex-wrap gap-1 text-xs">
+                     <span class="badge border px-2 py-0.5 rounded">Communication / Listening</span>
+                     <span class="badge border px-2 py-0.5 rounded">Problem Solving</span>
+                     <span class="badge border px-2 py-0.5 rounded">Technical Ability</span>
+                     <span class="badge border px-2 py-0.5 rounded">Mentoring</span>
+                     <span class="badge border px-2 py-0.5 rounded">Educator / Creator</span>
+                     <span class="badge border px-2 py-0.5 rounded">Event Coordination</span>
+                     <span class="badge border px-2 py-0.5 rounded">Research</span>
+                     <span class="badge border px-2 py-0.5 rounded">Management</span>
+                     <span class="badge border px-2 py-0.5 rounded">GMP</span>
+                 </div>
+            </section>
+
+            <section class="mb-6">
+                <h2 class="font-poppins text-lg font-semibold text-cv-accent uppercase tracking-wider mb-3">Awards</h2>
+                 <ul class="space-y-1 text-sm list-inside text-cv-text-dark marker:text-cv-accent">
+                        <li>Awarded seat on Executive Board for Women in Technology and Science (2016)</li>
+                        <li>Award for Beyond Endurance Education Programme in Antarctica (2009)</li>
+                        <li>Communication Award for presenting my PhD work to the Lay Public (2003)</li>
+                 </ul>
+            </section>
+
+            <section class="mb-6">
+                <h2 class="font-poppins text-lg font-semibold text-cv-accent uppercase tracking-wider mb-3">Research & Publications</h2>
+                 <ul class="space-y-1 text-sm list-inside text-cv-text-dark marker:text-cv-accent">
+                        <li>PhD Thesis: Synthesis of Novel Nitrogen - Nitrogen Ligands and their Application in Asymmetric Catalysis</li>
+                 </ul>
+            </section>
+
+            <section>
+                <h2 class="font-poppins text-lg font-semibold text-cv-accent uppercase tracking-wider mb-3">Memberships</h2>
+                 <ul class="space-y-1 text-sm list-inside text-cv-text-dark marker:text-cv-accent">
+                        <li>Research Director on the board of Galway Energy Co Operative</li>
+                        <li>Volunteer for Transition Galway’s 2030 Vision for Galway (ref. <a href="https://avisionforgalway2030.wordpress.com" class="hover:text-cv-accent-hover transition-colors duration-200">avisionforgalway2030.wordpress.com</a>)</li>
+                        <li>WITS Ireland Member</li>
+                 </ul>
+            </section>
+        </aside>
+
+    </div>
+    <script>
+        // JavaScript for Tab Functionality (reused from db.html)
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('aria-controls');
+                // Deactivate others
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.setAttribute('tabindex', '-1');
+                });
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    content.setAttribute('hidden', '');
+                });
+                // Activate clicked
+                button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+                button.removeAttribute('tabindex');
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                    targetContent.removeAttribute('hidden');
+                }
+            });
+            // Keyboard navigation listener
+            button.addEventListener('keydown', (e) => {
+                 let index = Array.from(tabButtons).indexOf(e.target);
+                 let newIndex;
+                 if (e.key === 'ArrowRight') { newIndex = (index + 1) % tabButtons.length; e.preventDefault(); }
+                 else if (e.key === 'ArrowLeft') { newIndex = (index - 1 + tabButtons.length) % tabButtons.length; e.preventDefault(); }
+                 else if (e.key === 'Home') { newIndex = 0; e.preventDefault(); }
+                 else if (e.key === 'End') { newIndex = tabButtons.length - 1; e.preventDefault(); }
+                 if (newIndex !== undefined) { tabButtons[newIndex].focus(); }
+            });
+        });
+        // Set initial tabindex
+        if (tabButtons.length > 0) { tabButtons[0].removeAttribute('tabindex'); }
+
+        // JavaScript for Print Button (reused from db.html)
+        const printButton = document.getElementById('print-button');
+        if (printButton) {
+            printButton.addEventListener('click', () => {
+                window.print();
+            });
+        }
+    </script>
+     </body>
+</html>
